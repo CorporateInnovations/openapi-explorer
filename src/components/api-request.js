@@ -312,6 +312,18 @@ export default class ApiRequest extends LitElement {
         this.selectedRequestBodyType = mimeType;
       }
     }
+
+    // This is a way to get the schema names to display on examples of more than one (oneOF)
+    const schemaExamplesTitleArray = [];
+    if (requestBodyTypes && requestBodyTypes[0].examples) {
+      for (const example in requestBodyTypes[0].examples) {
+        schemaExamplesTitleArray.push(example);
+      }
+      schemaExamplesTitleArray.forEach(function(exampleName, index) {
+        requestBodyTypes[0].schema.oneOf[index].allOf[0].titleV2 = exampleName;
+      });
+    }
+
     // MIME Type selector
     reqBodyTypeSelectorHtml = requestBodyTypes.length === 1
       ? ''
