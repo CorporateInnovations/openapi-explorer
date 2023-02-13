@@ -1,5 +1,5 @@
 {
-  "name": "corporate-innovations-openapi-explorer",
+  "name": "@CorporateInnovations/openapi-explorer",
   "version": "1.0.1",
   "description": "Forked from - OpenAPI Explorer - API viewer with dynamically generated components, documentation, and interaction console",
   "author": "CI Group",
