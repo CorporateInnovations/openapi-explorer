@@ -1,12 +1,15 @@
 {
-  "name": "openapi-explorer",
-  "version": "0.0.0",
-  "description": "OpenAPI Explorer - API viewer with dynamically generated components, documentation, and interaction console",
-  "author": "Rhosys Developers <developers@rhosys.ch>",
+  "name": "corporate-innovations-openapi-explorer",
+  "version": "1.0.1",
+  "description": "Forked from - OpenAPI Explorer - API viewer with dynamically generated components, documentation, and interaction console",
+  "author": "CI Group",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Rhosys/openapi-explorer.git"
+    "url": "https://github.com/CorporateInnovations/openapi-explorer.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "license": "Apache-2.0",
   "keywords": [
