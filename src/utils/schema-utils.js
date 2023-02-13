@@ -326,7 +326,15 @@ export function schemaInObjectNotation(rawSchema, options, level = 0, suffix = '
       if (v.type === 'object' || v.properties || v.allOf || v.anyOf || v.oneOf) {
         const partialObj = schemaInObjectNotation(v, options);
         if (partialObj) {
-          objWithAnyOfProps[`::OPTION~${index + 1}${v.title ? `~${v.title}` : ''}`] = partialObj;
+          // Commented original code
+          // objWithAnyOfProps[`::OPTION~${index + 1}${v.title ? `~${v.title}` : ''}`] = partialObj;
+          if (v.allOf[0].titleV2) {
+            objWithAnyOfProps[`::OPTION~${v.allOf[0].titleV2}`] = partialObj;
+          } else if (v.title) {
+            objWithAnyOfProps[`::OPTION~${index + 1}~${v.title}`] = partialObj;
+          } else {
+            objWithAnyOfProps[`::OPTION~${index + 1}`] = partialObj;
+          }
           objWithAnyOfProps['::type'] = 'xxx-of-option';
           readOnly = readOnly && partialObj['::flags']?.['🆁'];
           writeOnly = writeOnly && partialObj['::flags']?.['🆆'];
