@@ -32,6 +32,7 @@ export default class ApiRequest extends LitElement {
     this.activeResponseTab = 'response'; // allowed values: response, headers, curl
     this.selectedRequestBodyType = '';
     this.selectedRequestBodyExample = '';
+    this.requestBodyExpanded = true;
   }
 
   static get properties() {
@@ -74,16 +75,17 @@ export default class ApiRequest extends LitElement {
     return html`
     <div class="grey-border api-request col regular-font request-panel ${(this.renderStyle === 'focused' || this.callback === 'true') ? 'focused-mode' : 'view-mode'}">
       <div class=" ${this.callback === 'true' ? 'tiny-title' : 'req-res-title'} "> 
-        ${this.callback === 'true' ? 'CALLBACK REQUEST' : getI18nText('operations.request')} <!-- REQUEST DIV -->
-      </div>
+        ${this.callback === 'true' ? 'CALLBACK REQUEST' : getI18nText('operations.request')} <div class="toolbar-item" style="display:flex; float: right;" @click='${() => this.toggleRequestBody()}'}>${this.requestBodyExpanded ? getI18nText('schemas.collapse-desc') : getI18nText('schemas.expand-desc')}</div>
+      </div> <!-- REQUEST DIV -->
       <div>
+        ${this.requestBodyExpanded ? html`
         ${this.inputParametersTemplate('path')}
         ${this.inputParametersTemplate('query')}
         ${this.requestBodyTemplate()}
         ${this.inputParametersTemplate('header')}
         ${this.inputParametersTemplate('cookie')}
-        ${this.allowTry === 'false' ? '' : html`${this.apiCallTemplate()}`}
-      </div>  
+        ${this.allowTry === 'false' ? '' : html`${this.apiCallTemplate()}`}` : ''}
+      </div> 
     </div>
     `;
   }
@@ -1259,6 +1261,11 @@ export default class ApiRequest extends LitElement {
       this.responseBlobUrl = '';
     }
     super.disconnectedCallback();
+  }
+
+  toggleRequestBody(){
+    this.requestBodyExpanded = !this.requestBodyExpanded;
+    this.requestUpdate();
   }
 }
 

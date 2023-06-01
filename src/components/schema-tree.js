@@ -204,24 +204,30 @@ export default class SchemaTree extends LitElement {
     }
 
     return html`
-      <div class="tr primitive">
-        <div class="td key ${deprecated ? 'deprecated' : ''}" style='min-width:${minFieldColWidth}px; font-size: 16px;'>
-          ${keyLabel.endsWith('*')
-            ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}`
-            : key.startsWith('::OPTION')
-              ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
-              : schemaLevel > 0
-                ? html`<span class="key-label">${keyLabel}:</span>`
-                : ''
-          }
+      <div class="underline">
+        <div class="tr primitive">
+          <div class="td key ${deprecated ? 'deprecated' : ''}" style='min-width:${minFieldColWidth}px; font-size: 16px;'>
+            ${keyLabel.endsWith('*')
+              ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}`
+              : key.startsWith('::OPTION')
+                ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
+                : schemaLevel > 0
+                  ? html`<span class="key-label">${keyLabel}:</span>`
+                  : ''
+            }
+          </div>
+          
+          <div class="td key-descr">
+            <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
+              ${unsafeHTML(marked(`${readOrWriteOnly && `${readOrWriteOnly} ` || ''}${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} ${schemaDescription}` || ''}`))}
+            </span>
+            <span>${dataType === 'array' ? '[' : ''}<span class="${cssType}">${format || type}</span>${dataType === 'array' ? ']' : ''}</span>
+          </div>
         </div>
-        
-        <div class="td key-descr">
-          <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
-            ${unsafeHTML(marked(`${readOrWriteOnly && `${readOrWriteOnly} ` || ''}${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} ${schemaDescription}` || ''}`))}
-          </span>
-          <span>${dataType === 'array' ? '[' : ''}<span class="${cssType}">${format || type}momo</span>${dataType === 'array' ? ']' : ''}</span>
-          ${this.schemaDescriptionExpanded ? html` <!--  Info Inside Of Colapse -->
+        <span style='color:var(--red); font-size: 15px; padding-right: 228px;'>required</span>
+        <span>${example}</span>
+        <div class="testing" style="margin-left: 284px;">
+            ${this.schemaDescriptionExpanded ? html` <!--  Info Inside Of Colapse -->
             ${constraint ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Constraints: </span>${constraint}</div><br>` : ''}
             ${defaultValue ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Default: </span>${defaultValue}</div><br>` : ''}
             ${allowedValues ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Allowed: </span>${allowedValues}</div><br>` : ''}
@@ -229,8 +235,6 @@ export default class SchemaTree extends LitElement {
             ${example ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span class='bold-text'>Example: </span>${example}</div><br>` : ''}` : ''}
         </div>
       </div>
-      <span style='color:var(--red); font-size: 15px;'>required</span>
-      <span>Username of your API user provided by euNetworks</span>
     `;
   }
   /* eslint-enable indent */

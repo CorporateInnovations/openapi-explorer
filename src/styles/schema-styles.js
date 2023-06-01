@@ -86,6 +86,9 @@ export default css`
 }
 .toolbar-item:first-of-type { margin:0 2px 0 0;}
 
+.underline:first-of-type {
+  border-bottom: 1px solid black;
+}
 
 @media only screen and (min-width: 576px) {
   .key-descr {
