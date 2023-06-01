@@ -35,37 +35,14 @@ export default class JsonTree extends LitElement {
         flex:1;
         line-height: calc(var(--font-size-small) + 6px);
       }
-
-      .open-bracket {
-        display:inline-block;
-        padding: 0 20px 0 0;
-        cursor: pointer;
-        border: 1px solid transparent;
-        border-radius:3px;
-      }
-      .collapsed.open-bracket {
-        padding-right: 0;
-      }
-      .tree > .open-bracket {
-        margin-left: -2px;
-      }
-      .open-bracket:hover {
-        color:var(--primary-color);
-        background-color:var(--hover-color);
-        border: 1px solid var(--border-color);
-      }
-
-      .inside-bracket-wrapper {
+     .inside-bracket-wrapper {
         max-height: 10000px;
         transition: max-height 1.2s ease-in-out;
         overflow: hidden;
+        padding: 20px 0 0 0;
       }
-      .open-bracket.collapsed + .inside-bracket-wrapper {
-        transition: max-height 1.2s ease-in-out -1.1s;
-        max-height: 0;
-      }
+      
       .inside-bracket {
-        padding-left:16px;
         border-left:1px dotted var(--border-color);
       }
 
@@ -168,7 +145,6 @@ export default class JsonTree extends LitElement {
             </div>`)
           }
         </div>
-        <div class="close-bracket">${detailType === 'array' ? ']' : '}'}${isLast ? '' : ','}</div>
       </div>
       `;
     }
@@ -176,18 +152,6 @@ export default class JsonTree extends LitElement {
     return (typeof data === 'string' || data instanceof Date)
       ? html`<span class="${typeof data}">"${data}"</span>${isLast ? '' : ','}`
       : html`<span class="${typeof data}">${data}</span>${isLast ? '' : ','}`;
-  }
-  /* eslint-enable indent */
-
-  toggleExpand(e) {
-    const openBracketEl = e.target;
-    openBracketEl.classList.toggle('collapsed');
-    if (openBracketEl.classList.contains('collapsed')) {
-      e.target.innerHTML = e.target.classList.contains('array') ? '[...]' : '{...}';
-    } else {
-      e.target.innerHTML = e.target.classList.contains('array') ? '[' : '{';
-    }
-    this.requestUpdate();
   }
 }
 // Register the element with the browser

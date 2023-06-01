@@ -72,9 +72,9 @@ export default class ApiRequest extends LitElement {
 
   render() {
     return html`
-    <div class="api-request col regular-font request-panel ${(this.renderStyle === 'focused' || this.callback === 'true') ? 'focused-mode' : 'view-mode'}">
+    <div class="grey-border api-request col regular-font request-panel ${(this.renderStyle === 'focused' || this.callback === 'true') ? 'focused-mode' : 'view-mode'}">
       <div class=" ${this.callback === 'true' ? 'tiny-title' : 'req-res-title'} "> 
-        ${this.callback === 'true' ? 'CALLBACK REQUEST' : getI18nText('operations.request')}
+        ${this.callback === 'true' ? 'CALLBACK REQUEST' : getI18nText('operations.request')} <!-- REQUEST DIV -->
       </div>
       <div>
         ${this.inputParametersTemplate('path')}
@@ -465,7 +465,7 @@ export default class ApiRequest extends LitElement {
     return html`
       <div class='request-body-container' data-selected-request-body-type="${this.selectedRequestBodyType}">
         <div class="table-title top-gap row">
-          REQUEST BODY ${this.request_body.required ? html`<span class="mono-font" style='color:var(--red)'>*</span>` : ''} 
+          REQUEST BODY ${this.request_body.required ? html`<span class="mono-font" style='color:var(--red)'></span>` : ''} 
           <span style = "font-weight:normal; margin-left:5px"> ${this.selectedRequestBodyType}</span>
           <span style="flex:1"></span>
           ${reqBodyTypeSelectorHtml}
@@ -477,7 +477,7 @@ export default class ApiRequest extends LitElement {
             <div class="tab-panel col" style="border-width:0 0 1px 0;">
               <div class="tab-buttons row" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}">
                 <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab="model" >${getI18nText('operations.model')}</button>
-                <button class="tab-btn ${this.activeSchemaTab === 'body' ? 'active' : ''}" data-tab="body">${getI18nText('operations.body')}</button>
+                <button class="tab-btn ${this.activeSchemaTab === 'body' ? 'active' : ''}" data-tab="body">EXAMPLE</button>
               </div>
               ${html`<div class="tab-content col" style="display: ${this.activeSchemaTab === 'model' ? 'block' : 'none'}"> ${reqBodySchemaHtml}</div>`}
               ${html`<div class="tab-content col" style="display: ${this.activeSchemaTab === 'model' ? 'none' : 'block'}"> ${reqBodyDefaultHtml}</div>`}

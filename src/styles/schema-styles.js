@@ -9,7 +9,6 @@ export default css`
   flex: none;
   width: 100%;
   box-sizing: content-box;
-  border-bottom: 1px dotted transparent;
 }
 .td {
   display: block;
@@ -70,7 +69,7 @@ export default css`
   cursor: pointer;
   padding: 5px 0 5px 1rem;
   margin: 0 1rem !important;
-  color: var(--secondary-color);
+ 
   flex-shrink: 0;
 }
 .tree .toolbar .toolbar-item {

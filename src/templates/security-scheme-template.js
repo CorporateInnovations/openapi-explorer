@@ -437,16 +437,17 @@ export function pathSecurityTemplate(pathSecurity) {
     });
     return html`<div class="security-info-button" data-content-id='auth' @click='${(e) => this.scrollToEventTarget(e, false)}'>
       <div style="position:relative; display:flex; min-width:350px; max-width:700px; justify-content: flex-end;">
-        <svg width="16" height="24" style="cursor: pointer;">
+      <span style="border-width: 1px 1px 1px 4px; border-style: solid; border-color: #e33935; display: flex; padding: 2px 4px; border-radius: 4px;">
+      <svg width="16" height="24" style="cursor: pointer; padding-top: 2px;">
           <g>
-            <path style="fill: var(--fg3)" d="m13.8,8.5l0,-2.6l0,0c0,-3.2 -2.6,-5.8 -5.8,-5.8s-5.8,2.6 -5.8,5.8l0,0l0,2.6l-2.1,0l0,11.2l16,0l0,-11.2l-2.1,0l-0,0l0,0l0,0l-0,0zm-9.8,-2.6c0,0 0,0 0,0c0,-2.2 1.8,-4 4,-4c2.2,0 4,1.8 4,4c0,0 0,0 0,0l0,2.6l-8.03,0l0,-2.6l0,0l0,0z" />
+            <path style="fill: #e33935" d="m13.8,8.5l0,-2.6l0,0c0,-3.2 -2.6,-5.8 -5.8,-5.8s-5.8,2.6 -5.8,5.8l0,0l0,2.6l-2.1,0l0,11.2l16,0l0,-11.2l-2.1,0l-0,0l0,0l0,0l-0,0zm-9.8,-2.6c0,0 0,0 0,0c0,-2.2 1.8,-4 4,-4c2.2,0 4,1.8 4,4c0,0 0,0 0,0l0,2.6l-8.03,0l0,-2.6l0,0l0,0z" />
           </g>
         </svg>
           ${orSecurityKeys1.map((orSecurityItem1, i) => html`
           ${i !== 0 ? html`<div style="padding:3px 4px;"> OR </div>` : ''}
-          <div class="tooltip" style="cursor: pointer;">
+          <div class="tooltip" style="cursor: pointer; border: none;">
             <div style="padding:2px 4px; white-space:nowrap; text-overflow:ellipsis;max-width:150px; overflow:hidden;">
-              <span part="anchor anchor-operation-security"> ${orSecurityItem1.securityTypes} </span>
+              <span part="anchor anchor-operation-security" style="font-weight: 700;"> ${orSecurityItem1.securityTypes} </span>
             </div>
             <div class="tooltip-text" style="position:absolute; color: var(--fg); top:26px; right:0; border:1px solid var(--border-color);padding:2px 4px; display:block;">
               ${orSecurityItem1.securityDefs.length > 1 ? html`<div>Requires <b>all</b> of the following </div>` : ''}
@@ -476,7 +477,8 @@ export function pathSecurityTemplate(pathSecurity) {
                 `)}
               </div>  
             </div>
-          </div>  
+          </div> 
+         </span> 
         `)
         }
       </div>
