@@ -14,12 +14,14 @@ import './schema-tree';
 import './schema-table';
 
 export default class ApiResponse extends LitElement {
+  
   constructor() {
     super();
     this.selectedStatus = '';
     this.headersForEachRespStatus = {};
     this.mimeResponsesForEachStatus = {};
     this.activeSchemaTab = 'model';
+    this.showResponseTemplate = true;
   }
 
   static get properties() {
@@ -99,15 +101,25 @@ export default class ApiResponse extends LitElement {
 
   render() {
     return html`
-    <div class="col regular-font response-panel ${this.renderStyle}-mode">
-      <div class=" ${this.callback === 'true' ? 'tiny-title' : 'req-res-title'} "> 
+    <div data-selected-request-body-type="${this.selectedRequestBodyType}">
+      <div class="col regular-font response-panel ${this.renderStyle}-mode" style="border: 1.8px solid rgb(236, 236, 236); padding: 20px;">
+        <div class="${this.callback === 'true' ? 'tiny-title' : 'req-res-title'}">
         ${this.callback === 'true' ? 'CALLBACK RESPONSE' : getI18nText('operations.response')}
+        <div class="toolbar-item" style="display:flex; float: right; color: #999999; background-color: rgb(236, 236, 236); padding: 3px 11px 3px 11px; font-size: 14px; border-radius: 30px;" @click='${() => this.toggleResponseTemplate()}'}>
+         ${this.showResponseTemplate ? '\u{22C1} ' + getI18nText('schemas.collapse-desc') : '\u{FF1E} ' + getI18nText('schemas.expand-desc')}
+        </div>
+        </div>
+        <div>
+          ${this.responseTemplate()}
+        </div>
       </div>
-      <div>
-        ${this.responseTemplate()}
-      <div>  
-    </div>  
+      </div>
     `;
+  }
+  
+  toggleResponseTemplate() {
+    this.showResponseTemplate = !this.showResponseTemplate;
+    this.requestUpdate();
   }
 
   resetSelection() {
@@ -117,6 +129,7 @@ export default class ApiResponse extends LitElement {
 
   /* eslint-disable indent */
   responseTemplate() {
+  
     if (!this.responses) { return ''; }
     for (const statusCode in this.responses) {
       if (!this.selectedStatus) {
@@ -155,13 +168,18 @@ export default class ApiResponse extends LitElement {
       this.headersForEachRespStatus[statusCode] = tempHeaders;
       this.mimeResponsesForEachStatus[statusCode] = allMimeResp;
     }
-    return html`<div class='row' style='flex-wrap:wrap'>
+    if (this.showResponseTemplate) {
+    return html`
+    <div class="table-title top-gap row" id="responseTemplate">
+          REQUEST BODY 
+        </div>
+    <div class='row' style='flex-wrap:wrap'>
       ${Object.keys(this.responses).map((respStatus) => html`
         ${respStatus === '$$ref' // Swagger-Client parser creates '$$ref' object if JSON references are used to create responses - this should be ignored
           ? ''
           : html`
             <button 
-              @click="${() => {
+              @click="${(e) => {
                 this.selectedStatus = respStatus;
                 if (this.responses[respStatus].content && Object.keys(this.responses[respStatus].content)[0]) {
                   this.selectedMimeType = Object.keys(this.responses[respStatus].content)[0];
@@ -171,7 +189,7 @@ export default class ApiResponse extends LitElement {
               }}"
               class='m-btn small ${this.selectedStatus === respStatus ? 'primary' : ''}'
               part="btn--resp ${this.selectedStatus === respStatus ? 'btn-fill--resp' : 'btn-outline--resp'} btn-response-status"
-              style='margin: 8px 4px 0 0'> 
+              style='margin: 8px 4px 0 0' > 
               ${respStatus}
             </button>`
           }`)
@@ -193,14 +211,22 @@ export default class ApiResponse extends LitElement {
               <div class="tab-panel col">
                 <div class="tab-buttons row" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}" >
                   <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab='model'>${getI18nText('operations.model')}</button>
-                  <button class="tab-btn ${this.activeSchemaTab === 'body' ? 'active' : ''}" data-tab='body'>${getI18nText('operations.example')}</button>
+                  <button class="tab-btn ${this.activeSchemaTab === 'example' ? 'active' : ''}" data-tab='example'>${getI18nText('operations.example')}</button>
                   <div style="flex:1"></div>
-                  ${Object.keys(this.mimeResponsesForEachStatus[status]).length === 1
-                    ? html`<span class='small-font-size gray-text' style='align-self:center; margin-top:8px;'> ${Object.keys(this.mimeResponsesForEachStatus[status])[0]} </span>`
-                    : html`${this.mimeTypeDropdownTemplate(Object.keys(this.mimeResponsesForEachStatus[status]))}`
-                  }
+                  <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; padding: 3px 15px; margin-left: auto; margin-top: 3px; margin-bottom: 3px; align-items: baseline; border-radius: 15px; background-color: #0741c5; color: white; font-weight: 700;"
+                  @click="${(e) => {
+                   copyToClipboardV2(selectedExampleValue, e);
+                   this.copied = !this.copied;
+                   const button = e.target;
+                   const originalText = button.innerHTML;
+                   button.innerHTML = "Copied";
+                   setTimeout(() => {
+                     button.innerHTML = originalText;
+                   }, 4000)}}">
+                     Copy
+                     </span>
                 </div>
-                ${this.activeSchemaTab === 'body'
+                ${this.activeSchemaTab === 'example'
                   ? html`<div class='tab-content col' style='flex:1;'>
                       ${this.mimeExampleTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
                     </div>`
@@ -213,7 +239,10 @@ export default class ApiResponse extends LitElement {
           }`)
         }
     `;
+      }
+      return html``;
   }
+
 
   responseHeaderListTemplate(respHeaders) {
     return html`

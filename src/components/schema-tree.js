@@ -34,7 +34,7 @@ export default class SchemaTree extends LitElement {
       css`
       .tree {
         min-height: 30px;
-        font-size:var(--font-size-small);
+        font-size: 16px;
         text-align: left;
         line-height:calc(var(--font-size-small) + 6px);
       }
@@ -53,7 +53,6 @@ export default class SchemaTree extends LitElement {
         max-height: 10000px;
         transition: max-height 1.2s ease-in-out;
         overflow: hidden;
-        padding: 20px 0 0 0;
       }
       .tr.collapsed + .inside-bracket-wrapper {
         transition: max-height 1.2s ease-in-out -1.1s;
@@ -90,6 +89,7 @@ export default class SchemaTree extends LitElement {
   }
 
   generateTree(data, dataType = 'object', arrayType = '', flags = {}, key = '', description = '', schemaLevel = 0, indentLevel = 0) {
+    console.log(data)
     if (!data) {
       return html`<div class="null" style="display:inline;">
         <span class="key-label xxx-of-key"> ${key.replace('::OPTION~', '')}</span>
@@ -205,7 +205,7 @@ export default class SchemaTree extends LitElement {
 
     return html`
       <div class="underline">
-        <div class="tr primitive">
+        <div class="tr primitive" style="font-size: 16px; align-items: center;">
           <div class="td key ${deprecated ? 'deprecated' : ''}" style='min-width:${minFieldColWidth}px; font-size: 16px;'>
             ${keyLabel.endsWith('*')
               ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}`
@@ -226,7 +226,7 @@ export default class SchemaTree extends LitElement {
         </div>
         <span style='color:var(--red); font-size: 15px; padding-right: 228px;'>required</span>
         <span>${example}</span>
-        <div class="testing" style="margin-left: 284px;">
+        <div class="testing" style="margin-left: 284px; line-height: 25px; font-weight: 700;">
             ${this.schemaDescriptionExpanded ? html` <!--  Info Inside Of Colapse -->
             ${constraint ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Constraints: </span>${constraint}</div><br>` : ''}
             ${defaultValue ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Default: </span>${defaultValue}</div><br>` : ''}

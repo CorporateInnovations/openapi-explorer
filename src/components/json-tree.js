@@ -39,7 +39,6 @@ export default class JsonTree extends LitElement {
         max-height: 10000px;
         transition: max-height 1.2s ease-in-out;
         overflow: hidden;
-        padding: 20px 0 0 0;
       }
       
       .inside-bracket {

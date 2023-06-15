@@ -31,10 +31,10 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
     <div class="m-markdown" style="margin-right: 2rem; width: 70%;"> ${unsafeHTML(marked(path.description || ''))}</div>
     <div style="display: flex; justify-content: space-between">
       <div style="flex-grow: 1">
-        <div class='mono-font part="section-operation-url" regular-font-size' style='margin-top: 10px; padding: 8px 0; color:var(--fg3)'> 
+        <div class='mono-font part="section-operation-url" regular-font-size' style='margin-top: 10px; padding: 8px 0; color: black; display: flex; align-items: center;'> 
           ${path.isWebhook ? html`<span style="color:var(--primary-color)"> WEBHOOK </span>` : ''}
           <span style="font-size: 12px; background: #5167DB; border-radius: 25px; color: 'white'; padding: 0.4rem 1.2rem" part="label-operation-method" class='regular-font upper method-fg bold-text ${path.method}'>${path.method}</span> 
-          <span part="label-operation-path">https://api.connected.eunetworks.com/api${path.path}</span>   <!-- *************************** -->
+          <span part="label-operation-path" style="font-weight: 500; margin-left: 10px;">https://api.connected.eunetworks.com/api${path.path}</span>
         </div>
       </div>
       ${path.externalDocs

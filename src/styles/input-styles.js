@@ -13,7 +13,7 @@ export default css`
   line-height: 1;
   text-align: center;
   white-space: nowrap;
-  border: 2px solid var(--primary-color);
+  border: 2px solid red;
   background-color:transparent;
   transition: background-color 0.2s;
   user-select: none;
@@ -21,7 +21,8 @@ export default css`
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 .m-btn.primary {
-  background-color: var(--primary-color);
+  background-color: green;
+  border: 2px solid green;
   color: var(--primary-btn-text-color);
 }
 .m-btn.outline-primary {
@@ -30,7 +31,7 @@ export default css`
   border: 1px solid var(--bg);
 }
 .m-btn.outline-primary:hover {
-  border: 1px solid var(--bg);
+  border: 1px solid green;
 }
 .m-btn.thin-border { border-width: 1px; }
 .m-btn.large { padding:8px 14px; }
@@ -38,9 +39,25 @@ export default css`
 .m-btn.tiny { padding:5px 6px; }
 .m-btn.circle { border-radius: 50%; }
 .m-btn:hover { 
-  background-color: var(--primary-color);
+  background-color: green;
+  border: 2px solid green;
   color: var(--primary-btn-text-color);
 }
+
+.m-btn {
+  color: red;
+  font-weight: 700;
+}
+
+.m-btn:active {
+  border: 2px solid green;
+}
+
+.m-btn:focus {
+  border: 2px solid green;
+  color: white;
+}
+
 .m-btn.nav { border: 2px solid var(--secondary-color); }
 .m-btn.nav:hover { 
   background-color: var(--secondary-color);

@@ -97,7 +97,9 @@ export function getTypeInfo(schema, options = { includeNulls: false }) {
 
 export function getSampleValueByType(schemaObj, fallbackPropertyName, skipExampleStrings) {
   const example = Array.isArray(schemaObj.examples) ? schemaObj.examples[0] : Object.values(schemaObj.examples || {})[0]?.value ?? schemaObj.example;
+
   if (skipExampleStrings && typeof example === 'string') { return ''; }
+
   if (typeof example !== 'undefined') { return example; }
 
   if (schemaObj.default) { return schemaObj.default; }
@@ -137,6 +139,7 @@ export function getSampleValueByType(schemaObj, fallbackPropertyName, skipExampl
   if (typeValue.match(/^null/g)) { return null; }
   if (skipExampleStrings && typeValue.match(/^string/g)) { return ''; }
   if (typeValue.match(/^string/g)) {
+    
     if (schemaObj.pattern) {
       const examplePattern = schemaObj.pattern.replace(/[+*](?![^\][]*[\]])/g, '{8}').replace(/\{\d*,(\d+)?\}/g, '{8}');
       return expandN(examplePattern, 1)[0] || fallbackPropertyName || 'string';
@@ -180,6 +183,7 @@ export function getSampleValueByType(schemaObj, fallbackPropertyName, skipExampl
 
 function duplicateExampleWithNewPropertyValues(objectExamples, propertyName, propertyValues) {
   // Limit max number of property examples to 2 and limit the max number of examples to 10
+
   return objectExamples.reduce((exampleList, example) => {
     const examplesFromPropertyValues = propertyValues.slice(0, 2).map((value) => ({
       ...cloneDeep(example),
@@ -191,6 +195,7 @@ function duplicateExampleWithNewPropertyValues(objectExamples, propertyName, pro
 
 export function getExampleValuesFromSchema(schema, config = {}) {
   // Wrap the top level so that the recursive object can treat it as a normal property and we'll hit the 'object' below, otherwise we'll never create the top level.
+
   if (config.xml) {
     const xmlResult = getExampleValuesFromSchemaRecursive(schema.type === 'object' ? { properties: { _root: schema } } : schema, config);
     return xmlResult.map((example) => example[0]);
@@ -200,6 +205,7 @@ export function getExampleValuesFromSchema(schema, config = {}) {
 
 // TODO: Support getting the `summary` from the examples object or the `title` from the schema object
 function getExampleValuesFromSchemaRecursive(rawSchema, config = {}) {
+
   if (!rawSchema) {
     return [];
   }
@@ -259,7 +265,7 @@ function getSimpleValueResult(schema, config, namespace, prefix, xmlAttributes, 
       if (innerSchema.deprecated) { return; }
       if (innerSchema.readOnly && !config.includeReadOnly) { return; }
       if (innerSchema.writeOnly && !config.includeWriteOnly) { return; }
-
+      
       const propertyExamples = getExampleValuesFromSchemaRecursive(innerSchema, { ...config, propertyName });
       objectExamples = duplicateExampleWithNewPropertyValues(objectExamples, propertyName, propertyExamples);
 
@@ -481,6 +487,7 @@ export function schemaInObjectNotation(rawSchema, options, level = 0, suffix = '
 
 /* Create Example object */
 export function generateExample(examples, example, schema, rawMimeType, includeReadOnly = true, includeWriteOnly = true, outputType, skipExampleStrings = false) {
+  
   const mimeType = rawMimeType || 'application/json';
   const finalExamples = [];
   // First check if examples is provided
@@ -589,6 +596,7 @@ export function generateExample(examples, example, schema, rawMimeType, includeR
   }
 
   return samples.map((sample, sampleCounter) => {
+    
     let exampleValue = '';
     if (mimeType.toLowerCase().includes('xml')) {
       exampleValue = xmlFormatter(sample, { declaration: true, indent: '    ' });

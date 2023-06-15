@@ -29,7 +29,7 @@ export default css`
   padding:1px;
 }
 .tab-btn.active {
-  border-bottom: 3px solid var(--primary-color); 
+  border-bottom: 3px solid #0741c5; 
   font-weight:bold;
   color:var(--primary-color);
 }

@@ -51,7 +51,7 @@ export default css`
     margin-left: 2px;
 }
 
-.stri, .string, .uri, .url, .byte, .bina, .binary, .date, .datetime, .date-time, .pass, .password, .ipv4, .ipv4, .uuid, .emai, .email, .host, .hostname { color:var(--green); }
+.stri, .string, .uri, .url, .byte, .bina, .binary, .date, .datetime, .date-time, .pass, .password, .ipv4, .ipv4, .uuid, .emai, .email, .host, .hostname { color: #716f6f; }
 .inte, .integer, .numb, .number, .int6, .int64, .int3, .int32, .floa, .float, .doub, .double, .deci, .decimal, .blue { color:var(--blue); }
 .null { color:var(--red); }
 .bool, .boolean { color:var(--orange); }
@@ -86,8 +86,12 @@ export default css`
 }
 .toolbar-item:first-of-type { margin:0 2px 0 0;}
 
+.underline {
+  padding: 15px 0;
+}
+
 .underline:first-of-type {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid rgb(236, 236, 236);
 }
 
 @media only screen and (min-width: 576px) {
