@@ -102,7 +102,7 @@ export default css`
   }
 .grey-border {
   border: 1.8px solid rgba(236,236,236,255);
-  padding: 20px 20px 15px 20px;
+  padding: 20px;
   border-radius: 4px;
  }
 }

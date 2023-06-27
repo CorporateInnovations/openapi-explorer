@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { copyToClipboard } from '../utils/common-utils';
 import { marked } from 'marked';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { schemaInObjectNotation, generateExample, getTypeInfo } from '../utils/schema-utils';
@@ -22,6 +23,7 @@ export default class ApiResponse extends LitElement {
     this.mimeResponsesForEachStatus = {};
     this.activeSchemaTab = 'model';
     this.showResponseTemplate = true;
+    this.selectedResponseExample = 0 ;
   }
 
   static get properties() {
@@ -105,7 +107,7 @@ export default class ApiResponse extends LitElement {
       <div class="col regular-font response-panel ${this.renderStyle}-mode" style="border: 1.8px solid rgb(236, 236, 236); padding: 20px;">
         <div class="${this.callback === 'true' ? 'tiny-title' : 'req-res-title'}">
         ${this.callback === 'true' ? 'CALLBACK RESPONSE' : getI18nText('operations.response')}
-        <div class="toolbar-item" style="display:flex; float: right; color: #999999; background-color: rgb(236, 236, 236); padding: 3px 11px 3px 11px; font-size: 14px; border-radius: 30px;" @click='${() => this.toggleResponseTemplate()}'}>
+        <div style="margin: 0; display:flex; float: right; color: #999999; background-color: rgb(236, 236, 236); padding: 3px 11px 3px 11px; font-size: 14px; border-radius: 30px; cursor: pointer;" @click='${() => this.toggleResponseTemplate()}'}>
          ${this.showResponseTemplate ? '\u{22C1} ' + getI18nText('schemas.collapse-desc') : '\u{FF1E} ' + getI18nText('schemas.expand-desc')}
         </div>
         </div>
@@ -129,7 +131,6 @@ export default class ApiResponse extends LitElement {
 
   /* eslint-disable indent */
   responseTemplate() {
-  
     if (!this.responses) { return ''; }
     for (const statusCode in this.responses) {
       if (!this.selectedStatus) {
@@ -168,11 +169,13 @@ export default class ApiResponse extends LitElement {
       this.headersForEachRespStatus[statusCode] = tempHeaders;
       this.mimeResponsesForEachStatus[statusCode] = allMimeResp;
     }
+
     if (this.showResponseTemplate) {
     return html`
     <div class="table-title top-gap row" id="responseTemplate">
           REQUEST BODY 
-        </div>
+          <span style="font-weight: 400; margin-left: 5px;">${this.selectedMimeType}</span>
+        </div>       
     <div class='row' style='flex-wrap:wrap'>
       ${Object.keys(this.responses).map((respStatus) => html`
         ${respStatus === '$$ref' // Swagger-Client parser creates '$$ref' object if JSON references are used to create responses - this should be ignored
@@ -198,33 +201,32 @@ export default class ApiResponse extends LitElement {
 
       ${Object.keys(this.responses).map((status) => html`
         <div style = 'display: ${status === this.selectedStatus ? 'block' : 'none'}' >
-          <div class="top-gap">
+          <div style="margin: 10px 0 15px 0;">
             <span class="resp-descr m-markdown ">${unsafeHTML(marked(this.responses[status] && this.responses[status].description || ''))}</span>
             ${(this.headersForEachRespStatus[status] && this.headersForEachRespStatus[status].length > 0)
               ? html`${this.responseHeaderListTemplate(this.headersForEachRespStatus[status])}`
               : ''
             }
           </div>
-          ${Object.keys(this.mimeResponsesForEachStatus[status]).length === 0
+          ${Object.keys(this.mimeResponsesForEachStatus[status]).length === 0 
             ? ''
-            : html`  
-              <div class="tab-panel col">
-                <div class="tab-buttons row" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}" >
-                  <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab='model'>${getI18nText('operations.model')}</button>
-                  <button class="tab-btn ${this.activeSchemaTab === 'example' ? 'active' : ''}" data-tab='example'>${getI18nText('operations.example')}</button>
+            : html`
+            <div style="display: ${this.selectedStatus == 200 ? 'block' : 'none'}">
+                ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.length > 1 ? 
+                  html`
+                    <select name="schemaOptions" id="schemaOptions" style="border: 2px solid black; min-width: 290px; margin-bottom: 10px; padding: 10px; border-radius: 5px; font-weight: 700;">
+                      ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.map((example) => {return html`<option value="${example.exampleId}">${example.exampleId}</option>`})}
+                    </select>` 
+                  : ''}
+              </div>
+              <div class="tab-panel col" style="border-radius: 5px; ${this.activeSchemaTab === 'example' ? 'background: black; color: white' : ''}">
+                <div class="tab-buttons row" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}" style="${this.activeSchemaTab === 'example' ? 'margin: 5px 15px 0;' : ''}">
+                  <button style="${this.activeSchemaTab === 'example' ? 'color: white; font-weight: 700;' : ''}" class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab='model'>${getI18nText('operations.model')}</button>
+                  <button style="${this.activeSchemaTab === 'example' ? 'color: white;' : ''}" class="tab-btn ${this.activeSchemaTab === 'example' ? 'active' : ''}" data-tab='example'>${getI18nText('operations.example')}</button>
                   <div style="flex:1"></div>
-                  <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; padding: 3px 15px; margin-left: auto; margin-top: 3px; margin-bottom: 3px; align-items: baseline; border-radius: 15px; background-color: #0741c5; color: white; font-weight: 700;"
-                  @click="${(e) => {
-                   copyToClipboardV2(selectedExampleValue, e);
-                   this.copied = !this.copied;
-                   const button = e.target;
-                   const originalText = button.innerHTML;
-                   button.innerHTML = "Copied";
-                   setTimeout(() => {
-                     button.innerHTML = originalText;
-                   }, 4000)}}">
-                     Copy
-                     </span>
+                  <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; padding: 3px 15px; margin-left: auto; margin-top: 1px; margin-bottom: 5px; align-items: center; border-radius: 15px; background-color: #0741c5; color: white; font-weight: 700; border-color: #0741c5;" @click="${(e) => {copyToClipboard(JSON.stringify(this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples[this.selectedResponseExample].exampleValue, null, 2), e);}}">
+                      Copy
+                    </span>
                 </div>
                 ${this.activeSchemaTab === 'example'
                   ? html`<div class='tab-content col' style='flex:1;'>
@@ -282,6 +284,7 @@ export default class ApiResponse extends LitElement {
   onSelectExample(e) {
     const exampleContainerEl = e.target.closest('.example-panel');
     const exampleEls = [...exampleContainerEl.querySelectorAll('.example')];
+    this.selectedResponseExample = e.target.value.split('-')[1];
 
     exampleEls.forEach((v) => {
       v.style.display = v.dataset.example === e.target.value ? 'block' : 'none';
@@ -305,6 +308,7 @@ export default class ApiResponse extends LitElement {
                 render-style = '${this.renderStyle}'
                 .data="${mimeRespDetails.examples[0].exampleValue}"
                 class = 'example-panel pad-top-8'
+                style="background-color: #393939;"
               ></json-tree>`
             : html`
               <pre class = 'example-panel generic-tree border-top pad-top-8'>${mimeRespDetails.examples[0].exampleValue}</pre>

@@ -14,7 +14,7 @@ export default class SchemaTree extends LitElement {
       schemaDescriptionExpanded: { type: Boolean },
       schemaHideReadOnly: { type: String, attribute: 'schema-hide-read-only' },
       schemaHideWriteOnly: { type: String, attribute: 'schema-hide-write-only' },
-      selection: { type: String }
+      selectedRequest: { type: String, attribute: 'selected-request' }
     };
   }
 
@@ -72,7 +72,6 @@ export default class SchemaTree extends LitElement {
   render() {
     return html`
       <div class="tree"> 
-       
         ${this.data
           ? html`${this.generateTree(this.data['::type'] === 'array' ? this.data['::props'] : this.data, this.data['::type'], this.data['::array-type'] || '')}`
           : html`<span class='mono-font' style='color:var(--red)'> ${getI18nText('schemas.schema-missing')} </span>`
@@ -89,7 +88,6 @@ export default class SchemaTree extends LitElement {
   }
 
   generateTree(data, dataType = 'object', arrayType = '', flags = {}, key = '', description = '', schemaLevel = 0, indentLevel = 0) {
-    console.log(data)
     if (!data) {
       return html`<div class="null" style="display:inline;">
         <span class="key-label xxx-of-key"> ${key.replace('::OPTION~', '')}</span>
@@ -109,6 +107,26 @@ export default class SchemaTree extends LitElement {
     let keyDescr = '';
     if (key.startsWith('::ONE~OF') || key.startsWith('::ANY~OF')) {
       keyLabel = key.replace('::', '').replace('~', ' ');
+      for (let object in data) {
+        let objectKeyLabel;
+        let objectKeyDescr;
+        if (object.startsWith('::OPTION')) {
+          const splitParts = object.split('~');
+          objectKeyLabel = splitParts[0];
+          objectKeyDescr = splitParts[1];
+          if(objectKeyDescr === this.selectedRequest){
+            console.log('sele', this.selectedRequest);
+            console.log('data', data[object]);
+            this.generateTree(data[object], data[object]['::type'], data[object]['::array-type'] || '');
+            break;
+          }
+        }
+
+        //if object starts with option
+          //split object by '~', compare second value to this.selectedRequest
+           //if match selected request
+            //this.generate(data[object], data[object]['::type'], data[object]['::array-type'] || '')
+      }
     } else if (key.startsWith('::OPTION')) {
       const parts = key.split('~');
       keyLabel = parts[1];
@@ -205,35 +223,35 @@ export default class SchemaTree extends LitElement {
 
     return html`
       <div class="underline">
-        <div class="tr primitive" style="font-size: 16px; align-items: center;">
+        <div class="tr primitive" style="font-size: 16px;">
           <div class="td key ${deprecated ? 'deprecated' : ''}" style='min-width:${minFieldColWidth}px; font-size: 16px;'>
             ${keyLabel.endsWith('*')
-              ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}`
+              ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red);'>required</span>`
               : key.startsWith('::OPTION')
                 ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
                 : schemaLevel > 0
-                  ? html`<span class="key-label">${keyLabel}:</span>`
+                  ? html`<span class="key-label">${keyLabel}</span>`
                   : ''
             }
           </div>
-          
           <div class="td key-descr">
+            <span>${dataType === 'array' ? '[' : ''}<span class="${cssType}">${format || type}</span>${dataType === 'array' ? ']' : ''}</span>
             <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
               ${unsafeHTML(marked(`${readOrWriteOnly && `${readOrWriteOnly} ` || ''}${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} ${schemaDescription}` || ''}`))}
             </span>
-            <span>${dataType === 'array' ? '[' : ''}<span class="${cssType}">${format || type}</span>${dataType === 'array' ? ']' : ''}</span>
-          </div>
-        </div>
-        <span style='color:var(--red); font-size: 15px; padding-right: 228px;'>required</span>
-        <span>${example}</span>
-        <div class="testing" style="margin-left: 284px; line-height: 25px; font-weight: 700;">
-            ${this.schemaDescriptionExpanded ? html` <!--  Info Inside Of Colapse -->
-            ${constraint ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Constraints: </span>${constraint}</div><br>` : ''}
-            ${defaultValue ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Default: </span>${defaultValue}</div><br>` : ''}
-            ${allowedValues ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Allowed: </span>${allowedValues}</div><br>` : ''}
-            ${pattern ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span class='bold-text'>Pattern: </span>${pattern}</div><br>` : ''}
-            ${example ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span class='bold-text'>Example: </span>${example}</div><br>` : ''}` : ''}
-        </div>
+            
+            <span>${example}</span>
+            <br>
+            <div class="testing" style="line-height: 25px; font-weight: 700;">
+              ${this.schemaDescriptionExpanded ? html` 
+              ${constraint ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Constraints: </span>${constraint}</div><br>` : ''}
+              ${defaultValue ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Default: </span>${defaultValue}</div><br>` : ''}
+              ${allowedValues ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Allowed: </span>${allowedValues}</div><br>` : ''}
+              ${pattern ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span class='bold-text'>Pattern: </span>${pattern}</div><br>` : ''}
+              ${example ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span class='bold-text'>Example: </span>${example}</div><br>` : ''}` : ''}
+            </div>
+            </div>
+        </div>   
       </div>
     `;
   }

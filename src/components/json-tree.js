@@ -46,7 +46,6 @@ export default class JsonTree extends LitElement {
       }
 
       .string{color:var(--green);}
-      .number{color:var(--blue);}
       .null{color:var(--red);}
       .boolean{color:var(--orange);}
       .object{color:white}
@@ -112,19 +111,13 @@ export default class JsonTree extends LitElement {
   /* eslint-disable indent */
   render() {
     return html`
-      <div class="json-tree tree">
-        <div class="toolbar"> 
-          <div>&nbsp;</div>
-          <div class="toolbar-item">
-            <button class="m-btn outline-primary" part="btn btn-fill" @click='${(e) => { copyToClipboard(JSON.stringify(this.data, null, 2), e); }}'>${getI18nText('operations.copy')}</button>
-          </div>
-        </div>
+      <div class="json-tree tree" style="background: #393939;">
         ${this.generateTree(this.data, true)}
       </div>  
     `;
   }
 
-  generateTree(data, isLast = false) {
+    generateTree(data, isLast = false) {
     if (data === null) {
       return html`<div class="null" style="display:inline;">null</div>`;
     }
@@ -145,6 +138,7 @@ export default class JsonTree extends LitElement {
           }
         </div>
       </div>
+      <div class="close-bracket"> } </div>
       `;
     }
 

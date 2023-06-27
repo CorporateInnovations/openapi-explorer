@@ -185,7 +185,7 @@ function duplicateExampleWithNewPropertyValues(objectExamples, propertyName, pro
   // Limit max number of property examples to 2 and limit the max number of examples to 10
 
   return objectExamples.reduce((exampleList, example) => {
-    const examplesFromPropertyValues = propertyValues.slice(0, 2).map((value) => ({
+    const examplesFromPropertyValues = propertyValues.slice(0, 5).map((value) => ({
       ...cloneDeep(example),
       [propertyName]: value,
     }));

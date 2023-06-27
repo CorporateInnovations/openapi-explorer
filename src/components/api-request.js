@@ -33,6 +33,7 @@ export default class ApiRequest extends LitElement {
     this.selectedRequestBodyType = '';
     this.selectedRequestBodyExample = '';
     this.requestBodyExpanded = true;
+    this.selectedRequest = 'EthernetPricingRequestV1';
   }
 
   static get properties() {
@@ -76,7 +77,7 @@ export default class ApiRequest extends LitElement {
     <div class="grey-border api-request col regular-font request-panel ${(this.renderStyle === 'focused' || this.callback === 'true') ? 'focused-mode' : 'view-mode'}">
       <div class="${this.callback === 'true' ? 'tiny-title' : 'req-res-title'}"> 
         ${this.callback === 'true' ? 'CALLBACK REQUEST' : getI18nText('operations.request')}
-        <div class="toolbar-item" style="display:flex; float: right; color: #999999; background-color: rgb(236, 236, 236); padding: 3px 11px 3px 11px; font-size: 14px; border-radius: 30px;" @click='${() => this.toggleRequestBody()}'}>
+        <div class="toolbar-item" style="display:flex; float: right; color: #999999; background-color: rgb(236, 236, 236); padding: 3px 11px 3px 11px; font-size: 14px; border-radius: 30px; cursor: pointer;" @click='${() => this.toggleRequestBody()}'}>
          ${this.requestBodyExpanded ? '\u{22C1} ' + getI18nText('schemas.collapse-desc') : '\u{FF1E} ' + getI18nText('schemas.expand-desc')}
         </div>
       </div>
@@ -297,7 +298,6 @@ export default class ApiRequest extends LitElement {
     if (Object.keys(this.request_body).length === 0) {
       return '';
     }
-
     // Variable to store partial HTMLs
     let reqBodyTypeSelectorHtml = '';
     let reqBodyFileInputHtml = '';
@@ -368,11 +368,11 @@ export default class ApiRequest extends LitElement {
           reqBodyExamples.filter((v) => v.exampleId === this.selectedRequestBodyExample).map((v) => selectedExampleValue = v.exampleValue);
           reqBodyDefaultHtml = html`
             ${reqBodyDefaultHtml}
-            <div class = 'example-panel border-top pad-top-8'>
+            <div class = 'example-panel border-top pad-top-8' style="background: #393939;">
               ${reqBodyExamples.length === 1
                 ? ''
                 : html`
-                  <select aria-label='request body example' style="min-width:100px; max-width:100%;  margin-bottom:-1px;" @change='${(e) => this.onSelectExample(e)}'>
+                  <select aria-label='request body example' style="min-width:100px; max-width:100%;  margin: 15px 0 -1px 15px;" @change='${(e) => this.onSelectExample(e)}'>
                     ${reqBodyExamples.map((v) => html`<option value="${v.exampleId}" ?selected=${v.exampleId === this.selectedRequestBodyExample} > 
                       ${v.exampleSummary.length > 80 ? v.exampleId : v.exampleSummary ? v.exampleSummary : v.exampleId} 
                     </option>`)}
@@ -393,7 +393,7 @@ export default class ApiRequest extends LitElement {
                       data-ptype = "${reqBody.mimeType}" 
                       data-default = "${v.exampleFormat === 'text' ? v.exampleValue  : JSON.stringify(v.exampleValue , null, 8)}"
                       data-default-format = "${v.exampleFormat}"
-                      style="width:100%; resize:vertical; background-color: #393939; color: white; font-size: 16px; padding: 20px 0 0 20px; border-radius: 6px;"
+                      style="width:100%; border-color: #393939; resize:vertical; background-color: #393939; color: white; font-size: 16px; padding: 20px 0 0 20px; border-radius: 6px;"
                       .value="${this.fillRequestWithDefault === 'true' ? (v.exampleFormat === 'text' ? v.exampleValue : JSON.stringify(v.exampleValue, null, 8)) : ''}"
                     ></textarea>
                   </slot>
@@ -460,6 +460,7 @@ export default class ApiRequest extends LitElement {
               class = '${reqBody.mimeType.substring(reqBody.mimeType.indexOf('/') + 1)} pad-top-8'
               style = 'display: ${this.selectedRequestBodyType === reqBody.mimeType ? 'block' : 'none'};'
               .data = '${schemaAsObj}'
+              selected-request = "${this.selectedRequest}"
               schema-expand-level = "${this.schemaExpandLevel}"
               schema-hide-read-only = "${this.schemaHideReadOnly.includes(this.method)}"
               schema-hide-write-only = false
@@ -481,11 +482,21 @@ export default class ApiRequest extends LitElement {
         
         ${(this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text'))
           ? html`
+          <div>Chosen request: -${this.selectedRequest}-</div>
+          <select @change="${(e) => {this.selectedRequest = e.target.value; this.requestUpdate()}}">
+          ${Object.keys(this.request_body.content[this.selectedRequestBodyType].schema).includes('oneOf')
+            ? this.request_body.content[this.selectedRequestBodyType].schema.oneOf.map((schemaObject) =>
+                Object.keys(schemaObject).includes('allOf')
+                  ? html`<option value="${schemaObject.allOf[0].titleV2}">${schemaObject.allOf[0].titleV2}</option>`
+                  : ''
+              )
+            : ''}
+          </select>
             <div class="tab-panel col" style="border-width:0 0 1px 0;">
               <div class="tab-buttons row" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}">  
               <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab="model" >${getI18nText('operations.model')}</button>
                 <button class="tab-btn ${this.activeSchemaTab === 'example' ? 'active' : ''}" data-tab="example">${getI18nText('operations.example')}</button>
-                <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; padding: 3px 15px; margin-left: auto; margin-top: 3px; margin-bottom: 3px; align-items: baseline; border-radius: 15px; background-color: #0741c5; color: white; font-weight: 700;"
+                <span class="m-btn outline-primary" style="display: ${ this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; padding: 3px 15px; margin-left: auto; margin-top: 3px; margin-bottom: 3px; align-items: baseline; border-radius: 15px; background-color: #0741c5; color: white; font-weight: 700;"
                  @click="${(e) => {
                   copyToClipboardV2(selectedExampleValue, e);
                   this.copied = !this.copied;

@@ -42,6 +42,10 @@ export function copyToClipboardV2(data, e) {
   // const btnEl = e.currentTarget;
   const textArea = document.createElement('textarea');
   textArea.value = data;
+  var isNested = Object.keys(data).some(function(key) {
+    return data[key] && typeof data[key] === 'object';
+   });
+  if(isNested){textArea.value = JSON.stringify(data)};
   textArea.style.position = 'fixed'; // avoid scrolling to bottom
   document.body.appendChild(textArea);
   textArea.focus();
