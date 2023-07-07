@@ -24,6 +24,7 @@ export default class ApiResponse extends LitElement {
     this.activeSchemaTab = 'model';
     this.showResponseTemplate = true;
     this.selectedResponseExample = 0 ;
+    this.selectedResponse = '';
   }
 
   static get properties() {
@@ -214,10 +215,11 @@ export default class ApiResponse extends LitElement {
             <div style="display: ${this.selectedStatus == 200 ? 'block' : 'none'}">
                 ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.length > 1 ? 
                   html`
-                    <select name="schemaOptions" id="schemaOptions" style="border: 2px solid black; min-width: 290px; margin-bottom: 10px; padding: 10px; border-radius: 5px; font-weight: 700;">
+                    <select name="schemaOptions" @change='${(e) =>  this.onSelectExample(e)}' id="schemaOptions" style="border: 2px solid black; min-width: 290px; margin-bottom: 10px; padding: 10px; border-radius: 5px; font-weight: 700;">
                       ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.map((example) => {return html`<option value="${example.exampleId}">${example.exampleId}</option>`})}
                     </select>` 
                   : ''}
+
               </div>
               <div class="tab-panel col" style="border-radius: 5px; ${this.activeSchemaTab === 'example' ? 'background: black; color: white' : ''}">
                 <div class="tab-buttons row" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}" style="${this.activeSchemaTab === 'example' ? 'margin: 5px 15px 0;' : ''}">
@@ -233,8 +235,11 @@ export default class ApiResponse extends LitElement {
                       ${this.mimeExampleTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
                     </div>`
                   : html`<div class='tab-content col' style='flex:1;'>
+                  ${(console.log('this.selectedMimeType', this.mimeResponsesForEachStatus[status][this.selectedMimeType].selectedExample))}
                       ${this.mimeSchemaTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
-                    </div>`
+                    </div>
+                    <div style="border: 1px solid red;">
+                    ${this.mimeSchemaTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType].selectedExample)}</div>`
                 }
               </div>
             `
@@ -282,10 +287,16 @@ export default class ApiResponse extends LitElement {
   }
 
   onSelectExample(e) {
-    const exampleContainerEl = e.target.closest('.example-panel');
+    console.log('e',e.target.value);
+    // const exampleContainerEl = e.target.closest('.example-panel');
+
+    const exampleContainerEl = e.target.closest('.response-panel').querySelector('.example-panel');
+    //const exampleContainerEl = document.querySelectorAll('.example-panel');
+    console.log('example', exampleContainerEl);
     const exampleEls = [...exampleContainerEl.querySelectorAll('.example')];
     this.selectedResponseExample = e.target.value.split('-')[1];
-
+    this.selectedResponse = e.target.value; 
+    
     exampleEls.forEach((v) => {
       v.style.display = v.dataset.example === e.target.value ? 'block' : 'none';
     });
@@ -316,11 +327,7 @@ export default class ApiResponse extends LitElement {
           }`
         : html`
           <span class = 'example-panel generic-tree ${this.renderStyle === 'read' ? 'border pad-8-16' : 'border-top pad-top-8'}'>
-            <select aria-label='response body example' @change='${(e) => this.onSelectExample(e)}'>
-              ${mimeRespDetails.examples.map((v) => html`<option value="${v.exampleId}" ?selected=${v.exampleId === mimeRespDetails.selectedExample} > 
-                ${v.exampleSummary.length > 80 ? v.exampleId : v.exampleSummary} 
-              </option>`)}
-            </select>
+            
             ${mimeRespDetails.examples.map((v) => html`
               <div class="example" data-example = '${v.exampleId}' style = "display: ${v.exampleId === mimeRespDetails.selectedExample ? 'block' : 'none'}">
                 ${v.exampleSummary && v.exampleSummary.length > 80 ? html`<div style="padding: 4px 0"> ${v.exampleSummary} </div>` : ''}
@@ -342,6 +349,7 @@ export default class ApiResponse extends LitElement {
   }
 
   mimeSchemaTemplate(mimeRespDetails) {
+    console.log("MimeRespDetails Log:", mimeRespDetails)
     if (!mimeRespDetails) {
       return html`
         <pre style='color:var(--red)' class = '${this.renderStyle === 'read' ? 'border pad-8-16' : 'border-top'}'> Schema not found</pre>

@@ -91,7 +91,7 @@ export default css`
 }
 
 .underline:first-of-type {
-  border-bottom: 1px solid rgb(236, 236, 236);
+  border-bottom: 1px solid #ffffff;
 }
 
 @media only screen and (min-width: 576px) {

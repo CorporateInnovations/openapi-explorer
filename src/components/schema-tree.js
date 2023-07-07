@@ -108,20 +108,13 @@ export default class SchemaTree extends LitElement {
     if (key.startsWith('::ONE~OF') || key.startsWith('::ANY~OF')) {
       keyLabel = key.replace('::', '').replace('~', ' ');
       for (let object in data) {
-        let objectKeyLabel;
-        let objectKeyDescr;
         if (object.startsWith('::OPTION')) {
           const splitParts = object.split('~');
-          objectKeyLabel = splitParts[0];
-          objectKeyDescr = splitParts[1];
-          if(objectKeyDescr === this.selectedRequest){
-            console.log('sele', this.selectedRequest);
-            console.log('data', data[object]);
-            this.generateTree(data[object], data[object]['::type'], data[object]['::array-type'] || '');
-            break;
+          let objectKeyDescr = splitParts[1];
+          if(objectKeyDescr == this.selectedRequest){
+            data = data[object];
           }
         }
-
         //if object starts with option
           //split object by '~', compare second value to this.selectedRequest
            //if match selected request
