@@ -88,6 +88,7 @@ export default class SchemaTree extends LitElement {
   }
 
   generateTree(data, dataType = 'object', arrayType = '', flags = {}, key = '', description = '', schemaLevel = 0, indentLevel = 0) {
+    console.log('flags', flags);
     if (!data) {
       return html`<div class="null" style="display:inline;">
         <span class="key-label xxx-of-key"> ${key.replace('::OPTION~', '')}</span>
@@ -113,13 +114,10 @@ export default class SchemaTree extends LitElement {
           let objectKeyDescr = splitParts[1];
           if(objectKeyDescr == this.selectedRequest){
             data = data[object];
-          }
-        }
-        //if object starts with option
-          //split object by '~', compare second value to this.selectedRequest
-           //if match selected request
-            //this.generate(data[object], data[object]['::type'], data[object]['::array-type'] || '')
+           }
+         } 
       }
+
     } else if (key.startsWith('::OPTION')) {
       const parts = key.split('~');
       keyLabel = parts[1];
@@ -230,9 +228,9 @@ export default class SchemaTree extends LitElement {
           <div class="td key-descr">
             <span>${dataType === 'array' ? '[' : ''}<span class="${cssType}">${format || type}</span>${dataType === 'array' ? ']' : ''}</span>
             <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
-              ${unsafeHTML(marked(`${readOrWriteOnly && `${readOrWriteOnly} ` || ''}${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} ${schemaDescription}` || ''}`))}
+              ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} ${schemaDescription}` || ''}`))}
             </span>
-            
+            <p>${unsafeHTML(marked(`${readOrWriteOnly && `<strong>readOnly: true </strong> ` || ''} `)) }</p>
             <span>${example}</span>
             <br>
             <div class="testing" style="line-height: 25px; font-weight: 700;">

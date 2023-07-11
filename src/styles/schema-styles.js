@@ -88,10 +88,11 @@ export default css`
 
 .underline {
   padding: 15px 0;
+  border-bottom: 1px solid #e2e2e2;
 }
 
-.underline:first-of-type {
-  border-bottom: 1px solid #ffffff;
+.underline:last-of-type {
+  border-bottom: none;
 }
 
 @media only screen and (min-width: 576px) {
