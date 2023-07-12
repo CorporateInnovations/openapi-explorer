@@ -449,9 +449,9 @@ export function pathSecurityTemplate(pathSecurity) {
             <div style="padding:2px 4px; white-space:nowrap; text-overflow:ellipsis;max-width:150px; overflow:hidden;">
               <span part="anchor anchor-operation-security" style="font-weight: 700;"> ${orSecurityItem1.securityTypes} </span>
             </div>
-            <div class="tooltip-text" style="position:absolute; color: var(--fg); top:26px; right:0; border:1px solid var(--border-color);padding:2px 4px; display:block;">
+            <div class="tooltip-text" style="position:absolute; color: var(--fg); top:26px; right:0; border:1px solid var(--border-color);padding:2px 4px; display:block; background: red; color: white; font-weight: 700; border-radius: 4px;">
               ${orSecurityItem1.securityDefs.length > 1 ? html`<div>Requires <b>all</b> of the following </div>` : ''}
-              <div style="padding-left: 8px">
+              <div style="padding-left: 8px;">
                 ${orSecurityItem1.securityDefs.map((andSecurityItem, j) => html`
                   ${andSecurityItem.type === 'oauth2'
                     ? html`

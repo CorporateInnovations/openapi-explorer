@@ -157,15 +157,15 @@ export default class ApiRequest extends LitElement {
 
       tableRows.push(html`
       <tr> 
-        <td style="width:160px; min-width:50px;">
+        <td style="width:160px; min-width:50px; font-size: 16px; padding: 7px 0;">
           <div class="param-name ${paramSchema.deprecated ? 'deprecated' : ''}">
-            ${param.name}${!paramSchema.deprecated && param.required ? html`<span style='color:var(--red);'>*</span>` : ''}
+            ${param.name}<br>${!paramSchema.deprecated && param.required ? html`<span style='color:var(--red);'>required</span>` : ''}
           </div>
-          <div class="param-type">
+          <div class="param-type" style="line-height: 1.5;">
             ${paramSchema.type === 'array'
               ? `${paramSchema.arrayType}`
               : `${paramSchema.format ? paramSchema.format : paramSchema.type}`
-            }${!paramSchema.deprecated && param.required ? html`<span style='opacity: 0;'>*</span>` : ''}
+            }${!paramSchema.deprecated && param.required ? html`<span style='opacity: 0;'>required</span>` : ''}
           </div>
         </td>  
         ${this.allowTry === 'true'
@@ -254,9 +254,9 @@ export default class ApiRequest extends LitElement {
     }
 
     return html`
-    <div class="table-title top-gap">${title}${paramType === 'path' ? html`<span style='color:var(--red);'>*</span>` : ''}</div>
+    <div class="table-title top-gap">${title} <br> ${paramType === 'path' ? html`<span style='color:var(--red);'>required</span>` : ''}</div>
     <div style="display:block; overflow-x:auto; max-width:100%;">
-      <table role="presentation" class="m-table" style="width:100%; word-break:break-word;">
+      <table role="presentation" class="m-table" style="width:100%; word-break:break-word; border: none;">
         ${tableRows}
       </table>
     </div>`;
@@ -475,7 +475,7 @@ export default class ApiRequest extends LitElement {
             <span style="flex:1"></span>
             ${reqBodyTypeSelectorHtml}
           </div> 
-        ${this.request_body.description ? html`<div class="m-markdown" style="margin-bottom:25px">${unsafeHTML(marked(this.request_body.description))}</div>` : ''}
+        ${this.request_body.description ? html`<div class="m-markdown" style="margin-bottom:20px">${unsafeHTML(marked(this.request_body.description))}</div>` : ''}
           ${(this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text'))
             ? html`
             ${Object.keys(this.request_body.content[this.selectedRequestBodyType].schema).includes('oneOf')
@@ -542,7 +542,7 @@ export default class ApiRequest extends LitElement {
         <tr> 
           <td style="width:160px; min-width:100px;">
             <div class="param-name ${fieldSchema.deprecated ? 'deprecated' : ''}">
-              ${fieldName}${!fieldSchema.deprecated && (schema.required && schema.required.includes(fieldName) || fieldSchema.required) ? html`<span style='color:var(--red);'>*</span>` : ''}
+              ${fieldName}${!fieldSchema.deprecated && (schema.required && schema.required.includes(fieldName) || fieldSchema.required) ? html`<span style='color:var(--red);'>required</span>` : ''}
             </div>
             <div class="param-type">
             ${paramSchema.type === 'array' ? html`[<span>${paramSchema.format || paramSchema.type}</span>]` : `${paramSchema.format || paramSchema.type}`}

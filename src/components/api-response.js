@@ -243,8 +243,6 @@ export default class ApiResponse extends LitElement {
                       ${this.mimeExampleTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
                     </div>`
                   : html`<div class='tab-content col' style='flex:1;'>
-                  ${(console.log('this.selectedMimeType', this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree))}
-                  ${(console.log('this.selectedMimeType As Array', Object.keys(this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree)))}
                       ${this.mimeSchemaTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
                     </div>`
                 }
@@ -336,7 +334,7 @@ export default class ApiResponse extends LitElement {
                 style="background-color: #393939;"
               ></json-tree>`
             : html`
-              <pre class = 'example-panel generic-tree border-top pad-top-8'>${mimeRespDetails.examples[0].exampleValue}</pre>
+              <pre style="white-space: pre-wrap; line-break: anywhere;" class = 'example-panel generic-tree border-top pad-top-8'>${mimeRespDetails.examples[0].exampleValue}</pre>
             `
           }`
         : html`

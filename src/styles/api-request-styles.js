@@ -10,7 +10,6 @@ export default css`
 .api-request .param-name,
 .api-request .param-type {
   margin: 1px 0;
-  text-align: right;
   line-height: var(--font-size-small);
 }
 .api-request .param-name {

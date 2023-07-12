@@ -43,6 +43,7 @@ export default class JsonTree extends LitElement {
       
       .inside-bracket {
         border-left:1px dotted var(--border-color);
+        padding-left: 16px;
       }
 
       .string{color:var(--green);}

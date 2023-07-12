@@ -87,7 +87,7 @@ export default css`
 .toolbar-item:first-of-type { margin:0 2px 0 0;}
 
 .underline {
-  padding: 15px 0;
+  padding: 10px 0;
   border-bottom: 1px solid #e2e2e2;
 }
 
