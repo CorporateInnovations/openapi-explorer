@@ -299,16 +299,13 @@ export default class ApiResponse extends LitElement {
   }
 
   onSelectExample(e) {
-    console.log('e',e.target.value);
     // const exampleContainerEl = e.target.closest('.example-panel');
 
     const exampleContainerEl = e.target.closest('.response-panel').querySelector('.example-panel');
     //const exampleContainerEl = document.querySelectorAll('.example-panel');
-    console.log('example', exampleContainerEl);
     const exampleEls = [...exampleContainerEl.querySelectorAll('.example')];
     this.selectedResponseExample = e.target.value - 1;
     this.selectedResponse = e.target.value; 
-    console.log("This Is The Selected Response", this.selectedResponse);
     exampleEls.forEach((v) => {
       v.style.display = v.dataset.example === e.target.value ? 'block' : 'none';
     });
@@ -362,7 +359,6 @@ export default class ApiResponse extends LitElement {
   }
 
   mimeSchemaTemplate(mimeRespDetails) {
-    console.log("MimeRespDetails Log:", mimeRespDetails)
     if (!mimeRespDetails) {
       return html`
         <pre style='color:var(--red)' class = '${this.renderStyle === 'read' ? 'border pad-8-16' : 'border-top'}'> Schema not found</pre>

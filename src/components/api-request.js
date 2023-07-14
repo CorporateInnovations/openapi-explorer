@@ -157,17 +157,19 @@ export default class ApiRequest extends LitElement {
 
       tableRows.push(html`
       <tr> 
-        <td style="width:160px; min-width:50px; font-size: 16px; padding: 7px 0;">
-          <div class="param-name ${paramSchema.deprecated ? 'deprecated' : ''}">
-            ${param.name}<br>${!paramSchema.deprecated && param.required ? html`<span style='color:var(--red);'>required</span>` : ''}
+        <td style="width:160px; min-width:268px; font-size: 16px; padding: 7px 0;">
+          <div class="param-name ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column;">
+            ${param.name}${!paramSchema.deprecated && param.required ? html`<span style='color:var(--red);'>required</span>` : ''}
           </div>
-          <div class="param-type" style="line-height: 1.5;">
+        </td>
+        <td style="width:160px; min-width:268px; font-size: 16px; padding: 7px 0;">
+        <div class="param-type" style="line-height: 1.5;">
             ${paramSchema.type === 'array'
               ? `${paramSchema.arrayType}`
               : `${paramSchema.format ? paramSchema.format : paramSchema.type}`
             }${!paramSchema.deprecated && param.required ? html`<span style='opacity: 0;'>required</span>` : ''}
           </div>
-        </td>  
+          </td>
         ${this.allowTry === 'true'
           ? html`
             <td style="min-width:160px;">
