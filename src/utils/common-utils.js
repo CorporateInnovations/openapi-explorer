@@ -38,6 +38,25 @@ export function copyToClipboard(data, e) {
   document.body.removeChild(textArea);
 }
 
+export function copyToClipboardV2(data, e) {
+  const textArea = document.createElement('textarea');
+  textArea.value = data;
+  var isNested = Object.keys(data).some(function(key) {
+    return data[key] && typeof data[key] === 'object';
+   });
+  if(isNested){textArea.value = JSON.stringify(data)};
+  textArea.style.position = 'fixed'; // avoid scrolling to bottom
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+  } catch (err) {
+    console.error('Unable to copy', err); // eslint-disable-line no-console
+  }
+  document.body.removeChild(textArea);
+}
+
 export function getBaseUrlFromUrl(url) {
   const pathArray = url.split('/');
   return `${pathArray[0]}//${pathArray[2]}`;

@@ -6,7 +6,6 @@ export default css`
 }
 .tab-buttons {
   height:30px;
-  border-bottom: 1px solid var(--light-border-color) ;
   align-items: stretch;
   overflow-y: hidden;
   overflow-x: auto;
@@ -30,7 +29,7 @@ export default css`
   padding:1px;
 }
 .tab-btn.active {
-  border-bottom: 3px solid var(--primary-color); 
+  border-bottom: 3px solid #0741c5; 
   font-weight:bold;
   color:var(--primary-color);
 }

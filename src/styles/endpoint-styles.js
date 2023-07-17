@@ -206,11 +206,13 @@ export default css`
 
 .security-info-button {
   position: absolute;
-  top: 3px;
+  top: 33px;
   right: 2px;
   font-size: var(--font-size-small);
   line-height: 1.5;
 }
+
+
 
 @media only screen and (max-width: 768px) {
   .security-info-button {

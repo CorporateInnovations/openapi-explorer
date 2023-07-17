@@ -8,7 +8,8 @@ export default {
       'authentication': 'Authentification',
       'operations': 'OPÉRATIONS',
       'components': 'COMPOSANTS',
-      'schemas': 'Schémas'
+      'schemas': 'Schémas',
+      'filter-placeholder': 'Rechercher les docs'
     },
     'headers': {
       'api-servers': 'SERVEUR API',
