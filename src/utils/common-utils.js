@@ -52,10 +52,6 @@ export function copyToClipboardV2(data, e) {
   textArea.select();
   try {
     document.execCommand('copy');
-    // btnEl.innerText = getI18nText('operations.copied');
-    // setTimeout(() => {
-    //   btnEl.innerText = getI18nText('operations.copy');
-    // }, 5000);
   } catch (err) {
     console.error('Unable to copy', err); // eslint-disable-line no-console
   }

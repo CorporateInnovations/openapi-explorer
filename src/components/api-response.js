@@ -298,11 +298,8 @@ export default class ApiResponse extends LitElement {
       </select>`;
   }
 
-  onSelectExample(e) {
-    // const exampleContainerEl = e.target.closest('.example-panel');
-
+  onSelectExample(e) {   
     const exampleContainerEl = e.target.closest('.response-panel').querySelector('.example-panel');
-    //const exampleContainerEl = document.querySelectorAll('.example-panel');
     const exampleEls = [...exampleContainerEl.querySelectorAll('.example')];
     this.selectedResponseExample = e.target.value - 1;
     this.selectedResponse = e.target.value; 
