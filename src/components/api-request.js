@@ -157,7 +157,7 @@ export default class ApiRequest extends LitElement {
 
       tableRows.push(html`
       <tr> 
-        <td style="width:160px; min-width:268px; font-size: 16px; padding: 7px 0;">
+        <td style="width: 25%; min-width:268px; font-size: 16px; padding: 7px 0;">
           <div class="param-name ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column;">
             ${param.name}${!paramSchema.deprecated && param.required ? html`<span style='color:var(--red);'>required</span>` : ''}
           </div>
@@ -169,6 +169,41 @@ export default class ApiRequest extends LitElement {
               : `${paramSchema.format ? paramSchema.format : paramSchema.type}`
             }${!paramSchema.deprecated && param.required ? html`<span style='opacity: 0;'>required</span>` : ''}
           </div>
+          ${this.renderStyle === 'focused'
+          ? html`
+            <div>
+              ${paramSchema.default || paramSchema.constraint || paramSchema.allowedValues || paramSchema.pattern
+                ? html`
+                  <div class="param-constraint">
+                    ${paramSchema.constraint ? html`<span style="font-weight:bold">Constraints: </span>${paramSchema.constraint}<br>` : ''}
+                    ${paramSchema.pattern ? html`<span style="font-weight:bold">Pattern: </span>${truncateString(paramSchema.pattern, 60)}<br>` : ''}
+                    ${paramSchema.allowedValues && paramSchema.allowedValues.split('┃').map((v, i) => html`
+                      ${i > 0 ? '|' : html`<span style="font-weight:bold">Allowed: </span>`}
+                      ${html`
+                        <a part="anchor anchor-param-constraint" class = "${this.allowTry === 'true' ? '' : 'inactive-link'}"
+                          data-type="${paramSchema.type === 'array' ? 'array' : 'string'}"
+                          data-enum="${v.trim()}"
+                          @click="${(e) => {
+                            const inputEl = e.target.closest('table').querySelector(`[data-pname="${param.name}"]`);
+                            if (inputEl) {
+                              if (e.target.dataset.type === 'array') {
+                                inputEl.value = [e.target.dataset.enum];
+                              } else {
+                                inputEl.value = e.target.dataset.enum;
+                              }
+                            }
+                          }}"
+                        >
+                          ${v} 
+                        </a>`
+                      }`)}
+                  </div>`
+                : ''
+              }
+            </div>  
+         `
+        : ''
+      }
           </td>
         ${this.allowTry === 'true'
           ? html`
@@ -217,46 +252,11 @@ export default class ApiRequest extends LitElement {
             </td>`
           : ''
         }
-        ${this.renderStyle === 'focused'
-          ? html`
-            <td>
-              ${paramSchema.default || paramSchema.constraint || paramSchema.allowedValues || paramSchema.pattern
-                ? html`
-                  <div class="param-constraint">
-                    ${paramSchema.constraint ? html`<span style="font-weight:bold">Constraints: </span>${paramSchema.constraint}<br>` : ''}
-                    ${paramSchema.pattern ? html`<span style="font-weight:bold">Pattern: </span>${truncateString(paramSchema.pattern, 60)}<br>` : ''}
-                    ${paramSchema.allowedValues && paramSchema.allowedValues.split('┃').map((v, i) => html`
-                      ${i > 0 ? '|' : html`<span style="font-weight:bold">Allowed: </span>`}
-                      ${html`
-                        <a part="anchor anchor-param-constraint" class = "${this.allowTry === 'true' ? '' : 'inactive-link'}"
-                          data-type="${paramSchema.type === 'array' ? 'array' : 'string'}"
-                          data-enum="${v.trim()}"
-                          @click="${(e) => {
-                            const inputEl = e.target.closest('table').querySelector(`[data-pname="${param.name}"]`);
-                            if (inputEl) {
-                              if (e.target.dataset.type === 'array') {
-                                inputEl.value = [e.target.dataset.enum];
-                              } else {
-                                inputEl.value = e.target.dataset.enum;
-                              }
-                            }
-                          }}"
-                        >
-                          ${v} 
-                        </a>`
-                      }`)}
-                  </div>`
-                : ''
-              }
-            </td>  
-          </tr>`
-        : ''
-      }
-    `);
+      </tr>`);
     }
 
     return html`
-    <div class="table-title top-gap">${title} <br> ${paramType === 'path' ? html`<span style='color:var(--red);'>required</span>` : ''}</div>
+    <div class="table-title top-gap">${title}</div>
     <div style="display:block; overflow-x:auto; max-width:100%;">
       <table role="presentation" class="m-table" style="width:100%; word-break:break-word; border: none;">
         ${tableRows}
@@ -332,7 +332,9 @@ export default class ApiRequest extends LitElement {
         schemaExamplesTitleArray.push(example);
       }
       schemaExamplesTitleArray.forEach(function(exampleName, index) {
-        requestBodyTypes[0].schema.oneOf[index].allOf[0].titleV2 = exampleName;
+        if(requestBodyTypes[0].schema.hasOwnProperty('oneOf')) {
+          requestBodyTypes[0].schema.oneOf[index].allOf[0].titleV2 = exampleName;
+        }
       });
     }
 
