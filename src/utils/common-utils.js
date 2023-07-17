@@ -39,7 +39,6 @@ export function copyToClipboard(data, e) {
 }
 
 export function copyToClipboardV2(data, e) {
-  // const btnEl = e.currentTarget;
   const textArea = document.createElement('textarea');
   textArea.value = data;
   var isNested = Object.keys(data).some(function(key) {
