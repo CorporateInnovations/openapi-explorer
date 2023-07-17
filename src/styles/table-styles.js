@@ -16,7 +16,6 @@ export default css`
 .m-table td, 
 .m-table th {
   font-size: var(--font-size-small);
-  padding: 4px 5px 4px;
 }
 
 .m-table td:not([align]), 

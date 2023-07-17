@@ -269,26 +269,28 @@ export default class OpenApiExplorer extends LitElement {
       }
 
       .tooltip {
-        border: 1px solid var(--border-color);
+        border: 1px solid #e33935;
         border-left-width: 4px;
         margin-left:2px;
+        border-color: #e33935;
+        color: #e33935;
       }
       .tooltip a {
-        color: var(--fg2);
+        color: #e33935;
         text-decoration: none;
       }
       .tooltip-text {
-        color: var(--fg2);
+        color: #e33935;
         background-color: var(--bg2);
         visibility: hidden;
         overflow-wrap: break-word;
       }
       .tooltip:hover {
-        color: var(--primary-color);
-        border-color: var(--primary-color);
+        color: #e33935;
+        border-color: #e33935;
       }
       .tooltip:hover a:hover {
-        color: var(--primary-color);
+        color: #e33935;
       }
 
       .tooltip:hover .tooltip-text {
@@ -334,7 +336,7 @@ export default class OpenApiExplorer extends LitElement {
           padding: 24px 8px; 
         }
         .section-gap--focused-mode {
-          padding: 1.5rem;
+          padding:  0 1.5rem 1.5rem 1.5rem;
         }
         .endpoint-body {
           position: relative;
@@ -348,7 +350,7 @@ export default class OpenApiExplorer extends LitElement {
           display:flex;
         }
         .section-gap--read-mode { 
-          padding: 24px 24px 12px;
+          padding:  0 24px 12px 24px;
         }
         .main-content-inner {
           padding: 24px;

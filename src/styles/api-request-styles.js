@@ -5,14 +5,11 @@ export default css`
 
 .api-request.focused-mode,
 .api-request.read-mode {
-  padding-top:24px;
-  margin-top:12px;
-  border-top: 1px dashed var(--border-color);
+  margin-top:25px;
 }
 .api-request .param-name,
 .api-request .param-type {
   margin: 1px 0;
-  text-align: right;
   line-height: var(--font-size-small);
 }
 .api-request .param-name {
@@ -32,7 +29,7 @@ export default css`
 .api-request .param-constraint:empty {
   display:none;
 }
-.api-request .top-gap{margin-top:24px;}
+.api-request .top-gap{margin-top:14px;}
 
 .api-request .textarea {
   min-height:220px; 
@@ -82,9 +79,6 @@ export default css`
   opacity: 1;
 }
 
-.api-request .border-top {
-  border-top:1px solid var(--border-color);
-}
 .api-request .border{
   border:1px solid var(--border-color);
   border-radius: var(--border-radius);
@@ -96,9 +90,7 @@ export default css`
 .api-request .pad-8-16{
   padding: 8px 16px;
 }
-.api-request .pad-top-8{
-  padding-top: 8px;
-}
+
 .api-request .mar-top-8{
   margin-top: 8px;
 }
@@ -107,5 +99,10 @@ export default css`
   .api-request .textarea {
     padding:8px;
   }
+.grey-border {
+  border: 1.8px solid rgba(236,236,236,255);
+  padding: 20px;
+  border-radius: 4px;
+ }
 }
 `;

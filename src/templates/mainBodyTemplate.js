@@ -43,7 +43,7 @@ export default function mainBodyTemplate() {
         : html`
         <main class="main-content regular-font" part="section-main-content">
           <slot></slot>
-          <div id="operations-root" class="main-content-inner">
+          <div id="operations-root" class="main-content-inner" style="padding-top: 0;">
             ${this.loadFailed === true
               ? html`<div style="text-align: center;margin: 16px;">Unable to load the Spec${this.specUrl ? ': ' : ''}<strong>${this.specUrl}</strong></div>`
               : html`

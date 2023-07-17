@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { copyToClipboard } from '../utils/common-utils';
 import { marked } from 'marked';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { schemaInObjectNotation, generateExample, getTypeInfo } from '../utils/schema-utils';
@@ -14,12 +15,16 @@ import './schema-tree';
 import './schema-table';
 
 export default class ApiResponse extends LitElement {
+  
   constructor() {
     super();
     this.selectedStatus = '';
     this.headersForEachRespStatus = {};
     this.mimeResponsesForEachStatus = {};
     this.activeSchemaTab = 'model';
+    this.showResponseTemplate = true;
+    this.selectedResponseExample = 0 ;
+    this.selectedResponse = '';
   }
 
   static get properties() {
@@ -99,15 +104,25 @@ export default class ApiResponse extends LitElement {
 
   render() {
     return html`
-    <div class="col regular-font response-panel ${this.renderStyle}-mode">
-      <div class=" ${this.callback === 'true' ? 'tiny-title' : 'req-res-title'} "> 
+    <div data-selected-request-body-type="${this.selectedRequestBodyType}">
+      <div class="col regular-font response-panel ${this.renderStyle}-mode" style="border: 1.8px solid rgb(236, 236, 236); padding: 20px;">
+        <div class="${this.callback === 'true' ? 'tiny-title' : 'req-res-title'}">
         ${this.callback === 'true' ? 'CALLBACK RESPONSE' : getI18nText('operations.response')}
+        <div style="margin: 0; display:flex; float: right; color: #999999; background-color: rgb(236, 236, 236); padding: 3px 11px 3px 11px; font-size: 14px; border-radius: 30px; cursor: pointer;" @click='${() => this.toggleResponseTemplate()}'}>
+         ${this.showResponseTemplate ? '\u{22C1} ' + getI18nText('schemas.collapse-desc') : '\u{FF1E} ' + getI18nText('schemas.expand-desc')}
+        </div>
+        </div>
+        <div>
+          ${this.responseTemplate()}
+        </div>
       </div>
-      <div>
-        ${this.responseTemplate()}
-      <div>  
-    </div>  
+      </div>
     `;
+  }
+  
+  toggleResponseTemplate() {
+    this.showResponseTemplate = !this.showResponseTemplate;
+    this.requestUpdate();
   }
 
   resetSelection() {
@@ -143,7 +158,7 @@ export default class ApiResponse extends LitElement {
         allMimeResp[mimeResp] = {
           description: this.responses[statusCode].description,
           examples: respExamples,
-          selectedExample: respExamples[0] && respExamples[0].exampleId || '',
+          selectedExample: this.selectedResponseExample,
           schemaTree,
         };
       }
@@ -155,13 +170,20 @@ export default class ApiResponse extends LitElement {
       this.headersForEachRespStatus[statusCode] = tempHeaders;
       this.mimeResponsesForEachStatus[statusCode] = allMimeResp;
     }
-    return html`<div class='row' style='flex-wrap:wrap'>
+
+    if (this.showResponseTemplate) {
+    return html`
+    <div class="table-title top-gap row" id="responseTemplate">
+          REQUEST BODY 
+          <span style="font-weight: 400; margin-left: 5px;">${this.selectedMimeType}</span>
+        </div>       
+    <div class='row' style='flex-wrap:wrap'>
       ${Object.keys(this.responses).map((respStatus) => html`
         ${respStatus === '$$ref' // Swagger-Client parser creates '$$ref' object if JSON references are used to create responses - this should be ignored
           ? ''
           : html`
             <button 
-              @click="${() => {
+              @click="${(e) => {
                 this.selectedStatus = respStatus;
                 if (this.responses[respStatus].content && Object.keys(this.responses[respStatus].content)[0]) {
                   this.selectedMimeType = Object.keys(this.responses[respStatus].content)[0];
@@ -171,7 +193,7 @@ export default class ApiResponse extends LitElement {
               }}"
               class='m-btn small ${this.selectedStatus === respStatus ? 'primary' : ''}'
               part="btn--resp ${this.selectedStatus === respStatus ? 'btn-fill--resp' : 'btn-outline--resp'} btn-response-status"
-              style='margin: 8px 4px 0 0'> 
+              style='margin: 8px 4px 0 0' > 
               ${respStatus}
             </button>`
           }`)
@@ -180,27 +202,43 @@ export default class ApiResponse extends LitElement {
 
       ${Object.keys(this.responses).map((status) => html`
         <div style = 'display: ${status === this.selectedStatus ? 'block' : 'none'}' >
-          <div class="top-gap">
+          <div style="margin: 10px 0 15px 0;">
             <span class="resp-descr m-markdown ">${unsafeHTML(marked(this.responses[status] && this.responses[status].description || ''))}</span>
             ${(this.headersForEachRespStatus[status] && this.headersForEachRespStatus[status].length > 0)
               ? html`${this.responseHeaderListTemplate(this.headersForEachRespStatus[status])}`
               : ''
             }
           </div>
-          ${Object.keys(this.mimeResponsesForEachStatus[status]).length === 0
+          ${Object.keys(this.mimeResponsesForEachStatus[status]).length === 0 
             ? ''
-            : html`  
-              <div class="tab-panel col">
-                <div class="tab-buttons row" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}" >
-                  <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab='model'>${getI18nText('operations.model')}</button>
-                  <button class="tab-btn ${this.activeSchemaTab === 'body' ? 'active' : ''}" data-tab='body'>${getI18nText('operations.example')}</button>
+            : html`
+            <div style="display: ${this.selectedStatus == 200 ? 'block' : 'none'}">
+                ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.length > 1 ? 
+                  html`
+                  <select name="schemaOptions" @change='${(e) =>  {this.onSelectExample(e); this.requestUpdate()}}' id="schemaOptions" style="border: 2px solid black; min-width: 290px; margin-bottom: 10px; padding: 10px; border-radius: 5px; font-weight: 700;">
+                    ${(this.mimeResponsesForEachStatus[status][this.selectedMimeType].hasOwnProperty('schemaTree') && this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree) ?
+                      Object.keys(this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree).map((schemaKey) => (typeof this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree[schemaKey] == 'object') ?
+                        Object.keys(this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree[schemaKey]).map((schemaObjectKey) => (schemaObjectKey == '::ONE~OF ' || schemaObjectKey == '::ANY~OF') ?
+                          Object.keys(this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree[schemaKey][schemaObjectKey]).map((schemaOptionKey) => (schemaOptionKey.startsWith('::OPTION')) ?
+                          html`${this.modelExamplesDropdown(schemaOptionKey, this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree[schemaKey][schemaObjectKey][schemaOptionKey])}`
+                          : '')
+                        : '')
+                      : '')
+                    : ''
+                    }
+                    </select>` 
+                  : ''}
+              </div>
+              <div class="tab-panel col" style="border-radius: 5px; ${this.activeSchemaTab === 'example' ? 'background: black; color: white' : ''}">
+                <div class="tab-buttons row" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}" style="${this.activeSchemaTab === 'example' ? 'margin: 5px 15px 0;' : ''}">
+                  <button style="${this.activeSchemaTab === 'example' ? 'color: white; font-weight: 700;' : ''}" class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab='model'>${getI18nText('operations.model')}</button>
+                  <button style="${this.activeSchemaTab === 'example' ? 'color: white;' : ''}" class="tab-btn ${this.activeSchemaTab === 'example' ? 'active' : ''}" data-tab='example'>${getI18nText('operations.example')}</button>
                   <div style="flex:1"></div>
-                  ${Object.keys(this.mimeResponsesForEachStatus[status]).length === 1
-                    ? html`<span class='small-font-size gray-text' style='align-self:center; margin-top:8px;'> ${Object.keys(this.mimeResponsesForEachStatus[status])[0]} </span>`
-                    : html`${this.mimeTypeDropdownTemplate(Object.keys(this.mimeResponsesForEachStatus[status]))}`
-                  }
+                  <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; padding: 3px 15px; margin-left: auto; margin-top: 1px; margin-bottom: 5px; align-items: center; border-radius: 15px; background-color: #0741c5; color: white; font-weight: 700; border-color: #0741c5;" @click="${(e) => {copyToClipboard(JSON.stringify(this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples[this.selectedResponseExample].exampleValue, null, 2), e);}}">
+                      Copy
+                    </span>
                 </div>
-                ${this.activeSchemaTab === 'body'
+                ${this.activeSchemaTab === 'example'
                   ? html`<div class='tab-content col' style='flex:1;'>
                       ${this.mimeExampleTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
                     </div>`
@@ -213,7 +251,10 @@ export default class ApiResponse extends LitElement {
           }`)
         }
     `;
+      }
+      return html``;
   }
+
 
   responseHeaderListTemplate(respHeaders) {
     return html`
@@ -243,6 +284,13 @@ export default class ApiResponse extends LitElement {
     </table>`;
   }
 
+  modelExamplesDropdown(schemaOptionKey ,obj) {
+    if(this.selectedResponse.length <= 0){
+      this.selectedResponse = schemaOptionKey.split('~')[1];
+    }
+    return html`<option value="${schemaOptionKey.split('~')[1]}">${obj['::description']}</option>`;
+  }
+  
   mimeTypeDropdownTemplate(mimeTypes) {
     return html`
       <select aria-label='mime type' @change="${(e) => { this.selectedMimeType = e.target.value; }}" style='margin-bottom: -1px; z-index:1'>
@@ -250,10 +298,11 @@ export default class ApiResponse extends LitElement {
       </select>`;
   }
 
-  onSelectExample(e) {
-    const exampleContainerEl = e.target.closest('.example-panel');
+  onSelectExample(e) {   
+    const exampleContainerEl = e.target.closest('.response-panel').querySelector('.example-panel');
     const exampleEls = [...exampleContainerEl.querySelectorAll('.example')];
-
+    this.selectedResponseExample = e.target.value - 1;
+    this.selectedResponse = e.target.value; 
     exampleEls.forEach((v) => {
       v.style.display = v.dataset.example === e.target.value ? 'block' : 'none';
     });
@@ -276,32 +325,30 @@ export default class ApiResponse extends LitElement {
                 render-style = '${this.renderStyle}'
                 .data="${mimeRespDetails.examples[0].exampleValue}"
                 class = 'example-panel pad-top-8'
+                style="background-color: #393939;"
               ></json-tree>`
             : html`
-              <pre class = 'example-panel generic-tree border-top pad-top-8'>${mimeRespDetails.examples[0].exampleValue}</pre>
+              <pre style="white-space: pre-wrap; line-break: anywhere;" class = 'example-panel generic-tree border-top pad-top-8'>${mimeRespDetails.examples[0].exampleValue}</pre>
             `
           }`
         : html`
-          <span class = 'example-panel generic-tree ${this.renderStyle === 'read' ? 'border pad-8-16' : 'border-top pad-top-8'}'>
-            <select aria-label='response body example' @change='${(e) => this.onSelectExample(e)}'>
-              ${mimeRespDetails.examples.map((v) => html`<option value="${v.exampleId}" ?selected=${v.exampleId === mimeRespDetails.selectedExample} > 
-                ${v.exampleSummary.length > 80 ? v.exampleId : v.exampleSummary} 
-              </option>`)}
-            </select>
-            ${mimeRespDetails.examples.map((v) => html`
-              <div class="example" data-example = '${v.exampleId}' style = "display: ${v.exampleId === mimeRespDetails.selectedExample ? 'block' : 'none'}">
+          <span class = 'example-panel generic-tree ${this.renderStyle === 'read' ? 'border pad-8-16' : 'border-top pad-top-8'}' style="border-top: none; margin-top: 0;">
+          ${mimeRespDetails.examples.length -1 >= mimeRespDetails.selectedExample ?
+            mimeRespDetails.examples.map((v) =>
+             html`
+              <div class="example" data-example = '${v.exampleId}' style = "display: ${v.exampleId === mimeRespDetails.examples[mimeRespDetails.selectedExample].exampleId ? 'block' : 'none'}">
                 ${v.exampleSummary && v.exampleSummary.length > 80 ? html`<div style="padding: 4px 0"> ${v.exampleSummary} </div>` : ''}
                 ${v.exampleDescription && v.exampleDescription !== v.exampleSummary ? html`<div class="m-markdown-small" style="padding: 4px 0"> ${unsafeHTML(marked(v.exampleDescription || ''))} </div>` : ''}
                 ${v.exampleFormat === 'json'
                   ? html`
-                    <json-tree 
+                    <json-tree
                       render-style = '${this.renderStyle}'
                       .data = '${v.exampleValue}'
                     ></json-tree>`
                   : html`<pre class="generic-tree">${v.exampleValue}</pre>`
                 }
-              </div>  
-            `)}
+              </div>`)
+              : html`<pre class="generic-tree">No Example</pre>`}
           </span>  
         `
       }
@@ -329,6 +376,7 @@ export default class ApiResponse extends LitElement {
           <schema-tree
             render-style = '${this.renderStyle}'
             .data = '${mimeRespDetails.schemaTree}'
+            selected-request = "${"Selected Resonse:", this.selectedResponse}"
             class = 'example-panel ${this.renderStyle === 'read' ? 'border pad-8-16' : 'pad-top-8'}'
             schema-expand-level = "${this.schemaExpandLevel}"
             schema-hide-read-only = false

@@ -41,12 +41,12 @@ export default function navbarTemplate() {
           ${this.allowSearch === 'false'
             ? ''
             : html`
-              <div style="display:flex; flex:1; line-height:22px;">
+              <div style="display:flex; flex:1; line-height:22px; background: white;">
                 <input id="nav-bar-search" 
                   part = "textbox textbox-nav-filter"
                   style = "width:100%; padding-right:20px; color:var(--nav-hover-text-color); border-color:var(--secondary-color); background-color:var(--nav-hover-bg-color)" 
                   type = "text"
-                  placeholder = "${getI18nText('menu.filter')}"
+                  placeholder = "${getI18nText('menu.filter-placeholder')}"
                   @input = "${this.onSearchChange}"  
                   spellcheck = "false">
               </div>`
@@ -54,7 +54,7 @@ export default function navbarTemplate() {
           ${this.allowAdvancedSearch === 'false'
             ? ''
             : html`
-              <button class="m-btn outline-primary" part="btn btn-fill btn-search" style="margin-left:5px;" @click="${this.onShowSearchModalClicked}">
+              <button class="m-btn outline-primary" part="btn btn-fill btn-search" style="margin-left:5px; color: white;" @click="${this.onShowSearchModalClicked}">
                 ${getI18nText('menu.search')}
               </button>
             `
@@ -179,7 +179,7 @@ export default function navbarTemplate() {
               </div>
 
               <div class="nav-bar-section-wrapper">
-                <div class="nav-bar-paths-under-tag">
+                <div class="nav-bar-paths-under-tag" >
                   ${component.subComponents.filter(s => componentIsInSearch(this.matchPaths, s)).map((p) => html`
                     <div class='nav-bar-path' data-content-id='cmp--${p.id}' id='link-cmp--${p.id}' @click='${(e) => this.scrollToEventTarget(e, false)}'>
                       <span> ${p.name} </span>

@@ -35,42 +35,18 @@ export default class JsonTree extends LitElement {
         flex:1;
         line-height: calc(var(--font-size-small) + 6px);
       }
-
-      .open-bracket {
-        display:inline-block;
-        padding: 0 20px 0 0;
-        cursor: pointer;
-        border: 1px solid transparent;
-        border-radius:3px;
-      }
-      .collapsed.open-bracket {
-        padding-right: 0;
-      }
-      .tree > .open-bracket {
-        margin-left: -2px;
-      }
-      .open-bracket:hover {
-        color:var(--primary-color);
-        background-color:var(--hover-color);
-        border: 1px solid var(--border-color);
-      }
-
-      .inside-bracket-wrapper {
+     .inside-bracket-wrapper {
         max-height: 10000px;
         transition: max-height 1.2s ease-in-out;
         overflow: hidden;
       }
-      .open-bracket.collapsed + .inside-bracket-wrapper {
-        transition: max-height 1.2s ease-in-out -1.1s;
-        max-height: 0;
-      }
+      
       .inside-bracket {
-        padding-left:16px;
         border-left:1px dotted var(--border-color);
+        padding-left: 16px;
       }
 
       .string{color:var(--green);}
-      .number{color:var(--blue);}
       .null{color:var(--red);}
       .boolean{color:var(--orange);}
       .object{color:white}
@@ -136,19 +112,13 @@ export default class JsonTree extends LitElement {
   /* eslint-disable indent */
   render() {
     return html`
-      <div class="json-tree tree">
-        <div class="toolbar"> 
-          <div>&nbsp;</div>
-          <div class="toolbar-item">
-            <button class="m-btn outline-primary" part="btn btn-fill" @click='${(e) => { copyToClipboard(JSON.stringify(this.data, null, 2), e); }}'>${getI18nText('operations.copy')}</button>
-          </div>
-        </div>
+      <div class="json-tree tree" style="background: #393939;">
         ${this.generateTree(this.data, true)}
       </div>  
     `;
   }
 
-  generateTree(data, isLast = false) {
+    generateTree(data, isLast = false) {
     if (data === null) {
       return html`<div class="null" style="display:inline;">null</div>`;
     }
@@ -168,26 +138,14 @@ export default class JsonTree extends LitElement {
             </div>`)
           }
         </div>
-        <div class="close-bracket">${detailType === 'array' ? ']' : '}'}${isLast ? '' : ','}</div>
       </div>
+      <div class="close-bracket"> } </div>
       `;
     }
 
     return (typeof data === 'string' || data instanceof Date)
       ? html`<span class="${typeof data}">"${data}"</span>${isLast ? '' : ','}`
       : html`<span class="${typeof data}">${data}</span>${isLast ? '' : ','}`;
-  }
-  /* eslint-enable indent */
-
-  toggleExpand(e) {
-    const openBracketEl = e.target;
-    openBracketEl.classList.toggle('collapsed');
-    if (openBracketEl.classList.contains('collapsed')) {
-      e.target.innerHTML = e.target.classList.contains('array') ? '[...]' : '{...}';
-    } else {
-      e.target.innerHTML = e.target.classList.contains('array') ? '[' : '{';
-    }
-    this.requestUpdate();
   }
 }
 // Register the element with the browser

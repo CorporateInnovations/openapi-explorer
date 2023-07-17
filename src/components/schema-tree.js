@@ -14,6 +14,7 @@ export default class SchemaTree extends LitElement {
       schemaDescriptionExpanded: { type: Boolean },
       schemaHideReadOnly: { type: String, attribute: 'schema-hide-read-only' },
       schemaHideWriteOnly: { type: String, attribute: 'schema-hide-write-only' },
+      selectedRequest: { type: String, attribute: 'selected-request' }
     };
   }
 
@@ -33,10 +34,7 @@ export default class SchemaTree extends LitElement {
       css`
       .tree {
         min-height: 30px;
-        background: var(--primary-color);
-        padding: 12px;
-        color: white;
-        font-size:var(--font-size-small);
+        font-size: 16px;
         text-align: left;
         line-height:calc(var(--font-size-small) + 6px);
       }
@@ -47,30 +45,10 @@ export default class SchemaTree extends LitElement {
       .key.deprecated .key-label {
         text-decoration: line-through; 
       }
-
-      .open-bracket {
-        display:inline-block;
-        padding: 0 20px 0 0;
-        cursor: pointer;
-        border: 1px solid transparent;
-        border-radius:3px;
-      }
-      .collapsed .open-bracket {
+      .collapsed{
         padding-right: 0;
       }
-      .td.key > .open-bracket:first-child {
-        margin-left: -2px;
-      }
-      .open-bracket:hover {
-        color:var(--primary-color);
-        background-color:var(--hover-color);
-        border: 1px solid var(--border-color);
-      }
-      .close-bracket {
-        display:inline-block;
-        font-family: var(--font-mono);
-      }
-
+     
       .inside-bracket-wrapper {
         max-height: 10000px;
         transition: max-height 1.2s ease-in-out;
@@ -81,7 +59,6 @@ export default class SchemaTree extends LitElement {
         max-height: 0;
       }
 
-      .inside-bracket.object,
       .inside-bracket.array {
         border-left: 1px dotted var(--border-color);
       }
@@ -94,13 +71,7 @@ export default class SchemaTree extends LitElement {
   /* eslint-disable indent */
   render() {
     return html`
-      <div class="tree">
-        <div class="toolbar">
-          ${this.data && this.data['::description'] ? html`<span class='m-markdown' style="margin-block-start: 0"> ${unsafeHTML(marked(this.data['::description'] || ''))}</span>` : html`<div>&nbsp;</div>`}
-          <div class="toolbar-item" @click='${() => this.toggleSchemaDescription()}'> 
-            ${this.schemaDescriptionExpanded ? getI18nText('schemas.collapse-desc') : getI18nText('schemas.expand-desc')}
-          </div>
-        </div>
+      <div class="tree"> 
         ${this.data
           ? html`${this.generateTree(this.data['::type'] === 'array' ? this.data['::props'] : this.data, this.data['::type'], this.data['::array-type'] || '')}`
           : html`<span class='mono-font' style='color:var(--red)'> ${getI18nText('schemas.schema-missing')} </span>`
@@ -108,6 +79,8 @@ export default class SchemaTree extends LitElement {
       </div>  
     `;
   }
+
+  // ***** Toggles Collapse ***** //
 
   toggleSchemaDescription() {
     this.schemaDescriptionExpanded = !this.schemaDescriptionExpanded;
@@ -134,6 +107,16 @@ export default class SchemaTree extends LitElement {
     let keyDescr = '';
     if (key.startsWith('::ONE~OF') || key.startsWith('::ANY~OF')) {
       keyLabel = key.replace('::', '').replace('~', ' ');
+      for (let object in data) {
+        if (object.startsWith('::OPTION')) {
+          const splitParts = object.split('~');
+          let objectKeyDescr = splitParts[1];
+          if(objectKeyDescr == this.selectedRequest){
+            data = data[object];
+           }
+         } 
+      }
+
     } else if (key.startsWith('::OPTION')) {
       const parts = key.split('~');
       keyLabel = parts[1];
@@ -199,30 +182,11 @@ export default class SchemaTree extends LitElement {
         return undefined;
       }
 
+      let selection = null;
       const displayLine = [flags['🆁'] || flags['🆆'], description].filter(v => v).join(' ');
       return html`
-        <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}">
-          <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style='min-width:${minFieldColWidth}px'>
-            ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION')
-              ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
-              : keyLabel === '::props' || keyLabel === '::ARRAY~OF'
-                ? ''
-                : schemaLevel > 0
-                  ? html`<span class="key-label">
-                      ${keyLabel.replace(/\*$/, '')}${keyLabel.endsWith('*') ? html`<span style="color:var(--red)">*</span>` : ''}:
-                    </span>`
-                  : ''
-            }
-            ${openBracket}
-          </div>
-          <div class="td key-descr">
-            <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${flags['🆁'] && 'Read only attribute' || flags['🆆'] && 'Write only attribute' || ''}">
-              ${unsafeHTML(marked(displayLine))}
-            </span>
-          </div>
-        </div>
         <div class="inside-bracket-wrapper">
-          <div class='inside-bracket ${data['::type'] || 'no-type-info'}' style='padding-left:${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' ? 0 : leftPadding}px;'>
+          <div class='inside-bracket ${data['::type'] || 'no-type-info'}' style='padding-left: 0;'>
             ${Array.isArray(data) && data[0] ? html`${this.generateTree(data[0], 'xxx-of-option', '', data[0]['::flags'] || {}, '::ARRAY~OF', '', newSchemaLevel, newIndentLevel)}`
               : html`
                 ${Object.keys(data).map((dataKey) =>
@@ -234,7 +198,6 @@ export default class SchemaTree extends LitElement {
                 )}`
             }
           </div>
-          ${data['::type'] && data['::type'].includes('xxx-of') ? '' : html`<div class='close-bracket'> ${closeBracket} </div>`}
         </div>
       `;
     }
@@ -247,32 +210,37 @@ export default class SchemaTree extends LitElement {
     if (readOrWriteOnly === '🆆' && this.schemaHideWriteOnly === 'true') {
       return undefined;
     }
-
     return html`
-      <div class="tr primitive">
-        <div class="td key ${deprecated ? 'deprecated' : ''}" style='min-width:${minFieldColWidth}px'>
-          ${keyLabel.endsWith('*')
-            ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span><span style='color:var(--red);'>*</span>:`
-            : key.startsWith('::OPTION')
-              ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
-              : schemaLevel > 0
-                ? html`<span class="key-label">${keyLabel}:</span>`
-                : ''
-          }
-          <span>${dataType === 'array' ? '[' : ''}<span class="${cssType}">${format || type}</span>${dataType === 'array' ? ']' : ''}</span>
-
-        </div>
-        <div class="td key-descr">
-          <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
-            ${unsafeHTML(marked(`${readOrWriteOnly && `${readOrWriteOnly} ` || ''}${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} ${schemaDescription}` || ''}`))}
-          </span>
-          ${this.schemaDescriptionExpanded ? html`
-            ${constraint ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Constraints: </span>${constraint}</div><br>` : ''}
-            ${defaultValue ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Default: </span>${defaultValue}</div><br>` : ''}
-            ${allowedValues ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Allowed: </span>${allowedValues}</div><br>` : ''}
-            ${pattern ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span class='bold-text'>Pattern: </span>${pattern}</div><br>` : ''}
-            ${example ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span class='bold-text'>Example: </span>${example}</div><br>` : ''}` : ''}
-        </div>
+      <div class="underline">
+        <div class="tr primitive" style="font-size: 16px;">
+          <div class="td key ${deprecated ? 'deprecated' : ''}" style='min-width: 290px; font-size: 16px;'>
+            ${keyLabel.endsWith('*')
+              ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red);'>required</span>`
+              : key.startsWith('::OPTION')
+                ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
+                : schemaLevel > 0
+                  ? html`<span class="key-label">${keyLabel}</span>`
+                  : ''
+            }
+          </div>
+          <div class="td key-descr">  
+            <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
+              ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <p style="color: #8a8a8a;">${type}</p>${schemaDescription}` || ''}`))}
+            </span>
+            <p style="margin: 0; margin-block: 0;">${unsafeHTML(marked(`${readOrWriteOnly && `<strong>readOnly: true </strong> ` || ''} `)) }</p>
+            ${example ? html` <span>${example}</span>`: ''}
+            ${this.schemaDescriptionExpanded && (constraint || defaultValue || allowedValues || pattern || example) ? html` 
+              <br>
+              <div class="testing" style="line-height: 25px; font-weight: 700;">
+                ${constraint ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Constraints: </span>${constraint}</div><br>` : ''}
+                ${defaultValue ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Default: </span>${defaultValue}</div><br>` : ''}
+                ${allowedValues ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Allowed: </span>${allowedValues}</div><br>` : ''}
+                ${pattern ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span class='bold-text'>Pattern: </span>${pattern}</div><br>` : ''}
+                ${example ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span class='bold-text'>Example: </span>${example}</div><br>` : ''}
+              </div>` 
+            : ''}
+            </div>
+        </div>   
       </div>
     `;
   }

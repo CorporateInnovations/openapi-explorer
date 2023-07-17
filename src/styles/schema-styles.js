@@ -9,7 +9,6 @@ export default css`
   flex: none;
   width: 100%;
   box-sizing: content-box;
-  border-bottom: 1px dotted transparent;
 }
 .td {
   display: block;
@@ -52,11 +51,11 @@ export default css`
     margin-left: 2px;
 }
 
-.stri, .string, .uri, .url, .byte, .bina, .binary, .date, .datetime, .date-time, .pass, .password, .ipv4, .ipv4, .uuid, .emai, .email, .host, .hostname { color:var(--green); }
-.inte, .integer, .numb, .number, .int6, .int64, .int3, .int32, .floa, .float, .doub, .double, .deci, .decimal, .blue { color:var(--blue); }
+.stri, .string, .uri, .url, .byte, .bina, .binary, .date, .datetime, .date-time, .pass, .password, .ipv4, .ipv4, .uuid, .emai, .email, .host, .hostname { color: #716f6f; }
+.inte, .numb, .int6, .int64, .int3, .int32, .floa, .float, .doub, .double, .deci, .decimal, .blue { color:var(--blue); }
 .null { color:var(--red); }
 .bool, .boolean { color:var(--orange); }
-.enum, .cons, .const { color:var(--yellow); }
+.cons, .const { color:var(--yellow); }
 
 .tree .toolbar {
   display: flex;
@@ -70,7 +69,7 @@ export default css`
   cursor: pointer;
   padding: 5px 0 5px 1rem;
   margin: 0 1rem !important;
-  color: var(--secondary-color);
+ 
   flex-shrink: 0;
 }
 .tree .toolbar .toolbar-item {
@@ -87,6 +86,14 @@ export default css`
 }
 .toolbar-item:first-of-type { margin:0 2px 0 0;}
 
+.underline {
+  padding: 10px 0;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.underline:last-of-type {
+  border-bottom: none;
+}
 
 @media only screen and (min-width: 576px) {
   .key-descr {
