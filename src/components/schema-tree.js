@@ -225,7 +225,7 @@ export default class SchemaTree extends LitElement {
           </div>
           <div class="td key-descr">  
             <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
-              ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <p style="color: #8a8a8a;">${type}</p>${schemaDescription}` || ''}`))}
+              ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <p>${type}</p>${schemaDescription}` || ''}`))}
             </span>
             <p style="margin: 0; margin-block: 0;">${unsafeHTML(marked(`${readOrWriteOnly && `<strong>readOnly: true </strong> ` || ''} `)) }</p>
             ${example ? html` <span>${example}</span>`: ''}
