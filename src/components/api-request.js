@@ -382,7 +382,7 @@ export default class ApiRequest extends LitElement {
           reqBodyDefaultHtml = html`
             ${reqBodyDefaultHtml}
               ${reqBodyExamples
-                .filter(v => v.exampleId.trim() === this.selectedRequest.trim()) //|| reqBodyExamples[0].exampleValue
+                .filter(v => v.exampleId.trim() === this.selectedRequest.trim())
                 .map((v) => html`
                    <div class="example ${v.exampleId === this.selectedRequestBodyExample ? 'example-selected' : ''}" data-default = '${v.exampleId}'>
                    ${v.exampleSummary && v.exampleSummary.length > 80 ? html`<div style="padding: 4px 0"> ${v.exampleSummary} </div>` : ''}
@@ -496,17 +496,8 @@ export default class ApiRequest extends LitElement {
                 <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab="model" >${getI18nText('operations.model')}</button>
                   <button class="tab-btn ${this.activeSchemaTab === 'example' ? 'active' : ''}" data-tab="example">${getI18nText('operations.example')}</button>
                   <span class="m-btn outline-primary" style="display: ${ this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; padding: 3px 15px; margin-left: auto; margin-top: 3px; margin-bottom: 3px; align-items: baseline; border-radius: 15px; background-color: #0741c5; color: white; font-weight: 700;"
-                  @click="${(e) => {
-                    copyToClipboardV2(reqBodyDefaultHtml.values[1][0].values[5], e);
-                    this.copied = !this.copied;
-                    const button = e.target;
-                    const originalText = button.innerHTML;
-                    button.innerHTML = "Copied";
-                    setTimeout(() => {
-                      button.innerHTML = originalText;
-                    }, 4000)}}">
-                      Copy 
-                      </span>
+                  @click="${(e) => { copyToClipboardV2(reqBodyDefaultHtml.values[1][0].values[5], e); this.copied = !this.copied; const button = e.target; const originalText = button.innerHTML; button.innerHTML = "Copied";
+                    setTimeout(() => { button.innerHTML = originalText; }, 4000)}}"> Copy </span>
                 </div>
                 ${html`<div class="tab-content col" style="display: ${this.activeSchemaTab === 'model' ? 'block' : 'none'}"> ${reqBodySchemaHtml}</div>`}
                 ${html`<div class="tab-content col" style="display: ${this.activeSchemaTab === 'example' ? 'block' : 'none'}"> ${reqBodyDefaultHtml}</div>`}

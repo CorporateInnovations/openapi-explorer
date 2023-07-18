@@ -181,8 +181,8 @@ export default class SchemaTable extends LitElement {
                   ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION')
                     ? html`<span class="xxx-of-key" style="margin-left:-6px">${keyLabel}</span><span class="${isOneOfLabel ? 'xxx-of-key' : 'xxx-of-descr'}">${keyDescr}</span>`
                     : keyLabel.endsWith('*')
-                      ? html`<span class="key-label" style="display:inline-block; margin-left:-6px;"> ${keyLabel.substring(0, keyLabel.length - 1)}TEST1</span><span style='color:var(--red);'>*</span>`
-                      : html`<span class="key-label" style="display:inline-block; margin-left:-6px;">${keyLabel === '::props' ? '' : keyLabel}TEST2</span>`
+                      ? html`<span class="key-label" style="display:inline-block; margin-left:-6px;"> ${keyLabel.substring(0, keyLabel.length - 1)}</span><span style='color:var(--red);'>required</span>`
+                      : html`<span class="key-label" style="display:inline-block; margin-left:-6px;">${keyLabel === '::props' ? '' : keyLabel}</span>`
                   }
                 </div>
               </div>
@@ -223,7 +223,7 @@ export default class SchemaTable extends LitElement {
       return undefined;
     }
     return html`
-      <div class="itr primtive">
+      <div class="tr primitive">
         <div class="td key ${deprecated ? 'deprecated' : ''}" style='padding-left:${leftPadding}px;'>
           ${keyLabel && keyLabel.endsWith('*')
             ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span><span style='color:var(--red);'>*</span>`
