@@ -26,6 +26,7 @@ import TabStyles from './styles/tab-styles';
 import NavStyles from './styles/nav-styles';
 import InfoStyles from './styles/info-styles';
 import advancedSearchStyles from './styles/advanced-search-styles';
+import OverviewStyles from './styles/overview-styles';
 
 import { advancedSearch, getCurrentElement, replaceState, sleep } from './utils/common-utils';
 import { initI18n } from './languages';
@@ -131,6 +132,7 @@ export default class OpenApiExplorer extends LitElement {
       InfoStyles,
       advancedSearchStyles,
       apiRequestStyles,
+      OverviewStyles,
       css`
       *:not(:defined) { display:none }
 

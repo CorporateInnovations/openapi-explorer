@@ -8,6 +8,7 @@ export default function overviewTemplate() {
   return html`
     <section id="overview" part="section-overview"
       class="observe-me ${this.renderStyle === 'focused' ? 'section-gap--focused-mode' : 'section-gap'}">
+      <img class="overview-bg-img" src="/images/eun-bg.png">
       ${this.resolvedSpec && this.resolvedSpec.info
         ? html`
           <slot name="overview">
@@ -15,7 +16,7 @@ export default function overviewTemplate() {
               ${this.resolvedSpec.info.title}
               ${!this.resolvedSpec.info.version ? '' : html`
                 <span style = 'font-size:var(--font-size-small);font-weight:bold'>
-                  ${this.resolvedSpec.info.version}
+                  version ${this.resolvedSpec.info.version}
                 </span>`
               }
             </div>
@@ -45,10 +46,12 @@ export default function overviewTemplate() {
             </div>
           </slot>
           <slot name="overview-api-description">
-            ${this.resolvedSpec.info.description
-              ? html`${unsafeHTML(`<div class="m-markdown regular-font section-padding">${marked(this.resolvedSpec.info.description)}</div>`)}`
-              : ''
-            }
+            The euNetworks public facing API is based on the OpenAPI specification (previously known as Swagger). Here you’ll find everything you need to connect and consume our API endpoints.
+            <a href="/contact" >Contact us</a> if you’re not yet a customer and would like access to our powerful bandwidth infrastructure products.
+            <div style="display: flex;">
+              <button>Contact Us</button>
+              <button>Download OPEN API Documentation</button>
+            </div>
           </slot>
         `
         : ''
