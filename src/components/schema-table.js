@@ -56,6 +56,7 @@ export default class SchemaTable extends LitElement {
       }
       .key.deprecated .key-label {
         text-decoration: line-through;
+
       }
 
       .table .key-type {

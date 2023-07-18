@@ -213,7 +213,7 @@ export default class SchemaTree extends LitElement {
     return html`
       <div class="underline">
         <div class="tr primitive" style="font-size: 16px;">
-          <div class="td key ${deprecated ? 'deprecated' : ''}" style='min-width: 290px; font-size: 16px;'>
+          <div class="td key ${deprecated ? 'deprecated' : ''}" style='line-height: 1.5; min-width: 290px; font-size: 16px;'>
             ${keyLabel.endsWith('*')
               ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red);'>required</span>`
               : key.startsWith('::OPTION')

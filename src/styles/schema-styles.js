@@ -18,6 +18,7 @@ export default css`
   font-family: var(--font-mono);
   white-space: normal;
   word-break: break-all;
+  color: black;
 }
 
 .key-descr {

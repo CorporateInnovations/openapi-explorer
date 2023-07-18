@@ -170,6 +170,7 @@ export default class OpenApiExplorer extends LitElement {
         overflow-x: hidden;
         scrollbar-width: thin;
         scrollbar-color: var(--border-color) transparent;
+        position: relative;
       }
 
       .main-content::-webkit-scrollbar {

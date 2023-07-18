@@ -7,4 +7,13 @@ export default css`
 	bottom: 0;
 	right: 0;
 }
+
+.buttons {
+	color: white;
+	background: #4c6be4;
+	padding: 6px 28px;
+	border-radius: 15px;
+	border: none;
+}
 `;
+

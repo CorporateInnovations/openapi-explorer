@@ -6,16 +6,16 @@ import { getI18nText } from '../languages';
 /* eslint-disable indent */
 export default function overviewTemplate() {
   return html`
-    <section id="overview" part="section-overview"
+    <section id="overview" part="section-overview" style="max-width: 900px; font-size: 18px;"
       class="observe-me ${this.renderStyle === 'focused' ? 'section-gap--focused-mode' : 'section-gap'}">
       <img class="overview-bg-img" src="/images/eun-bg.png">
       ${this.resolvedSpec && this.resolvedSpec.info
         ? html`
           <slot name="overview">
-            <div id="api-title" part="label-overview-title" style="font-size:32px;" class="section-padding">
+            <div id="api-title" part="label-overview-title" style="font-size:32px; padding-top: 64px; font-weight: 700; color: #082c7c;" class="section-padding">
               ${this.resolvedSpec.info.title}
               ${!this.resolvedSpec.info.version ? '' : html`
-                <span style = 'font-size:var(--font-size-small);font-weight:bold'>
+                <span style = 'color: black; font-size:var(--font-size-small);font-weight:bold'>
                   version ${this.resolvedSpec.info.version}
                 </span>`
               }
@@ -45,12 +45,12 @@ export default function overviewTemplate() {
               }
             </div>
           </slot>
-          <slot name="overview-api-description">
-            The euNetworks public facing API is based on the OpenAPI specification (previously known as Swagger). Here you’ll find everything you need to connect and consume our API endpoints.
-            <a href="/contact" >Contact us</a> if you’re not yet a customer and would like access to our powerful bandwidth infrastructure products.
+          <slot name="overview-api-description"; style="color: black;">
+            <p>The euNetworks public facing API is based on the OpenAPI specification (previously known as Swagger). Here you’ll find everything you need to connect and consume our API endpoints.</p>
+            <p><a href="/contact" >Contact us</a> if you’re not yet a customer and would like access to our powerful bandwidth infrastructure products.</p>
             <div style="display: flex;">
-              <button>Contact Us</button>
-              <button>Download OPEN API Documentation</button>
+              <button class="buttons"; style="margin-right: 20px;"><a href="/contact" style=" color: white;"> Contact Us</a></button>
+              <button class="buttons"; >Download OpenAPI Specification</button>
             </div>
           </slot>
         `
