@@ -475,7 +475,7 @@ export default class ApiRequest extends LitElement {
         <div class='request-body-container' data-selected-request-body-type="${this.selectedRequestBodyType}">
           <div class="table-title top-gap row">
             REQUEST BODY ${this.request_body.required ? html`<span class="mono-font" style='color:var(--red)'></span>` : ''} 
-            <span style = "font-weight:normal; margin-left:5px"> ${this.selectedRequestBodyType}</span>
+            <span style = "font-weight:normal; margin-left:5px; font-family: Courier New;"> ${this.selectedRequestBodyType}</span>
             <span style="flex:1"></span>
             ${reqBodyTypeSelectorHtml}
           </div> 
