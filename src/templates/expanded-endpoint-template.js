@@ -28,13 +28,13 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
 
     <!-- Perfoms Session Auth Heading -->
     <h2 style="color: #05297d; font-weight: 700; font-size: 32px;">${path.shortSummary || `${path.method.toUpperCase()} ${path.path}`}</h2> 
-    <div class="m-markdown" style="margin-right: 2rem; width: 70%;"> ${unsafeHTML(marked(path.description || ''))}</div>
+    <div class="m-markdown" style="color: black; margin-right: 2rem; width: 70%;"> ${unsafeHTML(marked(path.description || ''))}</div>
     <div style="display: flex; justify-content: space-between">
       <div style="flex-grow: 1">
         <div class='mono-font part="section-operation-url" regular-font-size' style='margin-top: 10px; padding: 8px 0; color: black; display: flex; align-items: center;'> 
           ${path.isWebhook ? html`<span style="color:var(--primary-color)"> WEBHOOK </span>` : ''}
           <span style="font-size: 12px; background: ${path.method == 'delete' ? '#ff0f0f' : path.method == 'get' ? '#61C15C' : '#5267db'}; border-radius: 25px; color: 'white'; padding: 0.4rem 1.2rem" part="label-operation-method" class='regular-font upper method-fg bold-text ${path.method}'>${path.method}</span> 
-          <span part="label-operation-path" style="font-weight: 500; margin-left: 10px;">https://api.connected.eunetworks.com/api${path.path}</span>
+          <span part="label-operation-path" style="font-family: Courier New; font-weight: 700; font-size: 14px; margin-left: 10px;">https://api.connected.eunetworks.com/api${path.path}</span>
         </div>
       </div>
       ${path.externalDocs

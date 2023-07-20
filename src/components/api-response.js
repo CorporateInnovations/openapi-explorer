@@ -175,7 +175,7 @@ export default class ApiResponse extends LitElement {
     return html`
     <div class="table-title top-gap row" id="responseTemplate">
           REQUEST BODY 
-          <span style="font-weight: 400; margin-left: 5px;">${this.selectedMimeType}</span>
+          <span style="font-weight: 400; margin-left: 5px; font-family: Courier New;">${this.selectedMimeType}</span>
         </div>       
     <div class='row' style='flex-wrap:wrap'>
       ${Object.keys(this.responses).map((respStatus) => html`
