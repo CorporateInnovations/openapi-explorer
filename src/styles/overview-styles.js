@@ -14,6 +14,7 @@ export default css`
 	padding: 6px 28px;
 	border-radius: 15px;
 	border: none;
+	cursor: pointer;
 }
 `;
 
