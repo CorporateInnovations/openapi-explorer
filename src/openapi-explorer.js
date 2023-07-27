@@ -38,6 +38,7 @@ import { checkForAuthToken } from './templates/security-scheme-template';
 export default class OpenApiExplorer extends LitElement {
   constructor() {
     super();
+    this.apiObject = {};
     this.isV1 = false;
     this.loading = true;
     const intersectionObserverOptions = {
@@ -534,6 +535,7 @@ export default class OpenApiExplorer extends LitElement {
       this.loading = true;
       this.loadFailed = false;
       const spec = await ProcessSpec(specUrlOrObject, this.serverUrl);
+      this.apiObject = spec;
       this.loading = false;
       if (spec === undefined || spec === null) {
         console.error('Unable to resolve the API spec. '); // eslint-disable-line no-console

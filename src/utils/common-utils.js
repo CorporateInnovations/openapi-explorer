@@ -152,3 +152,14 @@ export function replaceState(rawElementId) {
   const newQuery = query.toString().length > 1 ? `${query.toString()}&route=${elementId}` : `route=${elementId}`;
   window.history.replaceState(null, null, `#${currentNavigationHashPart}?${newQuery}`);
 }
+
+export function downloadFile(data, fileType, fileName) {
+  let element = document.createElement('a');
+    element.setAttribute('href', 'data:'+fileType+';charset=utf-8,' + encodeURIComponent(data));
+    element.setAttribute('download', fileName);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+    document.body.removeChild(element);
+}
