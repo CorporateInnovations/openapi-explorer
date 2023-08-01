@@ -435,7 +435,7 @@ export function pathSecurityTemplate(pathSecurity) {
         securityDefs: andSecurityKeys1,
       });
     });
-    return html`<div class="security-info-button" data-content-id='post-/api/v1/session' @click='${(e) => this.scrollToEventTarget(e, false)}'>
+    return html`<div class="security-info-button" data-content-id='post-/api/v1/session'>
       <div style="position:relative; display:flex; min-width:350px; max-width:700px; justify-content: flex-end;">
       <span style="border-width: 1px 1px 1px 4px; border-style: solid; border-color: #e33935; display: flex; padding: 2px 4px; border-radius: 4px;">
       <svg width="16" height="24" style="cursor: pointer; padding-top: 2px;">
