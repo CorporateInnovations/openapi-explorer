@@ -108,8 +108,8 @@ export default class ApiResponse extends LitElement {
       <div class="col regular-font response-panel ${this.renderStyle}-mode" style="border: 1.8px solid rgb(236, 236, 236); padding: 20px;">
         <div class="${this.callback === 'true' ? 'tiny-title' : 'req-res-title'}">
         ${this.callback === 'true' ? 'CALLBACK RESPONSE' : getI18nText('operations.response')}
-        <div style="margin: 0; display:flex; float: right; color: #999999; background-color: rgb(236, 236, 236); padding: 3px 11px 3px 11px; font-size: 14px; border-radius: 30px; cursor: pointer;" @click='${() => this.toggleResponseTemplate()}'}>
-         ${this.showResponseTemplate ? '\u{22C1} ' + getI18nText('schemas.collapse-desc') : '\u{FF1E} ' + getI18nText('schemas.expand-desc')}
+        <div style="margin: 0; display:flex; float: right; color: #999999; background-color: rgb(236, 236, 236); padding: 3px 11px 3px 11px; font-size: 14px; border-radius: 30px; cursor: pointer;" @click='${(e) =>{ e.preventDefault(); this.toggleResponseTemplate()}}'}>
+         ${this.showResponseTemplate ? getI18nText('schemas.collapse-desc') : getI18nText('schemas.expand-desc')}
         </div>
         </div>
         <div>
@@ -234,7 +234,7 @@ export default class ApiResponse extends LitElement {
                   <button style="${this.activeSchemaTab === 'example' ? 'color: white; font-weight: 700;' : ''}" class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab='model'>${getI18nText('operations.model')}</button>
                   <button style="${this.activeSchemaTab === 'example' ? 'color: white;' : ''}" class="tab-btn ${this.activeSchemaTab === 'example' ? 'active' : ''}" data-tab='example'>${getI18nText('operations.example')}</button>
                   <div style="flex:1"></div>
-                  <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; padding: 3px 15px; margin-left: auto; margin-top: 1px; margin-bottom: 5px; align-items: center; border-radius: 15px; background-color: #0741c5; color: white; font-weight: 700; border-color: #0741c5;" @click="${(e) => {copyToClipboard(JSON.stringify(this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples[this.selectedResponseExample].exampleValue, null, 2), e);}}">
+                  <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; padding: 3px 15px; margin-left: auto; margin-top: 1px; margin-bottom: 5px; align-items: center; border-radius: 15px; background-color: #0741c5; color: white; font-weight: 700; border-color: #0741c5;" @click="${(e) => {e.preventDefault(); copyToClipboard(JSON.stringify(this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples[this.selectedResponseExample].exampleValue, null, 2), e);}}">
                       Copy
                     </span>
                 </div>

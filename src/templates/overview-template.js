@@ -2,6 +2,7 @@ import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { marked } from 'marked';
 import { getI18nText } from '../languages';
+import { downloadFile } from '../utils/common-utils';
 
 /* eslint-disable indent */
 export default function overviewTemplate() {
@@ -50,7 +51,7 @@ export default function overviewTemplate() {
             <p><a href="/contact" >Contact us</a> if you’re not yet a customer and would like access to our powerful bandwidth infrastructure products.</p>
             <div style="display: flex;">
               <button class="buttons"; style="margin-right: 20px;"><a href="/contact" style=" color: white;"> Contact Us</a></button>
-              <button class="buttons"; >Download OpenAPI Specification</button>
+              <button class="buttons"; @click="${(e)=>{e.preventDefault; downloadFile(JSON.stringify(this.apiObject), 'application/json', 'OpenAPI Specification')}}">Download OpenAPI Specification</button>
             </div>
           </slot>
         `
