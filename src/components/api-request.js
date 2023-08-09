@@ -36,6 +36,7 @@ export default class ApiRequest extends LitElement {
     this.requestBodyExpanded = true;
     this.selectedRequest = '';
     this.selctedExampleValue = '';
+    this.requestBodyTypesClone = null;
   }
 
   static get properties() {
@@ -91,7 +92,7 @@ export default class ApiRequest extends LitElement {
         ${this.inputParametersTemplate('header')}
         ${this.inputParametersTemplate('cookie')}
         ${this.allowTry === 'false' ? '' : html`${this.apiCallTemplate()}`}` : ''}
-      </div> 
+      </div>
     </div>
     `;
   }
@@ -156,7 +157,7 @@ export default class ApiRequest extends LitElement {
       }
 
       tableRows.push(html`
-      <tr> 
+      <tr>
         <td style="width: 25%; min-width:268px; font-size: 16px; padding: 7px 0;">
           <div class="param-name ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column;">
             ${param.name}${!paramSchema.deprecated && param.required ? html`<span style='color:var(--red);'>required</span>` : ''}
@@ -194,13 +195,13 @@ export default class ApiRequest extends LitElement {
                             }
                           }}"
                         >
-                          ${v} 
+                          ${v}
                         </a>`
                       }`)}
                   </div>`
                 : ''
               }
-            </div>  
+            </div>
          `
         : ''
       }
@@ -210,8 +211,8 @@ export default class ApiRequest extends LitElement {
             <td style="min-width:160px;">
               ${paramSchema.type === 'array'
                 ? html`
-                  <tag-input class="request-param" 
-                    style = "width:100%;" 
+                  <tag-input class="request-param"
+                    style = "width:100%;"
                     data-ptype = "${paramType}"
                     data-pname = "${param.name}"
                     data-default = "${Array.isArray(defaultVal) ? defaultVal.join('~|~') : defaultVal}"
@@ -224,7 +225,7 @@ export default class ApiRequest extends LitElement {
                   </tag-input>`
                 : paramSchema.type === 'object'
                   ? html`
-                    <textarea 
+                    <textarea
                       class = "textarea request-param"
                       part = "textarea textarea-param"
                       data-ptype = "${paramType}-object"
@@ -242,7 +243,7 @@ export default class ApiRequest extends LitElement {
                       class="request-param"
                       part="textbox textbox-param"
                       data-ptype="${paramType}"
-                      data-pname="${param.name}" 
+                      data-pname="${param.name}"
                       data-default="${Array.isArray(defaultVal) ? defaultVal.join('~|~') : defaultVal}"
                       data-array="false"
                       @keyup="${this.requestParamFunction}"
@@ -295,14 +296,16 @@ export default class ApiRequest extends LitElement {
   }
 
   requestBodyTemplate() {
-    
+
     if (!this.request_body) {
       return '';
     }
+    let that = this;
+
     if (Object.keys(this.request_body).length === 0) {
       return '';
     }
-  
+
     // Variable to store partial HTMLs
     let reqBodyTypeSelectorHtml = '';
     let reqBodyFileInputHtml = '';
@@ -324,6 +327,7 @@ export default class ApiRequest extends LitElement {
         this.selectedRequestBodyType = mimeType;
       }
     }
+    this.requestBodyTypesClone = JSON.parse(JSON.stringify(requestBodyTypes));
 
     // This is a way to get the schema names to display on examples of more than one (oneOF)
     const schemaExamplesTitleArray = [];
@@ -333,7 +337,7 @@ export default class ApiRequest extends LitElement {
       }
       schemaExamplesTitleArray.forEach(function(exampleName, index) {
         if(requestBodyTypes[0].schema.hasOwnProperty('oneOf')) {
-          requestBodyTypes[0].schema.oneOf[index].allOf[0].titleV2 = exampleName;
+          that.requestBodyTypesClone[0].schema.oneOf[index].allOf[0].titleV2 = exampleName;
         }
       });
     }
@@ -352,7 +356,7 @@ export default class ApiRequest extends LitElement {
       `;
 
     // For Loop - Main
-    requestBodyTypes.forEach((reqBody) => {
+    this.requestBodyTypesClone.forEach((reqBody) => {
       let reqBodyExamples = [];
 
       if (this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text')) {
@@ -431,7 +435,7 @@ export default class ApiRequest extends LitElement {
           reqBodyFileInputHtml = html`
             <div class = "small-font-size bold-text row">
               <input type="file" part="file-input" style="max-width:100%" class="request-body-param-file" data-ptype="${reqBody.mimeType}" spellcheck="false" />
-            </div>  
+            </div>
           `;
         }
       }
@@ -471,20 +475,20 @@ export default class ApiRequest extends LitElement {
       return html`
         <div class='request-body-container' data-selected-request-body-type="${this.selectedRequestBodyType}">
           <div class="table-title top-gap row">
-            REQUEST BODY ${this.request_body.required ? html`<span class="mono-font" style='color:var(--red)'></span>` : ''} 
+            REQUEST BODY ${this.request_body.required ? html`<span class="mono-font" style='color:var(--red)'></span>` : ''}
             <span style = "font-weight:normal; margin-left:5px; font-family: Courier New;"> ${this.selectedRequestBodyType}</span>
             <span style="flex:1"></span>
             ${reqBodyTypeSelectorHtml}
-          </div> 
+          </div>
         ${this.request_body.description ? html`<div class="m-markdown" style="margin-bottom:20px">${unsafeHTML(marked(this.request_body.description))}</div>` : ''}
           ${(this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text'))
             ? html`
             ${Object.keys(this.request_body.content[this.selectedRequestBodyType].schema).includes('oneOf')
             ? html`<select style="border:2px solid #000; min-width:290px; margin-bottom:10px; padding:10px; border-radius:5px;
-            font-weight:700"; @change="${(e) => {this.selectedRequest = e.target.value.trim(); this.requestUpdate()}}">
-              ${this.request_body.content[this.selectedRequestBodyType].schema.oneOf.map((schemaObject) =>
+            font-weight:700"; @change="${(e) => {e.preventDefault(), this.selectedRequest = e.target.value.trim(); this.requestUpdate()}}">
+              ${this.requestBodyTypesClone[0].schema.oneOf.map((schemaObject) =>
                 Object.keys(schemaObject).includes('allOf')
-                  ? html`<option value=" ${schemaObject.allOf[0].titleV2}">${schemaObject.allOf[0].titleV2}</option></select>`
+                  ? html`<option value="${schemaObject.allOf[0].titleV2}">${schemaObject.allOf[0].titleV2}</option></select>`
                   : ''
               )}`
             : ''}
@@ -499,14 +503,14 @@ export default class ApiRequest extends LitElement {
                 ${html`<div class="tab-content col" style="display: ${this.activeSchemaTab === 'model' ? 'block' : 'none'}"> ${reqBodySchemaHtml}</div>`}
                 ${html`<div class="tab-content col" style="display: ${this.activeSchemaTab === 'example' ? 'block' : 'none'}"> ${reqBodyDefaultHtml}</div>`}
               </div>`
-            : html`  
+            : html`
               ${reqBodyFileInputHtml}
               ${reqBodyFormHtml}`
           }
-        </div>  
+        </div>
       `;
     }
-    
+
   formDataTemplate(schema, mimeType, exampleValue = '') {
     const formDataTableRows = [];
     if (schema.properties) {
