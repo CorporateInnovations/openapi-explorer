@@ -10,11 +10,15 @@ export default css`
 
 .buttons {
 	color: white;
-	background: #4c6be4;
+	background: #084ff0;
 	padding: 6px 28px;
 	border-radius: 15px;
 	border: none;
 	cursor: pointer;
+}
+
+a[id="contactUsOverview"] {
+	text-decoration: underline;
 }
 `;
 
