@@ -47,11 +47,11 @@ export default function overviewTemplate() {
             </div>
           </slot>
           <slot name="overview-api-description"; style="color: black;">
-            <p>The euNetworks public facing API is based on the OpenAPI specification (previously known as Swagger). Here you’ll find everything you need to connect and consume our API endpoints.</p>
-            <p><a href="/contact" >Contact us</a> if you’re not yet a customer and would like access to our powerful bandwidth infrastructure products.</p>
+            <p>Connected is ready to help euNetworks customers move to an automated system-to-system integration. Making it easier to rapidly expand your network, get quotes and pricing, order bandwidth and manage network services.</p>
+            <p><a href="/contact" id="contactUsOverview" style="color: rgb(8, 79, 240);">Contact us</a> if you’re not yet a customer and would like access to our powerful bandwidth infrastructure products.</p>
             <div style="display: flex;">
-              <button class="buttons"; style="margin-right: 20px;"><a href="/contact" style=" color: white;"> Contact Us</a></button>
-              <button class="buttons"; @click="${(e)=>{e.preventDefault; downloadFile(JSON.stringify(this.apiObject), 'application/json', 'OpenAPI Specification')}}">Download OpenAPI Specification</button>
+              <button class="buttons"; style="margin-right: 20px;"><a href="/contact" style=" color: white;"> Contact us</a></button>
+              <button class="buttons"; @click="${(e)=>{e.preventDefault; downloadFile(JSON.stringify(this.apiObject), 'application/json', 'OpenAPI Specification')}}">Download OpenAPI specification</button>
             </div>
           </slot>
         `
