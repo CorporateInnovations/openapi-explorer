@@ -191,9 +191,10 @@ export default class ApiResponse extends LitElement {
                   this.selectedMimeType = undefined;
                 }
               }}"
-              class='m-btn small ${this.selectedStatus === respStatus ? 'primary' : ''}'
+              class="m-btn small ${this.selectedStatus === respStatus ? 'primary' : ''}"
+              id="${this.selectedStatus == 200 ? 'm-btnGreen' : 'm-btnGreenNotSelected'}"
               part="btn--resp ${this.selectedStatus === respStatus ? 'btn-fill--resp' : 'btn-outline--resp'} btn-response-status"
-              style='margin: 8px 4px 0 0' > 
+              style="margin: 8px 4px 0 0;"> 
               ${respStatus}
             </button>`
           }`)
