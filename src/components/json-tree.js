@@ -26,10 +26,11 @@ export default class JsonTree extends LitElement {
         background: var(--primary-color);
         color: white;
         padding: 12px;
+        line-height: 1.5; 
 
         min-height: 30px;
-        font-family: var(--font-mono);
-        font-size: var(--font-size-small);
+        font-family: "Courier New", sans-serif;
+        font-size: 18px;
         overflow:hidden;
         word-break: break-all;
         flex:1;
@@ -42,8 +43,7 @@ export default class JsonTree extends LitElement {
       }
       
       .inside-bracket {
-        border-left:1px dotted var(--border-color);
-        padding-left: 16px;
+        padding-left: 30px;
       }
 
       .string{color:var(--green);}
