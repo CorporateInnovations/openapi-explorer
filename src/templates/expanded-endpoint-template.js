@@ -6,6 +6,7 @@ import codeSamplesTemplate from './code-samples-template';
 import callbackTemplate from './callback-template';
 import '../components/api-request';
 import '../components/api-response';
+import { copyToClipboardV2 } from '../utils/common-utils';
 
 /* eslint-disable indent */
 export function expandedEndpointBodyTemplate(path, tagName = '') {
@@ -31,10 +32,12 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
     <div class="m-markdown" style="color: black; margin-right: 2rem; width: 70%;"> ${unsafeHTML(marked(path.description || ''))}</div>
     <div style="display: flex; justify-content: space-between">
       <div style="flex-grow: 1">
-        <div class='mono-font part="section-operation-url" regular-font-size' style='margin-top: 10px; padding: 8px 0; color: black; display: flex; align-items: center;'> 
+        <div class='mono-font part="section-operation-url" regular-font-size' style='padding: 8px 0; color: black; display: flex; align-items: center;'> 
           ${path.isWebhook ? html`<span style="color:var(--primary-color)"> WEBHOOK </span>` : ''}
           <span style="font-size: 12px; background: ${path.method == 'delete' ? '#ff0f0f' : path.method == 'get' ? '#61C15C' : '#5267db'}; border-radius: 25px; color: 'white'; padding: 0.4rem 1.2rem" part="label-operation-method" class='regular-font upper method-fg bold-text ${path.method}'>${path.method}</span> 
-          <span part="label-operation-path" style="font-family: Courier New; font-weight: 700; font-size: 14px; margin-left: 10px;">https://api.connected.eunetworks.com/api${path.path}</span>
+          <span class="copyUrlBtn" @click="${(e) => { copyToClipboardV2(`https://api.connected.eunetworks.com/api${path.path}`); const button = e.target; const originalText = button.innerHTML; button.innerHTML = "Copied";
+          setTimeout(() => { button.innerHTML = originalText; }, 3000)} }">Copy</span>
+          <span part="label-operation-path" id="apiUrl"><p class="apiUrlText">https://api.connected.eunetworks.com/api${path.path}</p></span>
         </div>
       </div>
       ${path.externalDocs
@@ -109,3 +112,4 @@ export function expandedTagTemplate(tagId, subsectionFullId) {
     </section>`;
 }
 /* eslint-enable indent */
+

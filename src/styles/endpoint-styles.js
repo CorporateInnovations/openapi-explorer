@@ -226,4 +226,32 @@ pre.code-sample {
   font-family: var(--font-mono);
   font-size: var(--font-size-small);
 }
+
+#apiUrl {
+  font-family: Courier New;
+  font-weight: 700;
+  font-size: 14px;
+  margin-left: 10px;
+  color: #084FF0;
+}
+
+.apiUrlText{
+  text-align: initial;
+  word-wrap: break-word;
+  max-width: 850px;
+  line-height: 1;
+  margin-top: 17px;
+}
+
+.copyUrlBtn {
+    font-size: 12px;
+    background: #5267db;
+    border-radius: 25px;
+    color: white;
+    padding: 0.4rem 1rem;
+    margin-left: 5px;
+    font-weight: 700;
+    cursor: pointer;
+ }
+
 `;
