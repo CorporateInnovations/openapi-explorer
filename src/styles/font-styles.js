@@ -84,6 +84,10 @@ export default css`
     display:block;
   }
 
+  m-markdown p {
+    font-size: 18px;
+  }
+
   .m-markdown p,
   .m-markdown a,
   .m-markdown span,
