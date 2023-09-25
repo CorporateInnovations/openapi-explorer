@@ -5,7 +5,7 @@ export default css`
   border: none;
 }
 .tab-buttons {
-  height:30px;
+  height:34px;
   align-items: stretch;
   overflow-y: hidden;
   overflow-x: auto;
