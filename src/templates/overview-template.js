@@ -13,7 +13,7 @@ export default function overviewTemplate() {
       ${this.resolvedSpec && this.resolvedSpec.info
         ? html`
           <slot name="overview">
-            <div id="api-title" part="label-overview-title" style="font-size:32px; padding-top: 64px; font-weight: 700; color: #082c7c;" class="section-padding">
+            <div id="api-title" part="label-overview-title" class="section-padding">
               ${this.resolvedSpec.info.title}
               ${!this.resolvedSpec.info.version ? '' : html`
                 <span style = 'color: black; font-size:var(--font-size-small);font-weight:bold'>

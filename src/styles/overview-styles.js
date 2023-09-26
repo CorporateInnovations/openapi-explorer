@@ -20,5 +20,13 @@ export default css`
 a[id="contactUsOverview"] {
 	text-decoration: underline;
 }
+
+#api-title {
+	font-size:32px;
+	font-weight: 700;
+	color: #082c7c;"
+}
+
+}
 `;
 
