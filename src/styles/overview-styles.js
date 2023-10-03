@@ -8,13 +8,28 @@ export default css`
 	right: 0;
 }
 
+@media only screen and (max-width: 425px) {
+	.buttons {
+	  font-size: 15px !important;
+	  padding: 9px 10px !important;
+	}
+	
+	#api-title {
+		margin: 0;
+	}
+}
+
 .buttons {
 	color: white;
 	background: #084ff0;
 	padding: 6px 28px;
-	border-radius: 15px;
+	border-radius: 17px;
 	border: none;
 	cursor: pointer;
+	min-height: 34px;
+	font-size: 16px;
+	padding: 9px 25px;
+	line-height: 1;
 }
 
 a[id="contactUsOverview"] {
@@ -25,8 +40,6 @@ a[id="contactUsOverview"] {
 	font-size:32px;
 	font-weight: 700;
 	color: #082c7c;"
-}
-
 }
 `;
 

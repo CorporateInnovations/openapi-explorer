@@ -22,11 +22,11 @@ export default class JsonTree extends LitElement {
       :host{
         display:flex;
       }
+
       .json-tree {
         background: var(--primary-color);
         color: white;
-        padding: 12px;
-        line-height: 1.5; 
+        padding: 12px; 
 
         min-height: 30px;
         font-family: "Courier New", sans-serif;
@@ -36,6 +36,7 @@ export default class JsonTree extends LitElement {
         flex:1;
         line-height: calc(var(--font-size-small) + 6px);
       }
+      
      .inside-bracket-wrapper {
         max-height: 10000px;
         transition: max-height 1.2s ease-in-out;
