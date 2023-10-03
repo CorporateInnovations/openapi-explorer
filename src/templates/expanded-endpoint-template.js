@@ -28,7 +28,7 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
     ${path.deprecated ? html`<div class="bold-text red-text"> DEPRECATED </div>` : ''}
 
     <!-- Perfoms Session Auth Heading -->
-    <h2 style="color: #05297d; font-weight: 700; font-size: 36px;">${path.shortSummary || `${path.method.toUpperCase()} ${path.path}`}</h2> 
+    <h2 class="performsSessionAuthHeading">${path.shortSummary || `${path.method.toUpperCase()} ${path.path}`}</h2> 
     <div class="m-markdown" style="color: black; margin-right: 2rem; margin-bottom: 1rem; width: 70%;"> ${unsafeHTML(marked(path.description || ''))}</div>
     <div style="display: flex; justify-content: space-between">
       <div style="flex-grow: 1">
@@ -36,8 +36,6 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
           ${path.isWebhook ? html`<span style="color:var(--primary-color)"> WEBHOOK </span>` : ''}
           <span style="font-size: 14px; background: ${path.method == 'delete' ? '#ff0f0f' : path.method == 'get' ? '#61C15C' : '#0841c6'}; border-radius: 25px; color: 'white'; padding: 0.4rem 1.2rem" part="label-operation-method" class='regular-font upper method-fg bold-text ${path.method}'>${path.method}</span> 
           <span part="label-operation-path" id="apiUrl"><p class="apiUrlText">https://api.connected.eunetworks.com/api${path.path}</p></span>
-          <span class="copyUrlBtn" @click="${(e) => { copyToClipboardV2(`https://api.connected.eunetworks.com/api${path.path}`); const button = e.target; const originalText = button.innerHTML; button.innerHTML = "Copied";
-          setTimeout(() => { button.innerHTML = originalText; }, 3000)} }">Copy</span>
         </div>
       </div>
       ${path.externalDocs
