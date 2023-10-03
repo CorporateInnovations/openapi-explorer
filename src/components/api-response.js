@@ -192,7 +192,7 @@ export default class ApiResponse extends LitElement {
                 }
               }}"
               class="m-btn small ${this.selectedStatus === respStatus ? 'primary' : ''}"
-              id="${this.selectedStatus == 200 ? 'm-btnGreen' : 'm-btnGreenNotSelected'}"
+              id="${this.selectedStatus < 250 ? 'm-btnGreen' : 'm-btnGreenNotSelected'}"
               part="btn--resp ${this.selectedStatus === respStatus ? 'btn-fill--resp' : 'btn-outline--resp'} btn-response-status"
               style="margin: 8px 4px 0 0;"> 
               ${respStatus}
@@ -355,7 +355,9 @@ export default class ApiResponse extends LitElement {
     `;
   }
 
+
   mimeSchemaTemplate(mimeRespDetails) {
+
     if (!mimeRespDetails) {
       return html`
         <pre style='color:var(--red)' class = '${this.renderStyle === 'read' ? 'border pad-8-16' : 'border-top'}'> Schema not found</pre>

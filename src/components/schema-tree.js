@@ -90,7 +90,7 @@ export default class SchemaTree extends LitElement {
   generateTree(data, dataType = 'object', arrayType = '', flags = {}, key = '', description = '', schemaLevel = 0, indentLevel = 0) {
     if (!data) {
       return html`<div class="null" style="display:inline;">
-        <span class="key-label xxx-of-key"> ${key.replace('::OPTION~', '')}</span>
+        <span class="key-label xxx-of-key">${key.replace('::OPTION~', '')}</span>
         ${
           dataType === 'array'
             ? html`<span class='mono-font'> [ ] </span>`

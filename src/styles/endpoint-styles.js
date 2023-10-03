@@ -227,6 +227,21 @@ pre.code-sample {
   font-size: var(--font-size-small);
 }
 
+@media only screen and (max-width: 1024px) {
+.performsSessionAuthHeading {
+  max-width: 330px;
+  line-height: 1;
+  font-size: 30px;
+ }
+}
+
+.performsSessionAuthHeading {
+  color: #05297d;
+  font-weight: 700;
+  font-size: 36px;
+}
+
+
 #apiUrl {
   font-family: Courier New;
   font-weight: 700;
@@ -238,9 +253,22 @@ pre.code-sample {
 .apiUrlText {
   text-align: initial;
   word-wrap: break-word;
-  max-width: 830px;
+  max-width: 300px;
   line-height: 1;
   margin-top: 17px;
+}
+
+
+@media only screen and (min-width: 1024px) {
+  .apiUrlText {
+    max-width: 450px;
+  }
+}
+
+@media only screen and (min-width: 1318px) {
+  .apiUrlText {
+    max-width: 725px;
+  }
 }
 
 @media only screen and (min-width: 1441px) {
@@ -248,20 +276,5 @@ pre.code-sample {
     max-width: 100% ;
   }
 }
-
-.copyUrlBtn {
-    font-size: 14px;
-    background: #0841c6;
-    border-radius: 17px;
-    color: white;
-    font-weight: 700;
-    width: 74px;
-    height: 31px;
-    cursor: pointer;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
- }
 
 `;
