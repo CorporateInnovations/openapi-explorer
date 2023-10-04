@@ -87,7 +87,7 @@ function endpointBodyTemplate(path) {
           <div class='title mono-font regular-font-size' part="section-operation-url" style='display: flex; flex-wrap: wrap; color:var(--fg3)'> 
             ${path.isWebhook ? html`<span style="color:var(--primary-color)"> WEBHOOK </span>` : ''}
             <span part="label-operation-method" class='regular-font upper method-fg bold-text ${path.method}'>${path.method}&nbsp;</span> 
-            <span style="display: flex; flex-wrap: wrap;" part="label-operation-path">${path.path.split('/').filter(t => t.trim()).map(t => html`<span>/${t}</span>`)}</span>
+            <span style="display: flex; flex-wrap: wrap; text-transform: none;" part="label-operation-path">https://api.preprod.connected.eunetworks.com/api${path.path.split('/').filter(t => t.trim()).map(t => html`<span>/${t}</span>`)}</span>
           </div>`
       }
       ${path.description ? html`<div class="m-markdown"> ${unsafeHTML(marked(path.description))}</div>` : ''}
