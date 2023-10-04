@@ -6,6 +6,13 @@ export default css`
 	position: absolute;
 	bottom: 0;
 	right: 0;
+	display: none;
+}
+
+@media only screen and (min-width: 768px) {
+	.overview-bg-img {
+		display: block;
+	}
 }
 
 @media only screen and (max-width: 425px) {

@@ -112,8 +112,8 @@ export default css`
 }
 .method.delete{ border: 2px solid var(--red);}
 .method.put{ border: 2px solid var(--orange); }
-.method.post{ border: 2px solid var(--green); }
-.method.head, .method.get { border: 2px solid var(--blue); }
+.method.post{ border: 2px solid var(--blue); }
+.method.head, .method.get { border: 2px solid var(--green); }
 .method.patch { border: 2px solid var(--yellow); }
 .method.query { border: 2px solid var(--purple); }
 .method.options { border: 2px solid var(--gray); }
@@ -253,7 +253,7 @@ pre.code-sample {
 .apiUrlText {
   text-align: initial;
   word-wrap: break-word;
-  max-width: 300px;
+  max-width: 385px;
   line-height: 1;
   margin-top: 17px;
 }
@@ -261,13 +261,13 @@ pre.code-sample {
 
 @media only screen and (min-width: 1024px) {
   .apiUrlText {
-    max-width: 450px;
+    max-width: 510px;
   }
 }
 
 @media only screen and (min-width: 1318px) {
   .apiUrlText {
-    max-width: 725px;
+    max-width: 910px;
   }
 }
 
