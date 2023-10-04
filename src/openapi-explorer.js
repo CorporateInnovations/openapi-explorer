@@ -277,11 +277,11 @@ export default class OpenApiExplorer extends LitElement {
         border-left-width: 4px;
         margin-left:2px;
         border-color: #e33935;
-        color: #e33935;
+        color: grey;
       }
       
       .tooltip a {
-        color: #e33935;
+        color: grey;
         text-decoration: none;
       }
       .tooltip-text {
@@ -300,14 +300,6 @@ export default class OpenApiExplorer extends LitElement {
         border-radius: 4px;
       }
       
-      .tooltip:hover {
-        color: #e33935;
-        border-color: #e33935;
-      }
-      .tooltip:hover a:hover {
-        color: #e33935;
-      }
-
       .tooltip:hover .tooltip-text {
         visibility: visible;
         opacity: 1;
