@@ -37,6 +37,7 @@ export default class ApiRequest extends LitElement {
     this.selectedRequest = '';
     this.selctedExampleValue = '';
     this.requestBodyTypesClone = null;
+    this.requestBodyExamples = null;
   }
 
   static get properties() {
@@ -374,11 +375,12 @@ export default class ApiRequest extends LitElement {
           );
 
          if (!this.selectedRequestBodyExample) {
-              this.selectedRequestBodyExample = (reqBodyExamples.length > 0 ? reqBodyExamples[0].exampleId : '');
-            } 
+            this.selectedRequestBodyExample = (reqBodyExamples.length > 0 ? reqBodyExamples[0].exampleSummary : '');
+          }
 
           reqBodyExamples.filter((v) => v.exampleId === this.selectedRequestBodyExample).map((v) => selectedExampleValue = v.exampleValue);
-          
+          this.requestBodyExamples = reqBodyExamples;
+
           if (!this.selectedRequest) {
             this.selectedRequest = (reqBodyExamples.length > 0 ? reqBodyExamples[0].exampleId : '');
           }
@@ -484,14 +486,19 @@ export default class ApiRequest extends LitElement {
           ${(this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text'))
             ? html`
             ${Object.keys(this.request_body.content[this.selectedRequestBodyType].schema).includes('oneOf')
-            ? html`<select style="border:2px solid #000; min-width:290px; margin-bottom:10px; padding:10px; border-radius:5px;
-            font-weight:700"; @change="${(e) => {e.preventDefault(), this.selectedRequest = e.target.value.trim(); this.requestUpdate()}}">
-              ${this.requestBodyTypesClone[0].schema.oneOf.map((schemaObject) =>
-                Object.keys(schemaObject).includes('allOf')
-                  ? html`<option value="${schemaObject.allOf[0].titleV2}">${schemaObject.allOf[0].titleV2}</option></select>`
-                  : ''
-              )}`
-            : ''}
+              ? html`<select style="border:2px solid #000; min-width:290px; margin-bottom:10px; padding:10px; border-radius:5px;
+              font-weight:700"; @change="${(e) => {e.preventDefault(), this.selectedRequest = e.target.value.trim(); this.requestUpdate()}}">
+                ${this.requestBodyTypesClone[0].schema.oneOf.map((schemaObject) =>
+                  Object.keys(schemaObject).includes('allOf')
+                    ? html`<option value="${schemaObject.allOf[0].titleV2}">${schemaObject.allOf[0].titleV2}</option></select>`
+                    : ''
+                )}`
+              : Object.keys(this.request_body.content[this.selectedRequestBodyType].schema).includes('allOf')
+                ? html`<select style="border:2px solid #000; min-width:290px; margin-bottom:10px; padding:10px; border-radius:5px;
+                  font-weight:700"; @change="${(e) => {e.preventDefault(), this.selectedRequest = e.target.value.trim(); this.requestUpdate()}}">
+                  ${this.requestBodyExamples.map((example) => html`<option value="${example.exampleId}">${example.exampleSummary}</option>`)}</select>`
+                : ''
+            }
               <div class="tab-panel col" style="border-width:0 0 1px 0; border-radius: 5px; ${this.activeSchemaTab === 'example' ? 'background: black; color: white' : ''}">
                 <div class="tab-buttons row" style="${this.activeSchemaTab === 'example' ? 'margin: 5px 15px 0 15px;' : ''}" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}">  
                 <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" style="${this.activeSchemaTab === 'example' ? 'color: white; font-weight: 700;' : ''}" data-tab="model" >${getI18nText('operations.model')}</button>
