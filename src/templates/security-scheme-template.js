@@ -437,10 +437,10 @@ export function pathSecurityTemplate(pathSecurity) {
     });
     return html`<div class="security-info-button" data-content-id='post-/api/v1/session'>
       <div style="position:relative; display:flex; min-width:350px; max-width:700px; justify-content: flex-end;">
-      <span style="border-width: 1px 1px 1px 4px; border-style: solid; border-color: #e33935; display: flex; padding: 2px 4px; border-radius: 4px;">
+      <span style="border-width: 1px 1px 1px 4px; border-style: solid; border-color: grey; display: flex; padding: 2px 4px; border-radius: 4px;">
       <svg width="16" height="24" style="cursor: pointer; padding-top: 2px;">
           <g>
-            <path style="fill: #e33935" d="m13.8,8.5l0,-2.6l0,0c0,-3.2 -2.6,-5.8 -5.8,-5.8s-5.8,2.6 -5.8,5.8l0,0l0,2.6l-2.1,0l0,11.2l16,0l0,-11.2l-2.1,0l-0,0l0,0l0,0l-0,0zm-9.8,-2.6c0,0 0,0 0,0c0,-2.2 1.8,-4 4,-4c2.2,0 4,1.8 4,4c0,0 0,0 0,0l0,2.6l-8.03,0l0,-2.6l0,0l0,0z" />
+            <path style="fill: grey" d="m13.8,8.5l0,-2.6l0,0c0,-3.2 -2.6,-5.8 -5.8,-5.8s-5.8,2.6 -5.8,5.8l0,0l0,2.6l-2.1,0l0,11.2l16,0l0,-11.2l-2.1,0l-0,0l0,0l0,0l-0,0zm-9.8,-2.6c0,0 0,0 0,0c0,-2.2 1.8,-4 4,-4c2.2,0 4,1.8 4,4c0,0 0,0 0,0l0,2.6l-8.03,0l0,-2.6l0,0l0,0z" />
           </g>
         </svg>
           ${orSecurityKeys1.map((orSecurityItem1, i) => html`
@@ -449,7 +449,7 @@ export function pathSecurityTemplate(pathSecurity) {
             <div style="padding:2px 4px; white-space:nowrap; text-overflow:ellipsis;max-width:150px; overflow:hidden;">
               <span part="anchor anchor-operation-security" style="font-weight: 700;"> ${orSecurityItem1.securityTypes} </span>
             </div>
-            <div class="tooltip-text" style="position:absolute; color: var(--fg); top:30px; right:0; border:1px solid var(--border-color);padding:2px 4px; display:block; background: red; color: white; font-weight: 700; border-radius: 4px; ">
+            <div class="tooltip-text">
               ${orSecurityItem1.securityDefs.length > 1 ? html`<div>Requires <b>all</b> of the following </div>` : ''}
               <div style="padding: 10px 40px 5px 10px;">
                 ${orSecurityItem1.securityDefs.map((andSecurityItem, j) => html`
@@ -466,7 +466,7 @@ export function pathSecurityTemplate(pathSecurity) {
                           ${orSecurityItem1.securityDefs.length > 1 ? html`<b>${j + 1}.</b> &nbsp;` : '' } 
                           ${andSecurityItem.scheme === 'basic' ? getI18nText('authentication.http-basic-note') : 'Bearer Token'} ${getI18nText('headers.authentication').toLocaleLowerCase()}
                           ${getOauthScopeTemplate(andSecurityItem.scopes)}
-                          <p>Type: ${andSecurityItem.type}</p>
+                          <p style="margin-top: 15px;">Type: ${andSecurityItem.type}</p>
                           <p>Scheme: ${andSecurityItem.scheme}</p>
                           <p>Format: string</p> <!-- Format Not Availble In Object Value May Need To Be Updated In Future --> 
                         </div>`

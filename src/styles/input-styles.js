@@ -20,9 +20,85 @@ export default css`
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
-.m-btn.primary {
-  background-color: green;
+
+#m-btnGreen:first-child {
+  padding: 5px 12px;
+  border-radius: var(--border-radius);
+  display: inline-block;
+  font-size: var(--font-size-small);
+  outline: 0px;
+  line-height: 1;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
   border: 2px solid green;
+  background-color: green;
+  color: white;
+  transition: background-color 0.2s ease 0s;
+  user-select: none;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+#m-btnGreenNotSelected:first-child {
+  padding: 5px 12px;
+  border-radius: var(--border-radius);
+  display: inline-block;
+  font-size: var(--font-size-small);
+  outline: 0px;
+  line-height: 1;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+  border: 2px solid green;
+  background-color: white;
+  color: green;
+  transition: background-color 0.2s ease 0s;
+  user-select: none;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+#m-btnGreenNotSelected:first-child:hover {
+  padding: 5px 12px;
+  border-radius: var(--border-radius);
+  display: inline-block;
+  font-size: var(--font-size-small);
+  outline: 0px;
+  line-height: 1;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+  border: 2px solid green;
+  background-color: green;
+  color: white;
+  transition: background-color 0.2s ease 0s;
+  user-select: none;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+
+
+
+.m-btnGreen:hover {
+  background: green;
+  color: white;
+}
+
+.m-btnGreen:active {
+  background: green;
+  color: white;
+}
+
+.m-btnGreen:focus {
+  background: green;
+  color: white;
+}
+
+.m-btn.primary {
+  background-color: red;
+  border: 2px solid red;
   color: var(--primary-btn-text-color);
 }
 .m-btn.outline-primary {
@@ -39,9 +115,9 @@ export default css`
 .m-btn.tiny { padding:5px 6px; }
 .m-btn.circle { border-radius: 50%; }
 .m-btn:hover { 
-  background-color: green;
-  border: 2px solid green;
-  color: var(--primary-btn-text-color);
+  background-color: red;
+  border: 2px solid red;
+  color: white;
 }
 
 .m-btn {
@@ -50,13 +126,9 @@ export default css`
 }
 
 .m-btn:active {
-  border: 2px solid green;
+  border: 2px solid red;
 }
 
-.m-btn:focus {
-  border: 2px solid green;
-  color: white;
-}
 
 .m-btn.nav { border: 2px solid var(--secondary-color); }
 .m-btn.nav:hover { 

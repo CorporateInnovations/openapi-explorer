@@ -112,8 +112,8 @@ export default css`
 }
 .method.delete{ border: 2px solid var(--red);}
 .method.put{ border: 2px solid var(--orange); }
-.method.post{ border: 2px solid var(--green); }
-.method.head, .method.get { border: 2px solid var(--blue); }
+.method.post{ border: 2px solid var(--blue); }
+.method.head, .method.get { border: 2px solid var(--green); }
 .method.patch { border: 2px solid var(--yellow); }
 .method.query { border: 2px solid var(--purple); }
 .method.options { border: 2px solid var(--gray); }
@@ -226,4 +226,55 @@ pre.code-sample {
   font-family: var(--font-mono);
   font-size: var(--font-size-small);
 }
+
+@media only screen and (max-width: 1024px) {
+.performsSessionAuthHeading {
+  max-width: 330px;
+  line-height: 1;
+  font-size: 30px;
+ }
+}
+
+.performsSessionAuthHeading {
+  color: #05297d;
+  font-weight: 700;
+  font-size: 36px;
+}
+
+
+#apiUrl {
+  font-family: Courier New;
+  font-weight: 700;
+  font-size: 14px;
+  margin: 0 10px;
+  color: #084FF0;
+}
+
+.apiUrlText {
+  text-align: initial;
+  word-wrap: break-word;
+  max-width: 385px;
+  line-height: 1;
+  margin-top: 17px;
+}
+
+
+@media only screen and (min-width: 1024px) {
+  .apiUrlText {
+    max-width: 510px;
+  }
+}
+
+@media only screen and (min-width: 1318px) {
+  .apiUrlText {
+    max-width: 910px;
+  }
+}
+
+@media only screen and (min-width: 1441px) {
+  .apiUrlText {
+    max-width: 100% ;
+  }
+}
+
 `;

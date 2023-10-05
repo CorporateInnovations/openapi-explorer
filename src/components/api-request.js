@@ -499,11 +499,11 @@ export default class ApiRequest extends LitElement {
                   ${this.requestBodyExamples.map((example) => html`<option value="${example.exampleId}">${example.exampleSummary}</option>`)}</select>`
                 : ''
             }
-              <div class="tab-panel col" style="border-width:0 0 1px 0; border-radius: 5px; ${this.activeSchemaTab === 'example' ? 'background: black; color: white' : ''}">
-                <div class="tab-buttons row" style="${this.activeSchemaTab === 'example' ? 'margin: 5px 15px 0 15px;' : ''}" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}">  
-                <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" style="${this.activeSchemaTab === 'example' ? 'color: white; font-weight: 700;' : ''}" data-tab="model" >${getI18nText('operations.model')}</button>
-                  <button class="tab-btn ${this.activeSchemaTab === 'example' ? 'active' : ''}" style="${this.activeSchemaTab === 'example' ? 'color: white' : ''}" data-tab="example">${getI18nText('operations.example')}</button>
-                  <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; padding: 3px 15px; margin-left: auto; margin-top: 1px; margin-bottom: 5px; align-items: center; border-radius: 15px; background-color: #0741c5; color: white; font-weight: 700; border-color: #0741c5;"
+              <div class="tab-panel col" style="border-width:0 0 1px 0; border-radius: 5px;">
+                <div class="tab-buttons row" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}">
+                <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab="model" >${getI18nText('operations.model')}</button>
+                  <button class="tab-btn ${this.activeSchemaTab === 'example' ? 'active' : ''}" data-tab="example">${getI18nText('operations.example')}</button>
+                  <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; margin-left: auto; align-items: center; justify-content: center; border-radius: 17px; background-color: #0741c5; color: white; font-weight: 700; border-color: #0741c5; width: 67px; height: 28px; font-size: 14px; margin-top: 3px;"
                   @click="${(e) => { e.preventDefault(); copyToClipboardV2(JSON.stringify(reqBodyDefaultHtml.values[1][0].values[5]), e); this.copied = !this.copied; const button = e.target; const originalText = button.innerHTML; button.innerHTML = "Copied";
                     setTimeout(() => { button.innerHTML = originalText; }, 4000)}}"> Copy </span>
                 </div>

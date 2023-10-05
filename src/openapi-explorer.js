@@ -194,7 +194,7 @@ export default class OpenApiExplorer extends LitElement {
         border-bottom: 1px solid var(--border-color);
       }
       .section-gap { 
-        padding: 24px 0px 0px;
+        padding: 24px 24px 0px 24px;
       }
       .section-tag-header {
         position:relative;
@@ -277,26 +277,29 @@ export default class OpenApiExplorer extends LitElement {
         border-left-width: 4px;
         margin-left:2px;
         border-color: #e33935;
-        color: #e33935;
+        color: grey;
       }
+      
       .tooltip a {
-        color: #e33935;
+        color: grey;
         text-decoration: none;
       }
       .tooltip-text {
-        color: #e33935;
-        background-color: var(--bg2);
         visibility: hidden;
         overflow-wrap: break-word;
-      }
-      .tooltip:hover {
-        color: #e33935;
-        border-color: #e33935;
-      }
-      .tooltip:hover a:hover {
-        color: #e33935;
-      }
 
+        position:absolute;
+        top:30px;
+        right:0;
+        border:1px solid var(--border-color);
+        padding:2px 4px;
+        display:block;
+        background: #fff;
+        color: grey;
+        font-weight: 700;
+        border-radius: 4px;
+      }
+      
       .tooltip:hover .tooltip-text {
         visibility: visible;
         opacity: 1;
@@ -316,6 +319,7 @@ export default class OpenApiExplorer extends LitElement {
         .sub-title.tag {
           margin-left: 1rem;
         }
+
         .section-tag-body .description {
           margin-left: 1rem;
           margin-right: 1rem;
@@ -340,7 +344,7 @@ export default class OpenApiExplorer extends LitElement {
           padding: 24px 8px; 
         }
         .section-gap--focused-mode {
-          padding:  0 1.5rem 1.5rem 1.5rem;
+          padding:  2.5rem 1.5rem 1.5rem 1.5rem;
         }
         .endpoint-body {
           position: relative;
@@ -358,6 +362,7 @@ export default class OpenApiExplorer extends LitElement {
         }
         .main-content-inner {
           padding: 24px;
+          padding-top: 40px;
         }
       }`,
     ];

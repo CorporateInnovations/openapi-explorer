@@ -43,8 +43,8 @@ export default css`
     color: var(--fg3);  
   }
   .method-fg.put { color: var(--orange); }
-  .method-fg.post { color: var(--green); }
-  .method-fg.head, .method-fg.get { color: var(--blue); }
+  .method-fg.post { color: var(--blue); }
+  .method-fg.head, .method-fg.get { color: var(--green); }
   .method-fg.delete { color: var(--red); }
   .method-fg.query { color: var(--purple); }
   .method-fg.options { color: var(--gray); }
@@ -82,6 +82,10 @@ export default css`
   .m-markdown,
   .m-markdown-small {
     display:block;
+  }
+
+  m-markdown p {
+    font-size: 18px;
   }
 
   .m-markdown p,

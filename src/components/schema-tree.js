@@ -45,8 +45,31 @@ export default class SchemaTree extends LitElement {
       .key.deprecated .key-label {
         text-decoration: line-through; 
       }
-      .collapsed{
+      .open-bracket {
+        display:inline-block;
+        padding: 0 20px 0 0;
+        cursor: pointer;
+        border: 1px solid transparent;
+        border-radius:3px;
+      }
+      .collapsed .open-bracket{
         padding-right: 0;
+      }
+      .td.key > .open-bracket:first-child {
+        margin-left: -2px;
+      }
+
+      .td key {
+        padding-left: 48px;
+      }
+      .open-bracket:hover {
+        color:var(--primary-color);
+        background-color:var(--hover-color);
+        border: 1px solid var(--border-color);
+      }
+      .close-bracket {
+        display:inline-block;
+        font-family: var(--font-mono);
       }
      
       .inside-bracket-wrapper {
@@ -58,7 +81,7 @@ export default class SchemaTree extends LitElement {
         transition: max-height 1.2s ease-in-out -1.1s;
         max-height: 0;
       }
-
+      .inside-bracket.object,
       .inside-bracket.array {
         border-left: 1px dotted var(--border-color);
       }
@@ -71,11 +94,19 @@ export default class SchemaTree extends LitElement {
   /* eslint-disable indent */
   render() {
     return html`
+    <div class="tree">
+    <div class="toolbar">
+      ${this.data && this.data['::description'] ? html`<span class='m-markdown' style="margin-block-start: 0"> ${unsafeHTML(marked(this.data['::description'] || ''))}</span>` : html`<div>&nbsp;</div>`}
+      <div class="toolbar-item" @click='${() => this.toggleSchemaDescription()}'> 
+        ${this.schemaDescriptionExpanded ? getI18nText('schemas.collapse-desc') : getI18nText('schemas.expand-desc')}
+      </div>
+    </div>
       <div class="tree"> 
         ${this.data
           ? html`${this.generateTree(this.data['::type'] === 'array' ? this.data['::props'] : this.data, this.data['::type'], this.data['::array-type'] || '')}`
           : html`<span class='mono-font' style='color:var(--red)'> ${getI18nText('schemas.schema-missing')} </span>`
         }
+        ${console.log("This Data", this.data)}
       </div>  
     `;
   }
@@ -90,7 +121,7 @@ export default class SchemaTree extends LitElement {
   generateTree(data, dataType = 'object', arrayType = '', flags = {}, key = '', description = '', schemaLevel = 0, indentLevel = 0) {
     if (!data) {
       return html`<div class="null" style="display:inline;">
-        <span class="key-label xxx-of-key"> ${key.replace('::OPTION~', '')}</span>
+        <span class="key-label xxx-of-key">${key.replace('::OPTION~', '')}</span>
         ${
           dataType === 'array'
             ? html`<span class='mono-font'> [ ] </span>`
@@ -185,8 +216,29 @@ export default class SchemaTree extends LitElement {
       let selection = null;
       const displayLine = [flags['🆁'] || flags['🆆'], description].filter(v => v).join(' ');
       return html`
+      <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}">
+      <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style='min-width:${minFieldColWidth}px'>
+        ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION')
+          ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
+          : keyLabel === '::props' || keyLabel === '::ARRAY~OF'
+            ? ''
+            : schemaLevel > 0
+              ? html`<span class="key-label">
+                  ${keyLabel.replace(/\*$/, '')}${keyLabel.endsWith('*') ? html`<span style="color:var(--red)">*</span>` : ''}:
+                </span>`
+              : ''
+        }
+        ${openBracket}
+      </div>
+      <div class="td key-descr">
+        <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${flags['🆁'] && 'Read only attribute' || flags['🆆'] && 'Write only attribute' || ''}">
+          ${unsafeHTML(marked(displayLine))}
+        </span>
+      </div>
+    </div>
         <div class="inside-bracket-wrapper">
-          <div class='inside-bracket ${data['::type'] || 'no-type-info'}' style='padding-left: 0;'>
+
+          <div class='inside-bracket ${data['::type'] || 'no-type-info'}' style='padding-left: 38px; ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' ? 0 : leftPadding}px';>
             ${Array.isArray(data) && data[0] ? html`${this.generateTree(data[0], 'xxx-of-option', '', data[0]['::flags'] || {}, '::ARRAY~OF', '', newSchemaLevel, newIndentLevel)}`
               : html`
                 ${Object.keys(data).map((dataKey) =>
@@ -198,6 +250,7 @@ export default class SchemaTree extends LitElement {
                 )}`
             }
           </div>
+          ${data['::type'] && data['::type'].includes('xxx-of') ? '' : html`<div class='close-bracket'> ${closeBracket} </div>`}
         </div>
       `;
     }
@@ -215,13 +268,14 @@ export default class SchemaTree extends LitElement {
         <div class="tr primitive" style="font-size: 16px;">
           <div class="td key ${deprecated ? 'deprecated' : ''}" style='line-height: 1.5; min-width: 290px; font-size: 16px;'>
             ${keyLabel.endsWith('*')
-              ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red);'>required</span>`
+              ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}${console.log("This Is Key Label:", keyLabel)}</span></br><span style='color:var(--red);'>required</span>`
               : key.startsWith('::OPTION')
                 ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
                 : schemaLevel > 0
                   ? html`<span class="key-label">${keyLabel}</span>`
                   : ''
             }
+            <span>${dataType === 'array' ? '[' : ''}<span class="${cssType}">${format || type}</span>${dataType === 'array' ? ']' : ''}</span>
           </div>
           <div class="td key-descr">  
             <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
