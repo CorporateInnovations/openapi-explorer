@@ -253,28 +253,9 @@ pre.code-sample {
 .apiUrlText {
   text-align: initial;
   word-wrap: break-word;
-  max-width: 385px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   line-height: 1;
   margin-top: 17px;
 }
-
-
-@media only screen and (min-width: 1024px) {
-  .apiUrlText {
-    max-width: 510px;
-  }
-}
-
-@media only screen and (min-width: 1318px) {
-  .apiUrlText {
-    max-width: 910px;
-  }
-}
-
-@media only screen and (min-width: 1441px) {
-  .apiUrlText {
-    max-width: 100% ;
-  }
-}
-
 `;
