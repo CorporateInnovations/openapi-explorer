@@ -46,11 +46,11 @@ export default class SchemaTree extends LitElement {
         text-decoration: line-through; 
       }
       .open-bracket {
-        display:inline-block;
-        padding: 0 20px 0 0;
+        display: inline-block;
         cursor: pointer;
-        border: 1px solid transparent;
-        border-radius:3px;
+        background: none;
+        border: none;
+        padding: 0;
       }
       .collapsed .open-bracket{
         padding-right: 0;
@@ -62,11 +62,7 @@ export default class SchemaTree extends LitElement {
       .td key {
         padding-left: 48px;
       }
-      .open-bracket:hover {
-        color:var(--primary-color);
-        background-color:var(--hover-color);
-        border: 1px solid var(--border-color);
-      }
+      
       .close-bracket {
         display:inline-block;
         font-family: var(--font-mono);
@@ -81,10 +77,7 @@ export default class SchemaTree extends LitElement {
         transition: max-height 1.2s ease-in-out -1.1s;
         max-height: 0;
       }
-      .inside-bracket.object,
-      .inside-bracket.array {
-        border-left: 1px dotted var(--border-color);
-      }
+
       .inside-bracket.xxx-of.option {
         border-left: 1px solid transparent;
       }`,
@@ -97,9 +90,6 @@ export default class SchemaTree extends LitElement {
     <div class="tree">
     <div class="toolbar">
       ${this.data && this.data['::description'] ? html`<span class='m-markdown' style="margin-block-start: 0"> ${unsafeHTML(marked(this.data['::description'] || ''))}</span>` : html`<div>&nbsp;</div>`}
-      <div class="toolbar-item" @click='${() => this.toggleSchemaDescription()}'> 
-        ${this.schemaDescriptionExpanded ? getI18nText('schemas.collapse-desc') : getI18nText('schemas.expand-desc')}
-      </div>
     </div>
       <div class="tree"> 
         ${this.data
@@ -132,6 +122,7 @@ export default class SchemaTree extends LitElement {
       </div>`;
     }
     if (Object.keys(data).length === 0) {
+
       return html`<span class="key object">${key}:{ }</span>`;
     }
     let keyLabel = '';
@@ -166,18 +157,10 @@ export default class SchemaTree extends LitElement {
     if (data['::type'] === 'object') {
       if (dataType === 'array') {
         if (schemaLevel < this.schemaExpandLevel) {
-          openBracket = html`<span class="open-bracket array-of-object" @click="${this.toggleObjectExpand}">[{</span>`;
+          openBracket = html`<span class="open-bracket array-of-object" @click="${this.toggleObjectExpand}">▾</span>`;
         } else {
-          openBracket = html`<span class="open-bracket array-of-object" @click="${this.toggleObjectExpand}">[{...}]</span>`;
+          openBracket = html`<span class="open-bracket array-of-object" @click="${this.toggleObjectExpand}">▸</span>`;
         }
-        closeBracket = '}]';
-      } else {
-        if (schemaLevel < this.schemaExpandLevel) {
-          openBracket = html`<span class="open-bracket object" @click="${this.toggleObjectExpand}">{</span>`;
-        } else {
-          openBracket = html`<span class="open-bracket object" @click="${this.toggleObjectExpand}">{...}</span>`;
-        }
-        closeBracket = '}';
       }
     } else if (data['::type'] === 'array') {
       if (dataType === 'array') {
@@ -216,6 +199,7 @@ export default class SchemaTree extends LitElement {
       let selection = null;
       const displayLine = [flags['🆁'] || flags['🆆'], description].filter(v => v).join(' ');
       return html`
+      ${key.startsWith('::ONE~OF') ? '' : html`
       <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}">
       <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style='min-width:${minFieldColWidth}px'>
         ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION')
@@ -232,13 +216,14 @@ export default class SchemaTree extends LitElement {
       </div>
       <div class="td key-descr">
         <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${flags['🆁'] && 'Read only attribute' || flags['🆆'] && 'Write only attribute' || ''}">
-          ${unsafeHTML(marked(displayLine))}
+  
+          ${unsafeHTML(marked(displayLine)).values["0"].length > 0 ? unsafeHTML(marked(displayLine)) : ''}
+
         </span>
       </div>
-    </div>
+    </div>`}
         <div class="inside-bracket-wrapper">
-
-          <div class='inside-bracket ${data['::type'] || 'no-type-info'}' style='padding-left: 38px; ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' ? 0 : leftPadding}px';>
+          <div class='inside-bracket ${data['::type'] || 'no-type-info'}' style='padding-left: 8px;';>
             ${Array.isArray(data) && data[0] ? html`${this.generateTree(data[0], 'xxx-of-option', '', data[0]['::flags'] || {}, '::ARRAY~OF', '', newSchemaLevel, newIndentLevel)}`
               : html`
                 ${Object.keys(data).map((dataKey) =>
@@ -264,8 +249,8 @@ export default class SchemaTree extends LitElement {
       return undefined;
     }
     return html`
-      <div class="underline">
-        <div class="tr primitive" style="font-size: 16px;">
+      <div>
+        <div class="tr primitive" style="font-size: 16px; padding: 7px 0;">
           <div class="td key ${deprecated ? 'deprecated' : ''}" style='line-height: 1.5; min-width: 290px; font-size: 16px;'>
             ${keyLabel.endsWith('*')
               ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}${console.log("This Is Key Label:", keyLabel)}</span></br><span style='color:var(--red);'>required</span>`
@@ -304,21 +289,9 @@ export default class SchemaTree extends LitElement {
     const rowEl = e.target.closest('.tr');
     rowEl.classList.toggle('collapsed');
     if (rowEl.classList.contains('collapsed')) {
-      e.target.innerHTML = e.target.classList.contains('array-of-object')
-        ? '[{...}]'
-        : e.target.classList.contains('array-of-array')
-          ? '[[...]]'
-          : e.target.classList.contains('array')
-            ? '[...]'
-            : '{...}';
+      e.target.innerHTML = '▸';
     } else {
-      e.target.innerHTML = e.target.classList.contains('array-of-object')
-        ? '[{'
-        : e.target.classList.contains('array-of-array')
-          ? '[['
-          : e.target.classList.contains('object')
-            ? '{'
-            : '[';
+      e.target.innerHTML = '▾';
     }
     this.requestUpdate();
   }
