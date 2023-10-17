@@ -88,15 +88,11 @@ export default class SchemaTree extends LitElement {
   render() {
     return html`
     <div class="tree">
-    <div class="toolbar">
-      ${this.data && this.data['::description'] ? html`<span class='m-markdown' style="margin-block-start: 0"> ${unsafeHTML(marked(this.data['::description'] || ''))}</span>` : html`<div>&nbsp;</div>`}
-    </div>
       <div class="tree"> 
         ${this.data
           ? html`${this.generateTree(this.data['::type'] === 'array' ? this.data['::props'] : this.data, this.data['::type'], this.data['::array-type'] || '')}`
           : html`<span class='mono-font' style='color:var(--red)'> ${getI18nText('schemas.schema-missing')} </span>`
         }
-        ${console.log("This Data", this.data)}
       </div>  
     `;
   }
@@ -216,9 +212,7 @@ export default class SchemaTree extends LitElement {
       </div>
       <div class="td key-descr">
         <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${flags['🆁'] && 'Read only attribute' || flags['🆆'] && 'Write only attribute' || ''}">
-  
           ${unsafeHTML(marked(displayLine)).values["0"].length > 0 ? unsafeHTML(marked(displayLine)) : ''}
-
         </span>
       </div>
     </div>`}
@@ -253,7 +247,7 @@ export default class SchemaTree extends LitElement {
         <div class="tr primitive" style="font-size: 16px; padding: 7px 0;">
           <div class="td key ${deprecated ? 'deprecated' : ''}" style='line-height: 1.5; min-width: 290px; font-size: 16px;'>
             ${keyLabel.endsWith('*')
-              ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}${console.log("This Is Key Label:", keyLabel)}</span></br><span style='color:var(--red);'>required</span>`
+              ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red);'>required</span>`
               : key.startsWith('::OPTION')
                 ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
                 : schemaLevel > 0
@@ -266,16 +260,13 @@ export default class SchemaTree extends LitElement {
             <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
               ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <p>${type}</p>${schemaDescription}` || ''}`))}
             </span>
-            <p style="margin: 0; margin-block: 0;">${unsafeHTML(marked(`${readOrWriteOnly && `<strong>readOnly: true </strong> ` || ''} `)) }</p>
-            ${example ? html` <span>${example}</span>`: ''}
             ${this.schemaDescriptionExpanded && (constraint || defaultValue || allowedValues || pattern || example) ? html` 
-              <br>
-              <div class="testing" style="line-height: 25px; font-weight: 700;">
-                ${constraint ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Constraints: </span>${constraint}</div><br>` : ''}
-                ${defaultValue ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Default: </span>${defaultValue}</div><br>` : ''}
-                ${allowedValues ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Allowed: </span>${allowedValues}</div><br>` : ''}
-                ${pattern ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span class='bold-text'>Pattern: </span>${pattern}</div><br>` : ''}
-                ${example ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span class='bold-text'>Example: </span>${example}</div><br>` : ''}
+              <div class="testing" style="line-height: 25px;">
+                ${constraint ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'>${constraint}</div><br>` : ''}
+                ${defaultValue ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span>Default: </span>${defaultValue}</div><br>` : ''}
+                ${allowedValues ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span>Supported: </span>${allowedValues}</div><br>` : ''}
+                ${pattern ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span>Pattern: </span>${pattern}</div><br>` : ''}
+                ${example ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span>Example: </span>${example}</div><br>` : ''}
               </div>` 
             : ''}
             </div>
