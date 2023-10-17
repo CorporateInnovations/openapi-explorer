@@ -105,4 +105,13 @@ export default css`
   border-radius: 4px;
  }
 }
+
+select[class="schemaSelectDropdown"]{
+  border:2px solid #000;
+  min-width:290px;
+  margin: 10px 0;
+  padding:10px;
+  border-radius:5px;
+  font-weight:700;
+}
 `;
