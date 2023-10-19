@@ -107,4 +107,40 @@ export default css`
     display: flex;
   }
 }
+
+.technicalWords {
+  border-radius: 4px;
+    background-color: rgb(245, 247, 250);
+    color: rgb(51, 51, 51);
+    padding: 1px 6px;
+    border: 1px solid rgb(228, 231, 235);
+    font-size: 12px;
+    font-family: "Titillium Web", sans-serif;
+    line-height: 1.2em;
+    display: inline-flex;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 14px;
+    max-width: 580px;
+}
+
+@media only screen and (min-width: 1595px) {
+  .technicalWords {
+      max-width: fit-content;
+   }
+  }
+
+.schemaDescriptions {
+  display:inline-block;
+  line-break:anywhere;
+  margin-right:8px;
+  display: contents;
+  align-items: center;
+}
+
+@media only screen and (min-width: 1440px) {
+  .schemaDescriptions {
+   display: flex;
+  }
+}
 `;
