@@ -217,7 +217,7 @@ export default class SchemaTree extends LitElement {
       </div>
     </div>`}
         <div class="inside-bracket-wrapper">
-          <div class='inside-bracket ${data['::type'] || 'no-type-info'}' style='padding-left: 8px;';>
+          <div class='inside-bracket ${data['::type'] || 'no-type-info'}'>
             ${Array.isArray(data) && data[0] ? html`${this.generateTree(data[0], 'xxx-of-option', '', data[0]['::flags'] || {}, '::ARRAY~OF', '', newSchemaLevel, newIndentLevel)}`
               : html`
                 ${Object.keys(data).map((dataKey) =>
@@ -244,29 +244,28 @@ export default class SchemaTree extends LitElement {
     }
     return html`
       <div>
-        <div class="tr primitive" style="font-size: 16px; padding: 7px 0;">
-          <div class="td key ${deprecated ? 'deprecated' : ''}" style='line-height: 1.5; min-width: 290px; font-size: 16px;'>
+        <div class="tr primitive" style="font-size: 18px; padding: 7px 0;">
+          <div class="td key ${deprecated ? 'deprecated' : ''}" style='line-height: 1.5; min-width: 290px; font-size: 18px;'>
             ${keyLabel.endsWith('*')
-              ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red);'>required</span>`
+              ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red); font-size: 16px;'>required</span>`
               : key.startsWith('::OPTION')
                 ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
                 : schemaLevel > 0
                   ? html`<span class="key-label">${keyLabel}</span>`
                   : ''
             }
-            <span>${dataType === 'array' ? '[' : ''}<span class="${cssType}">${format || type}</span>${dataType === 'array' ? ']' : ''}</span>
           </div>
           <div class="td key-descr">  
             <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
-              ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <p>${type}</p>${schemaDescription}` || ''}`))}
+              ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <p style="font-size: 18px; color: rgb(123, 135, 148);">${type}</p>${schemaDescription}` || ''}`))}
             </span>
             ${this.schemaDescriptionExpanded && (constraint || defaultValue || allowedValues || pattern || example) ? html` 
-              <div class="testing" style="line-height: 25px;">
-                ${constraint ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'>${constraint}</div><br>` : ''}
-                ${defaultValue ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span>Default: </span>${defaultValue}</div><br>` : ''}
-                ${allowedValues ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span>Supported: </span>${allowedValues}</div><br>` : ''}
-                ${pattern ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span>Pattern: </span>${pattern}</div><br>` : ''}
-                ${example ? html`<div style='display:inline-block; line-break: anywhere; margin-right:8px'><span>Example: </span>${example}</div><br>` : ''}
+              <div style="margin-top: -5px;">
+                ${constraint ? html`<div class="schemaDescriptions"><span class="technicalWords">${constraint}</span></div><br>` : ''}
+                ${defaultValue ? html`<div class="schemaDescriptions"><span>Default: </span><span class="technicalWords">${defaultValue}</span></div><br>` : ''}
+                ${allowedValues ? html`<div class="schemaDescriptions"><span>Supported: </span><span class="technicalWords">${allowedValues}</span></div><br>` : ''}
+                ${pattern ? html`<div class="schemaDescriptions"><span>Pattern: </span><span class="technicalWords">${pattern}</span></div><br>` : ''}
+                ${example ? html`<div class="schemaDescriptions"><span>Example: </span><span class="technicalWords">${example}</span></span></div><br>` : ''}
               </div>` 
             : ''}
             </div>
