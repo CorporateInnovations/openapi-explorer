@@ -35,6 +35,8 @@ export default class ApiRequest extends LitElement {
     this.selectedRequestBodyExample = '';
     this.requestBodyExpanded = true;
     this.selectedRequest = '';
+    this.selectedRequestModel = '';
+    this.selectedRequestExample = '';
     this.selctedExampleValue = '';
     this.requestBodyTypesClone = null;
     this.requestBodyExamples = null;
@@ -79,7 +81,7 @@ export default class ApiRequest extends LitElement {
   render() {
     return html`
     <div class="grey-border api-request col regular-font request-panel ${(this.renderStyle === 'focused' || this.callback === 'true') ? 'focused-mode' : 'view-mode'}">
-      <div class="${this.callback === 'true' ? 'tiny-title' : 'req-res-title'}"> 
+      <div class="${this.callback === 'true' ? 'tiny-title' : 'req-res-title'}" style="font-size: 20px;"> 
         ${this.callback === 'true' ? 'CALLBACK REQUEST' : getI18nText('operations.request')}
         <div class="toolbar-item" style="display:flex; float: right; color: #999999; background-color: rgb(236, 236, 236); padding: 3px 11px 3px 11px; font-size: 14px; border-radius: 30px; cursor: pointer;" @click='${(e) =>{e.preventDefault(); this.toggleRequestBody()}}'}>
          ${this.requestBodyExpanded ? getI18nText('schemas.collapse-desc') : getI18nText('schemas.expand-desc')}
@@ -122,6 +124,8 @@ export default class ApiRequest extends LitElement {
   /* eslint-disable indent */
   inputParametersTemplate(paramType) {
     const filteredParams = this.parameters ? this.parameters.filter((param) => param.in === paramType) : [];
+    this.parameters.map((i) => {
+    })
     if (filteredParams.length === 0) {
       return '';
     }
@@ -145,6 +149,7 @@ export default class ApiRequest extends LitElement {
       if (!paramSchema) {
         continue;
       }
+         
       const defaultVal = Array.isArray(paramSchema.default) ? paramSchema.default : `${paramSchema.default}`;
       let paramStyle = 'form';
       let paramExplode = true;
@@ -159,28 +164,31 @@ export default class ApiRequest extends LitElement {
 
       tableRows.push(html`
       <tr>
-        <td style="width: 25%; min-width:268px; font-size: 16px; padding: 7px 0;">
-          <div class="param-name ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column;">
-            ${param.name}${!paramSchema.deprecated && param.required ? html`<span style='color:var(--red);'>required</span>` : ''}
+        <td style="width: 25%; min-width:268px; font-size: 18px; padding: 7px 0;">
+          <div class="param-name ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column; line-height: 1.2; font-size: 18px;">
+            ${param.name}${!paramSchema.deprecated && param.required ? html`<span style='color:var(--red); font-size: 16px;'>required</span>` : ''}
           </div>
         </td>
-        <td style="width:160px; min-width:268px; font-size: 16px; padding: 7px 0;">
-        <div class="param-type" style="line-height: 1.5;">
+        <td style="width:160px; min-width:268px; font-size: 18px; padding: 7px 0;">
+        <div class="param-type" style="line-height: 1.5; color: rgb(123, 135, 148);">
             ${paramSchema.type === 'array'
               ? `${paramSchema.arrayType}`
               : `${paramSchema.format ? paramSchema.format : paramSchema.type}`
             }${!paramSchema.deprecated && param.required ? html`<span style='opacity: 0;'>required</span>` : ''}
           </div>
+          <div class="param-description ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column;">
+            ${param.description}
+          </div>
           ${this.renderStyle === 'focused'
           ? html`
-            <div>
+            <div style="2px dotted red">
               ${paramSchema.default || paramSchema.constraint || paramSchema.allowedValues || paramSchema.pattern
                 ? html`
-                  <div class="param-constraint">
+                  <div class="param-constraint" style="2px dotted blue">
                     ${paramSchema.constraint ? html`<span style="font-weight:bold">Constraints: </span>${paramSchema.constraint}<br>` : ''}
                     ${paramSchema.pattern ? html`<span style="font-weight:bold">Pattern: </span>${truncateString(paramSchema.pattern, 60)}<br>` : ''}
                     ${paramSchema.allowedValues && paramSchema.allowedValues.split('┃').map((v, i) => html`
-                      ${i > 0 ? '|' : html`<span style="font-weight:bold">Allowed: </span>`}
+                      ${i > 0 ? '|' : html`<span style="font-weight:bold">Supported: </span>`}
                       ${html`
                         <a part="anchor anchor-param-constraint" class = "${this.allowTry === 'true' ? '' : 'inactive-link'}"
                           data-type="${paramSchema.type === 'array' ? 'array' : 'string'}"
@@ -258,7 +266,7 @@ export default class ApiRequest extends LitElement {
     }
 
     return html`
-    <div class="table-title top-gap">${title}</div>
+    <div class="table-title top-gap" style="font-size: 16px;">${title}</div>
     <div style="display:block; overflow-x:auto; max-width:100%;">
       <table role="presentation" class="m-table" style="width:100%; word-break:break-word; border: none;">
         ${tableRows}
@@ -359,7 +367,6 @@ export default class ApiRequest extends LitElement {
     // For Loop - Main
     this.requestBodyTypesClone.forEach((reqBody) => {
       let reqBodyExamples = [];
-
       if (this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text')) {
         // Generate Example
         if (reqBody.mimeType === this.selectedRequestBodyType) {
@@ -378,19 +385,28 @@ export default class ApiRequest extends LitElement {
             this.selectedRequestBodyExample = (reqBodyExamples.length > 0 ? reqBodyExamples[0].exampleSummary : '');
           }
 
-          reqBodyExamples.filter((v) => v.exampleId === this.selectedRequestBodyExample).map((v) => selectedExampleValue = v.exampleValue);
+          reqBodyExamples.filter((v) => v.exampleSummary === this.selectedRequestBodyExample).map((v) => selectedExampleValue = v.exampleValue);
           this.requestBodyExamples = reqBodyExamples;
 
-          if (!this.selectedRequest) {
-            this.selectedRequest = (reqBodyExamples.length > 0 ? reqBodyExamples[0].exampleId : '');
+          if (!this.selectedRequestModel) {
+            let selectedRequestModelKeys = Object.keys(this.request_body.content[this.selectedRequestBodyType].schema);
+            if (selectedRequestModelKeys.includes("oneOf")){
+                this.selectedRequestModel = this.request_body.content[this.selectedRequestBodyType].schema["oneOf"][0]["allOf"][1]["description"];  
+            } else {
+              this.selectedRequestModel = '';  
+            }
+          }
+
+          if (!this.selectedRequestExample) {
+            this.selectedRequestExample = (reqBodyExamples.length > 0 ? reqBodyExamples[0].exampleSummary : '');      
           }
           
           reqBodyDefaultHtml = html`
             ${reqBodyDefaultHtml}
               ${reqBodyExamples
-                .filter(v => v.exampleId.trim() === this.selectedRequest.trim())
+                .filter(v => v.exampleSummary.trim() === this.selectedRequestExample.trim())
                 .map((v) => html`
-                   <div class="example ${v.exampleId === this.selectedRequestBodyExample ? 'example-selected' : ''}" data-default = '${v.exampleId}'>
+                   <div class="example ${v.exampleSummary === this.selectedRequestBodyExample ? 'example-selected' : ''}" data-default = '${v.exampleSummary}'>
                    ${v.exampleSummary && v.exampleSummary.length > 80 ? html`<div style="padding: 4px 0"> ${v.exampleSummary} </div>` : ''}
                    <slot name="${this.elementId}--request-body">
                    <json-tree 
@@ -441,9 +457,23 @@ export default class ApiRequest extends LitElement {
           `;
         }
       }
-
+     
       // Generate Schema
       if (reqBody.mimeType.includes('json') || reqBody.mimeType.includes('xml') || reqBody.mimeType.includes('text')) {
+        Object.keys(reqBody.schema).map((output) => {
+         let reqBodySchemaKeys = output;
+         if (reqBodySchemaKeys.includes("oneOf")){
+          reqBody.schema["oneOf"].map((schemaItem) => {
+            let schemaDescLoop = schemaItem["allOf"][Object.keys(schemaItem["allOf"]).length - 1 ]["description"]
+            if (schemaDescLoop === this.selectedRequestModel){
+              reqBody.schema = schemaItem
+            } 
+          })
+        } else if (reqBodySchemaKeys.includes("allOf")){
+          reqBody.schema = reqBody.schema;
+          }
+        })
+
         const schemaAsObj = schemaInObjectNotation(reqBody.schema, { includeNulls: this.includeNulls });
         if (this.schemaStyle === 'table') {
           reqBodySchemaHtml = html`
@@ -464,7 +494,7 @@ export default class ApiRequest extends LitElement {
               class = '${reqBody.mimeType.substring(reqBody.mimeType.indexOf('/') + 1)} pad-top-8'
               style = 'display: ${this.selectedRequestBodyType === reqBody.mimeType ? 'block' : 'none'};'
               .data = '${schemaAsObj}'
-              selected-request = "${this.selectedRequest}"
+              selected-request = "${this.selectedRequestModel}"
               schema-expand-level = "${this.schemaExpandLevel}"
               schema-hide-read-only = "${this.schemaHideReadOnly.includes(this.method)}"
               schema-hide-write-only = false
@@ -476,7 +506,7 @@ export default class ApiRequest extends LitElement {
 
       return html`
         <div class='request-body-container' data-selected-request-body-type="${this.selectedRequestBodyType}">
-          <div class="table-title top-gap row">
+          <div class="table-title top-gap row" style="font-size: 16px;">
             REQUEST BODY ${this.request_body.required ? html`<span class="mono-font" style='color:var(--red)'></span>` : ''}
             <span style = "font-weight:normal; margin-left:5px; font-family: Courier New;"> ${this.selectedRequestBodyType}</span>
             <span style="flex:1"></span>
@@ -484,21 +514,7 @@ export default class ApiRequest extends LitElement {
           </div>
         ${this.request_body.description ? html`<div class="m-markdown" style="margin-bottom:20px">${unsafeHTML(marked(this.request_body.description))}</div>` : ''}
           ${(this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text'))
-            ? html`
-            ${Object.keys(this.request_body.content[this.selectedRequestBodyType].schema).includes('oneOf')
-              ? html`<select style="border:2px solid #000; min-width:290px; margin-bottom:10px; padding:10px; border-radius:5px;
-              font-weight:700"; @change="${(e) => {e.preventDefault(), this.selectedRequest = e.target.value.trim(); this.requestUpdate()}}">
-                ${this.requestBodyTypesClone[0].schema.oneOf.map((schemaObject) =>
-                  Object.keys(schemaObject).includes('allOf')
-                    ? html`<option value="${schemaObject.allOf[0].titleV2}">${schemaObject.allOf[0].titleV2}</option></select>`
-                    : ''
-                )}`
-              : Object.keys(this.request_body.content[this.selectedRequestBodyType].schema).includes('allOf')
-                ? html`<select style="border:2px solid #000; min-width:290px; margin-bottom:10px; padding:10px; border-radius:5px;
-                  font-weight:700"; @change="${(e) => {e.preventDefault(), this.selectedRequest = e.target.value.trim(); this.requestUpdate()}}">
-                  ${this.requestBodyExamples.map((example) => html`<option value="${example.exampleId}">${example.exampleSummary}</option>`)}</select>`
-                : ''
-            }
+            ? html`         
               <div class="tab-panel col" style="border-width:0 0 1px 0; border-radius: 5px;">
                 <div class="tab-buttons row" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}">
                 <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab="model" >${getI18nText('operations.model')}</button>
@@ -507,8 +523,20 @@ export default class ApiRequest extends LitElement {
                   @click="${(e) => { e.preventDefault(); copyToClipboardV2(JSON.stringify(reqBodyDefaultHtml.values[1][0].values[5]), e); this.copied = !this.copied; const button = e.target; const originalText = button.innerHTML; button.innerHTML = "Copied";
                     setTimeout(() => { button.innerHTML = originalText; }, 4000)}}"> Copy </span>
                 </div>
-                ${html`<div class="tab-content col" style="display: ${this.activeSchemaTab === 'model' ? 'block' : 'none'}"> ${reqBodySchemaHtml}</div>`}
-                ${html`<div class="tab-content col" style="display: ${this.activeSchemaTab === 'example' ? 'block' : 'none'}"> ${reqBodyDefaultHtml}</div>`}
+                ${html`<div class="tab-content col" style="display: ${this.activeSchemaTab === 'model' ? 'block' : 'none'}">
+                       ${this.request_body.content[this.selectedRequestBodyType].schema.oneOf ? html`<select class="schemaSelectDropdown" @change="${(e) => {e.preventDefault(); this.selectedRequestModel = e.target.value; this.requestUpdate();}}">${this.request_body.content[this.selectedRequestBodyType].schema.oneOf.map((item) => {
+                        return html`<option value="${item["allOf"][1]["description"]}">${item["allOf"][1]["description"]}</option>`
+                          })}</select>` : '' }
+                           ${reqBodySchemaHtml}
+                </div>`}
+              
+                ${html`<div class="tab-content col" style="display: ${this.activeSchemaTab === 'example' ? 'block' : 'none'}">
+                 ${this.request_body.content[this.selectedRequestBodyType].examples ? html` <select class="schemaSelectDropdown" @change="${(e) => {e.preventDefault(); this.selectedRequestExample = e.target.value; this.requestUpdate();}}">${Object.keys(this.request_body.content[this.selectedRequestBodyType].examples).map((option) => {
+                   return html`<option value="${this.request_body.content[this.selectedRequestBodyType].examples[option]["summary"]}">
+                    ${this.request_body.content[this.selectedRequestBodyType].examples[option]["summary"]}
+                            </option>`; })} </select>` : '' }
+                ${reqBodyDefaultHtml}
+                </div>`}
               </div>`
             : html`
               ${reqBodyFileInputHtml}
@@ -665,7 +693,7 @@ export default class ApiRequest extends LitElement {
                       ${paramSchema.pattern ? html`<span style="font-weight:bold">Pattern: </span>${paramSchema.pattern}<br/>` : ''}
                       ${paramSchema.constraint ? html`<span style="font-weight:bold">Constraints: </span>${paramSchema.constraint}<br/>` : ''}
                       ${paramSchema.allowedValues && paramSchema.allowedValues.split('┃').map((v, i) => html`
-                        ${i > 0 ? '|' : html`<span style="font-weight:bold">Allowed: </span>`}
+                        ${i > 0 ? '|' : html`<span style="font-weight:bold">Supported: </span>`}
                         ${html`
                           <a part="anchor anchor-param-constraint" class = "${this.allowTry === 'true' ? '' : 'inactive-link'}"
                             data-type="${paramSchema.type === 'array' ? paramSchema.type : 'string'}"
@@ -1272,6 +1300,8 @@ export default class ApiRequest extends LitElement {
       this.responseBlobUrl = '';
     }
     this.selectedRequest = '';
+    this.selectedRequestModel = '';
+    this.selectedRequestExample = '';
     this.selectedRequestBodyExample = '';
   }
 

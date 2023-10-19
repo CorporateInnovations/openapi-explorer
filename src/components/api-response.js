@@ -23,7 +23,7 @@ export default class ApiResponse extends LitElement {
     this.mimeResponsesForEachStatus = {};
     this.activeSchemaTab = 'model';
     this.showResponseTemplate = true;
-    this.selectedResponseExample = 0 ;
+    this.selectedResponseExample = 0;
     this.selectedResponse = '';
   }
 
@@ -98,7 +98,17 @@ export default class ApiResponse extends LitElement {
         padding-top:24px;
         margin-top:12px;
         border-top: 1px dashed var(--border-color);
-      }`,
+      }
+      
+      #schemaOptions {
+        border: 2px solid black;
+        max-width: 290px;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px; 
+        font-weight: 700;
+      }
+      `,
     ];
   }
 
@@ -106,7 +116,7 @@ export default class ApiResponse extends LitElement {
     return html`
     <div data-selected-request-body-type="${this.selectedRequestBodyType}">
       <div class="col regular-font response-panel ${this.renderStyle}-mode" style="border: 1.8px solid rgb(236, 236, 236); padding: 20px;">
-        <div class="${this.callback === 'true' ? 'tiny-title' : 'req-res-title'}">
+        <div class="${this.callback === 'true' ? 'tiny-title' : 'req-res-title'}" style="font-size: 20px;">
         ${this.callback === 'true' ? 'CALLBACK RESPONSE' : getI18nText('operations.response')}
         <div style="margin: 0; display:flex; float: right; color: #999999; background-color: rgb(236, 236, 236); padding: 3px 11px 3px 11px; font-size: 14px; border-radius: 30px; cursor: pointer;" @click='${(e) =>{ e.preventDefault(); this.toggleResponseTemplate()}}'}>
          ${this.showResponseTemplate ? getI18nText('schemas.collapse-desc') : getI18nText('schemas.expand-desc')}
@@ -173,7 +183,7 @@ export default class ApiResponse extends LitElement {
 
     if (this.showResponseTemplate) {
     return html`
-    <div class="table-title top-gap row" id="responseTemplate">
+    <div class="table-title top-gap row" id="responseTemplate" style="font-size: 16px;">
           REQUEST BODY 
           <span style="font-weight: 400; margin-left: 5px; font-family: Courier New;">${this.selectedMimeType}</span>
         </div>       
@@ -214,21 +224,6 @@ export default class ApiResponse extends LitElement {
             ? ''
             : html`
             <div style="display: ${this.selectedStatus == 200 ? 'block' : 'none'}">
-                ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.length > 1 ? 
-                  html`
-                  <select name="schemaOptions" @change='${(e) =>  {this.onSelectExample(e); this.requestUpdate()}}' id="schemaOptions" style="border: 2px solid black; min-width: 290px; margin-bottom: 10px; padding: 10px; border-radius: 5px; font-weight: 700;">
-                    ${(this.mimeResponsesForEachStatus[status][this.selectedMimeType].hasOwnProperty('schemaTree') && this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree) ?
-                      Object.keys(this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree).map((schemaKey) => (typeof this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree[schemaKey] == 'object') ?
-                        Object.keys(this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree[schemaKey]).map((schemaObjectKey) => (schemaObjectKey == '::ONE~OF ' || schemaObjectKey == '::ANY~OF') ?
-                          Object.keys(this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree[schemaKey][schemaObjectKey]).map((schemaOptionKey) => (schemaOptionKey.startsWith('::OPTION')) ?
-                          html`${this.modelExamplesDropdown(schemaOptionKey, this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree[schemaKey][schemaObjectKey][schemaOptionKey])}`
-                          : '')
-                        : '')
-                      : '')
-                    : ''
-                    }
-                    </select>` 
-                  : ''}
               </div>
               <div class="tab-panel col" style="border-radius: 5px;">
                 <div class="tab-buttons row" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}">
@@ -238,11 +233,29 @@ export default class ApiResponse extends LitElement {
                   <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; margin-left: auto; margin-top: 1px; margin-bottom: 5px; align-items: center; justify-content: center; border-radius: 17px; background-color: #0741c5; color: white; font-weight: 700; border: none; width: 67px; height: 28px; font-size: 14px;" @click="${(e) => {e.preventDefault(); copyToClipboard(JSON.stringify(this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples[this.selectedResponseExample].exampleValue, null, 2), e);}}">Copy
                      </span>
                 </div>
+
                 ${this.activeSchemaTab === 'example'
-                  ? html`<div class='tab-content col' style='flex:1;'>
+                  ? html`
+                  ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.length > 2 ? html`<select id="schemaOptions" @change='${(e) => {this.onSelectExample(e); this.requestUpdate()}}'>
+                    ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.map((responseExample, key) => {
+                      return html`<option value="${key}">${responseExample["exampleSummary"]}</option>`
+                      })}
+                  </select>`: '' }
+                  <div class='tab-content col' style='flex:1;'>
                       ${this.mimeExampleTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
                     </div>`
-                  : html`<div class='tab-content col' style='flex:1;'>
+                  : html`
+                
+                  ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree.hasOwnProperty("submittedPricingParameters*") ?
+                      html`
+                        <select style="border: 2px solid black; max-width: 298px; margin-top: 10px;">
+                          ${Object.entries(this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree["submittedPricingParameters*"]["::ONE~OF "]).map((option) => html`
+                            <option value="${option[1]["::description"]}">${option[1]["::description"]}</option>
+                          `)}
+                        </select>
+                      ` : ''
+                    }
+                      <div class='tab-content col' style='flex:1;'>
                       ${this.mimeSchemaTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
                     </div>`
                 }
@@ -301,14 +314,22 @@ export default class ApiResponse extends LitElement {
   onSelectExample(e) {   
     const exampleContainerEl = e.target.closest('.response-panel').querySelector('.example-panel');
     const exampleEls = [...exampleContainerEl.querySelectorAll('.example')];
-    this.selectedResponseExample = e.target.value - 1;
-    this.selectedResponse = e.target.value; 
+    this.selectedResponseExample = e.target.value;
     exampleEls.forEach((v) => {
       v.style.display = v.dataset.example === e.target.value ? 'block' : 'none';
     });
   }
 
   mimeExampleTemplate(mimeRespDetails) {
+    mimeRespDetails.selectedExample = this.selectedResponseExample;
+    mimeRespDetails.examples.map((mimeResponse) => {
+      if (mimeResponse["exampleSummary"] === this.selectedResponse){
+        return mimeResponse["exampleValue"]
+      } else {
+        return 
+      }
+    })
+
     if (!mimeRespDetails) {
       return html`
         <pre style='color:var(--red)' class = 'example-panel border-top'> No example provided </pre>
@@ -355,14 +376,13 @@ export default class ApiResponse extends LitElement {
     `;
   }
 
-
   mimeSchemaTemplate(mimeRespDetails) {
-
     if (!mimeRespDetails) {
       return html`
         <pre style='color:var(--red)' class = '${this.renderStyle === 'read' ? 'border pad-8-16' : 'border-top'}'> Schema not found</pre>
       `;
     }
+
     return html`
       ${this.schemaStyle === 'table'
         ? html`
