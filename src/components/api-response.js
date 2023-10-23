@@ -24,7 +24,7 @@ export default class ApiResponse extends LitElement {
     this.activeSchemaTab = 'model';
     this.showResponseTemplate = true;
     this.selectedResponseExample = 0;
-    this.selectedResponse = '';
+    this.selectedResponse = 1;
   }
 
   static get properties() {
@@ -220,6 +220,7 @@ export default class ApiResponse extends LitElement {
               : ''
             }
           </div>
+          
           ${Object.keys(this.mimeResponsesForEachStatus[status]).length === 0 
             ? ''
             : html`
@@ -232,30 +233,39 @@ export default class ApiResponse extends LitElement {
                   <div style="flex:1"></div>
                   <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; margin-left: auto; margin-top: 1px; margin-bottom: 5px; align-items: center; justify-content: center; border-radius: 17px; background-color: #0741c5; color: white; font-weight: 700; border: none; width: 67px; height: 28px; font-size: 14px;" @click="${(e) => {e.preventDefault(); copyToClipboard(JSON.stringify(this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples[this.selectedResponseExample].exampleValue, null, 2), e);}}">Copy
                      </span>
-                </div>
-
+                </div>                
                 ${this.activeSchemaTab === 'example'
                   ? html`
-                  ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.length > 2 ? html`<select id="schemaOptions" @change='${(e) => {this.onSelectExample(e); this.requestUpdate()}}'>
-                    ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.map((responseExample, key) => {
-                      return html`<option value="${key}">${responseExample["exampleSummary"]}</option>`
-                      })}
-                  </select>`: '' }
-                  <div class='tab-content col' style='flex:1;'>
+                    ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.length > 2
+                      ? html`
+                        <select id="schemaOptions" @change='${(e) => {this.onSelectExample(e); this.requestUpdate()}}'>
+                          ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.map((responseExample, key) => {
+                            return html`<option value="${key}">${responseExample["exampleSummary"]}</option>`;
+                          })}
+                        </select>`
+                      : ''}
+                    <div class='tab-content col' style='flex:1;'>
                       ${this.mimeExampleTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
                     </div>`
                   : html`
-                
-                  ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree.hasOwnProperty("submittedPricingParameters*") ?
-                      html`
-                        <select style="border: 2px solid black; max-width: 298px; margin-top: 10px;">
-                          ${Object.entries(this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree["submittedPricingParameters*"]["::ONE~OF "]).map((option) => html`
-                            <option value="${option[1]["::description"]}">${option[1]["::description"]}</option>
-                          `)}
-                        </select>
-                      ` : ''
-                    }
-                      <div class='tab-content col' style='flex:1;'>
+                ${Object.entries(this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree).map((value) => {
+                  if(value.includes("submittedPricingParameters*")){
+                    let subPriceParam = value[1];
+                     if(subPriceParam.hasOwnProperty("::ONE~OF ") || subPriceParam.hasOwnProperty("::ALL~OF ")){
+                      return html`
+                      <select id="schemaOptions" @change="${(e) => {e.preventDefault(); this.selectedResponse = e.target.value; this.requestUpdate();}}">
+                        ${Object.entries(this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree["submittedPricingParameters*"]["::ONE~OF "])
+                          .filter(([key, index]) => key.startsWith("::OPTION"))
+                          .map(([key, value]) => {
+                            const optionKeys = key;
+                            const splitOptionKeys = optionKeys.split('~');
+                            return html`<option value="${splitOptionKeys[1]}">${value["::description"]}</option>`;
+                          })}
+                      </select>`
+                      }
+                  } 
+                })}
+                    <div class='tab-content col' style='flex:1;'>
                       ${this.mimeSchemaTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
                     </div>`
                 }

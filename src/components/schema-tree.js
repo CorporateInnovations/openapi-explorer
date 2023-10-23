@@ -7,6 +7,7 @@ import SchemaStyles from '../styles/schema-styles';
 import BorderStyles from '../styles/border-styles';
 
 export default class SchemaTree extends LitElement {
+
   static get properties() {
     return {
       data: { type: Object },
@@ -14,7 +15,7 @@ export default class SchemaTree extends LitElement {
       schemaDescriptionExpanded: { type: Boolean },
       schemaHideReadOnly: { type: String, attribute: 'schema-hide-read-only' },
       schemaHideWriteOnly: { type: String, attribute: 'schema-hide-write-only' },
-      selectedRequest: { type: String, attribute: 'selected-request' }
+      selectedResponse: { type: String, attribute: 'selected-request' }
     };
   }
 
@@ -67,6 +68,10 @@ export default class SchemaTree extends LitElement {
         display:inline-block;
         font-family: var(--font-mono);
       }
+
+      .inside-bracket {
+        border-radius: 8px;
+      }
      
       .inside-bracket-wrapper {
         max-height: 10000px;
@@ -90,7 +95,7 @@ export default class SchemaTree extends LitElement {
     <div class="tree">
       <div class="tree"> 
         ${this.data
-          ? html`${this.generateTree(this.data['::type'] === 'array' ? this.data['::props'] : this.data, this.data['::type'], this.data['::array-type'] || '')}`
+          ? html`${this.generateTree(this.data['::type'] === 'array' ? this.data['::props'] : this.data)}`
           : html`<span class='mono-font' style='color:var(--red)'> ${getI18nText('schemas.schema-missing')} </span>`
         }
       </div>  
@@ -129,7 +134,7 @@ export default class SchemaTree extends LitElement {
         if (object.startsWith('::OPTION')) {
           const splitParts = object.split('~');
           let objectKeyDescr = splitParts[1];
-          if(objectKeyDescr == this.selectedRequest){
+          if(objectKeyDescr == this.selectedResponse){
             data = data[object];
            }
          } 
@@ -210,14 +215,9 @@ export default class SchemaTree extends LitElement {
         }
         ${openBracket}
       </div>
-      <div class="td key-descr">
-        <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${flags['🆁'] && 'Read only attribute' || flags['🆆'] && 'Write only attribute' || ''}">
-          ${unsafeHTML(marked(displayLine)).values["0"].length > 0 ? unsafeHTML(marked(displayLine)) : ''}
-        </span>
-      </div>
     </div>`}
         <div class="inside-bracket-wrapper">
-          <div class='inside-bracket ${data['::type'] || 'no-type-info'}'>
+          <div class='inside-bracket ${data['::type'] || 'no-type-info'} inside-bracket-object'>
             ${Array.isArray(data) && data[0] ? html`${this.generateTree(data[0], 'xxx-of-option', '', data[0]['::flags'] || {}, '::ARRAY~OF', '', newSchemaLevel, newIndentLevel)}`
               : html`
                 ${Object.keys(data).map((dataKey) =>
