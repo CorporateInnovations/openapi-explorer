@@ -1,6 +1,6 @@
 {
   "name": "@CorporateInnovations/openapi-explorer",
-  "version": "1.4.8",
+  "version": "1.5.0",
   "description": "Forked from - OpenAPI Explorer - API viewer with dynamically generated components, documentation, and interaction console",
   "author": "CI Group",
   "type": "module",
