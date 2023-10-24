@@ -29,7 +29,7 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
 
     <!-- Perfoms Session Auth Heading -->
     <h2 class="performsSessionAuthHeading">${path.shortSummary || `${path.method.toUpperCase()} ${path.path}`}</h2> 
-    <div class="m-markdown" style="color: black; margin-right: 2rem; margin-bottom: 1rem; width: 70%;"> ${unsafeHTML(marked(path.description || ''))}</div>
+    <div class="m-markdown performsSessionAuthDescription"> ${unsafeHTML(marked(path.description || ''))}</div>
     <div style="display: flex; justify-content: space-between">
       <div style="flex-grow: 1">
         <div class='mono-font part="section-operation-url" regular-font-size' style='padding: 8px 0; color: black; display: flex; align-items: center;'> 
