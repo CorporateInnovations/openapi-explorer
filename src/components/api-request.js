@@ -525,7 +525,7 @@ export default class ApiRequest extends LitElement {
                 </div>
                 ${html`<div class="tab-content col" style="display: ${this.activeSchemaTab === 'model' ? 'block' : 'none'}">
                        ${this.request_body.content[this.selectedRequestBodyType].schema.oneOf ? html`<select class="schemaSelectDropdown" @change="${(e) => {e.preventDefault(); this.selectedRequestModel = e.target.value; this.requestUpdate();}}">${this.request_body.content[this.selectedRequestBodyType].schema.oneOf.map((item) => {
-                        return html`<option value="${item["allOf"][1]["description"]}">${item["allOf"][1]["description"]}</option>`
+                        return html`<option value="${item["allOf"][Object.keys(item["allOf"]).length - 1]["description"]}">${item["allOf"][Object.keys(item["allOf"]).length - 1]["description"]}</option>`
                           })}</select>` : '' }
                            ${reqBodySchemaHtml}
                 </div>`}

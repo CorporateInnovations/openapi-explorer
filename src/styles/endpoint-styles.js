@@ -241,6 +241,9 @@ pre.code-sample {
   font-size: 36px;
 }
 
+.performsSessionAuthDescription {
+  color: black;
+}
 
 #apiUrl {
   font-family: Courier New;
