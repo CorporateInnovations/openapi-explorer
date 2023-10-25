@@ -143,12 +143,6 @@ export default css`
   align-items: center;
 }
 
-@media only screen and (min-width: 1440px) {
-  .schemaDescriptions {
-   display: flex;
-  }
-}
-
 .nestingStyles {
   background: rgb(250, 250, 250);
   border-radius: 8px;
