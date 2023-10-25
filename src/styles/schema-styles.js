@@ -10,6 +10,11 @@ export default css`
   width: 100%;
   box-sizing: content-box;
 }
+
+.tr:not(:first-child){
+  padding: 15px 0;
+}
+
 .td {
   display: block;
   flex: 0 0 auto;
@@ -142,5 +147,11 @@ export default css`
   .schemaDescriptions {
    display: flex;
   }
+}
+
+.nestingStyles {
+  background: rgb(250, 250, 250);
+  border-radius: 8px;
+  padding: 12px 20px;
 }
 `;
