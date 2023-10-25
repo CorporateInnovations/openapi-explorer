@@ -162,29 +162,35 @@ export default class SchemaTree extends LitElement {
         } else {
           openBracket = html`<span class="open-bracket array-of-object" @click="${this.toggleObjectExpand}">▸</span>`;
         }
+      } else {
+        if (schemaLevel < this.schemaExpandLevel) {
+          openBracket = html`<span class="open-bracket object" @click="${this.toggleObjectExpand}">▾</span>`;
+        } else {
+          openBracket = html`<span class="open-bracket object" @click="${this.toggleObjectExpand}">▸</span>`;
+        }
       }
     } else if (data['::type'] === 'array') {
       if (dataType === 'array') {
         const arrType = arrayType !== 'object' ? arrayType : '';
         if (schemaLevel < this.schemaExpandLevel) {
-          openBracket = html`<span class="open-bracket array-of-array" data-array-type="${arrType}" @click="${this.toggleObjectExpand}">[[ ${arrType} </span>`;
+          openBracket = html`<span class="open-bracket array-of-array" data-array-type="${arrType}" @click="${this.toggleObjectExpand}">▾</span>`;
         } else {
-          openBracket = html`<span class="open-bracket array-of-array"  data-array-type="${arrType}" @click="${this.toggleObjectExpand}">[[...]]</span>`;
+          openBracket = html`<span class="open-bracket array-of-array"  data-array-type="${arrType}" @click="${this.toggleObjectExpand}">▸</span>`;
         }
         closeBracket = ']]';
       } else {
         if (schemaLevel < this.schemaExpandLevel) {
-          openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">[</span>`;
+          openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">▾</span>`;
         } else {
-          openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">[...]</span>`;
+          openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">▸</span>`;
         }
         closeBracket = ']';
       }
     } else if (data['::type'] === 'xxx-of' && dataType === 'array') {
       if (schemaLevel < this.schemaExpandLevel) {
-        openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">[</span>`;
+        openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">▾</span>`;
       } else {
-        openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">[...]</span>`;
+        openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">▸</span>`;
       }
       closeBracket = ']';
     }
