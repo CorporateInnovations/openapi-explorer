@@ -208,12 +208,11 @@ export default class SchemaTree extends LitElement {
           : keyLabel === '::props' || keyLabel === '::ARRAY~OF'
             ? ''
             : schemaLevel > 0
-              ? html`<span class="key-label">
-                  ${keyLabel.replace(/\*$/, '')}${keyLabel.endsWith('*') ? html`<span style="color:var(--red)">*</span>` : ''}:
+              ? html`<span class="key-label" style="font-size: 18px;">
+                  ${keyLabel.replace(/\*$/, '')} ${openBracket}${keyLabel.endsWith('*') ? html`<br><span style="color:var(--red); font-size: 16px;"> required</span>` : ''}
                 </span>`
               : ''
         }
-        ${openBracket}
       </div>
     </div>`}
         <div class="inside-bracket-wrapper">
@@ -236,6 +235,7 @@ export default class SchemaTree extends LitElement {
 
     // For Primitive Data types
     const { type, cssType, format, readOrWriteOnly, constraint, defaultValue, example, allowedValues, pattern, schemaDescription, schemaTitle, deprecated } = JSON.parse(data);
+    let constraintSplit = constraint.split(': ')
     if (readOrWriteOnly === '🆁' && this.schemaHideReadOnly === 'true') {
       return undefined;
     }
@@ -244,7 +244,7 @@ export default class SchemaTree extends LitElement {
     }
     return html`
       <div>
-        <div class="tr primitive" style="font-size: 18px; padding: 7px 0;">
+        <div class="tr primitive nestingStyles" style="font-size: 18px;">
           <div class="td key ${deprecated ? 'deprecated' : ''}" style='line-height: 1.5; min-width: 290px; font-size: 18px;'>
             ${keyLabel.endsWith('*')
               ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red); font-size: 16px;'>required</span>`
@@ -261,7 +261,7 @@ export default class SchemaTree extends LitElement {
             </span>
             ${this.schemaDescriptionExpanded && (constraint || defaultValue || allowedValues || pattern || example) ? html` 
               <div style="margin-top: -5px;">
-                ${constraint ? html`<div class="schemaDescriptions"><span class="technicalWords">${constraint}</span></div><br>` : ''}
+                ${constraint ? html`<div class="schemaDescriptions"><span>${constraintSplit[0]}: </span><span class="technicalWords">${constraintSplit[1]}</span></div><br>` : ''}
                 ${defaultValue ? html`<div class="schemaDescriptions"><span>Default: </span><span class="technicalWords">${defaultValue}</span></div><br>` : ''}
                 ${allowedValues ? html`<div class="schemaDescriptions"><span>Supported: </span><span class="technicalWords">${allowedValues}</span></div><br>` : ''}
                 ${pattern ? html`<div class="schemaDescriptions"><span>Pattern: </span><span class="technicalWords">${pattern}</span></div><br>` : ''}

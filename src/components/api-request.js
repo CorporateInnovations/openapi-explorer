@@ -184,13 +184,13 @@ export default class ApiRequest extends LitElement {
             <div style="2px dotted red">
               ${paramSchema.default || paramSchema.constraint || paramSchema.allowedValues || paramSchema.pattern
                 ? html`
-                  <div class="param-constraint" style="2px dotted blue">
-                    ${paramSchema.constraint ? html`<span style="font-weight:bold">Constraints: </span>${paramSchema.constraint}<br>` : ''}
-                    ${paramSchema.pattern ? html`<span style="font-weight:bold">Pattern: </span>${truncateString(paramSchema.pattern, 60)}<br>` : ''}
+                  <div class="param-constraint" style="display: block;">
+                    ${paramSchema.constraint ? html`<span>Constraints</span> <span class="technicalWords">${paramSchema.constraint}</span><br>` : ''}
+                    ${paramSchema.pattern ? html`<span style="font-weight:bold">Pattern: </span> <span class="technicalWords">${truncateString(paramSchema.pattern, 60)}</span><br>` : ''}
                     ${paramSchema.allowedValues && paramSchema.allowedValues.split('┃').map((v, i) => html`
-                      ${i > 0 ? '|' : html`<span style="font-weight:bold">Supported: </span>`}
+                      ${i > 0 ? '|' : html`<span>Supported: </span>`}
                       ${html`
-                        <a part="anchor anchor-param-constraint" class = "${this.allowTry === 'true' ? '' : 'inactive-link'}"
+                        <a part="anchor anchor-param-constraint" class="${this.allowTry === 'true' ? '' : 'inactive-link'} technicalWords"
                           data-type="${paramSchema.type === 'array' ? 'array' : 'string'}"
                           data-enum="${v.trim()}"
                           @click="${(e) => {
@@ -690,10 +690,10 @@ export default class ApiRequest extends LitElement {
                 ${paramSchema.default || paramSchema.constraint || paramSchema.allowedValues || paramSchema.pattern
                   ? html`
                     <div class="param-constraint">
-                      ${paramSchema.pattern ? html`<span style="font-weight:bold">Pattern: </span>${paramSchema.pattern}<br/>` : ''}
-                      ${paramSchema.constraint ? html`<span style="font-weight:bold">Constraints: </span>${paramSchema.constraint}<br/>` : ''}
+                      ${paramSchema.pattern ? html`<span>Pattern: </span><span class="technicalWords">${paramSchema.pattern}</span><br/>` : ''}
+                      ${paramSchema.constraint ? html`<span>Constraints</span><span class="technicalWords">${paramSchema.constraint}</span><br/>` : ''}
                       ${paramSchema.allowedValues && paramSchema.allowedValues.split('┃').map((v, i) => html`
-                        ${i > 0 ? '|' : html`<span style="font-weight:bold">Supported: </span>`}
+                        ${i > 0 ? '|' : html`<span>Supported: </span>`}
                         ${html`
                           <a part="anchor anchor-param-constraint" class = "${this.allowTry === 'true' ? '' : 'inactive-link'}"
                             data-type="${paramSchema.type === 'array' ? paramSchema.type : 'string'}"
