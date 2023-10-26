@@ -7,7 +7,6 @@ export default css`
 .tr {
   display: flex;
   flex: none;
-  width: 100%;
   box-sizing: content-box;
 }
 
@@ -144,8 +143,8 @@ export default css`
 }
 
 .nestingStyles {
-  background: rgb(250, 250, 250);
-  border-radius: 8px;
-  padding: 12px 20px;
+  background: rgb(242, 242, 242, 0.5);
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 `;
