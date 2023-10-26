@@ -181,7 +181,7 @@ export default class ApiRequest extends LitElement {
           </div>
           ${this.renderStyle === 'focused'
           ? html`
-            <div style="2px dotted red">
+            <div>
               ${paramSchema.default || paramSchema.constraint || paramSchema.allowedValues || paramSchema.pattern
                 ? html`
                   <div class="param-constraint" style="display: block;">
@@ -512,7 +512,7 @@ export default class ApiRequest extends LitElement {
             <span style="flex:1"></span>
             ${reqBodyTypeSelectorHtml}
           </div>
-        ${this.request_body.description ? html`<div class="m-markdown" style="margin-bottom:20px">${unsafeHTML(marked(this.request_body.description))}</div>` : ''}
+        ${this.request_body.description ? html`<div class="m-markdown" style="margin-bottom:20px;">${unsafeHTML(marked(this.request_body.description))}</div>` : ''}
           ${(this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text'))
             ? html`         
               <div class="tab-panel col" style="border-width:0 0 1px 0; border-radius: 5px;">
