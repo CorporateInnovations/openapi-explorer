@@ -148,6 +148,9 @@ export default class SchemaTree extends LitElement {
       keyLabel = key;
     }
 
+    let baseIndentLevel = 10 * indentLevel;
+    let innerBracketIndent = 8 * indentLevel;
+
     const leftPadding = 16;
     // Min-width used for model keys: `td key `
     const minFieldColWidth = 300 - (indentLevel * leftPadding);
@@ -162,29 +165,35 @@ export default class SchemaTree extends LitElement {
         } else {
           openBracket = html`<span class="open-bracket array-of-object" @click="${this.toggleObjectExpand}">▸</span>`;
         }
+      } else {
+        if (schemaLevel < this.schemaExpandLevel) {
+          openBracket = html`<span class="open-bracket object" @click="${this.toggleObjectExpand}">▾</span>`;
+        } else {
+          openBracket = html`<span class="open-bracket object" @click="${this.toggleObjectExpand}">▸</span>`;
+        }
       }
     } else if (data['::type'] === 'array') {
       if (dataType === 'array') {
         const arrType = arrayType !== 'object' ? arrayType : '';
         if (schemaLevel < this.schemaExpandLevel) {
-          openBracket = html`<span class="open-bracket array-of-array" data-array-type="${arrType}" @click="${this.toggleObjectExpand}">[[ ${arrType} </span>`;
+          openBracket = html`<span class="open-bracket array-of-array" data-array-type="${arrType}" @click="${this.toggleObjectExpand}">▾</span>`;
         } else {
-          openBracket = html`<span class="open-bracket array-of-array"  data-array-type="${arrType}" @click="${this.toggleObjectExpand}">[[...]]</span>`;
+          openBracket = html`<span class="open-bracket array-of-array"  data-array-type="${arrType}" @click="${this.toggleObjectExpand}">▸</span>`;
         }
         closeBracket = ']]';
       } else {
         if (schemaLevel < this.schemaExpandLevel) {
-          openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">[</span>`;
+          openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">▾</span>`;
         } else {
-          openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">[...]</span>`;
+          openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">▸</span>`;
         }
         closeBracket = ']';
       }
     } else if (data['::type'] === 'xxx-of' && dataType === 'array') {
       if (schemaLevel < this.schemaExpandLevel) {
-        openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">[</span>`;
+        openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">▾</span>`;
       } else {
-        openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">[...]</span>`;
+        openBracket = html`<span class="open-bracket array" @click="${this.toggleObjectExpand}">▸</span>`;
       }
       closeBracket = ']';
     }
@@ -201,14 +210,14 @@ export default class SchemaTree extends LitElement {
       const displayLine = [flags['🆁'] || flags['🆆'], description].filter(v => v).join(' ');
       return html`
       ${key.startsWith('::ONE~OF') ? '' : html`
-      <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}">
-      <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style='min-width:${minFieldColWidth}px'>
+      <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}" style="${schemaLevel > 1 ? 'background: rgb(250, 250, 250);': ''}">
+      <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style='min-width:${minFieldColWidth}px;'>
         ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION')
           ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
           : keyLabel === '::props' || keyLabel === '::ARRAY~OF'
             ? ''
             : schemaLevel > 0
-              ? html`<span class="key-label" style="font-size: 18px;">
+              ? html`<span class="key-label" style="font-size: 18px; padding-left:${indentLevel > 1 ? baseIndentLevel : ''}px" >
                   ${keyLabel.replace(/\*$/, '')} ${openBracket}${keyLabel.endsWith('*') ? html`<br><span style="color:var(--red); font-size: 16px;"> required</span>` : ''}
                 </span>`
               : ''
@@ -242,9 +251,10 @@ export default class SchemaTree extends LitElement {
     if (readOrWriteOnly === '🆆' && this.schemaHideWriteOnly === 'true') {
       return undefined;
     }
+
     return html`
-      <div>
-        <div class="tr primitive nestingStyles" style="font-size: 18px;">
+        <div class="${indentLevel > 1 ? 'nestingStyles' : 0}">
+        <div class="tr primitive" style="font-size: 18px; ${indentLevel > 2 ? 'border-radius: 0;' : ''} padding-left:${indentLevel > 1 ? innerBracketIndent : 0}px"> 
           <div class="td key ${deprecated ? 'deprecated' : ''}" style='line-height: 1.5; min-width: 290px; font-size: 18px;'>
             ${keyLabel.endsWith('*')
               ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red); font-size: 16px;'>required</span>`
@@ -269,8 +279,8 @@ export default class SchemaTree extends LitElement {
               </div>` 
             : ''}
             </div>
-        </div>   
-      </div>
+        </div>  
+        </div> 
     `;
   }
   /* eslint-enable indent */

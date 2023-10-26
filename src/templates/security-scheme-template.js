@@ -449,7 +449,7 @@ export function pathSecurityTemplate(pathSecurity) {
             <div style="padding:2px 4px; white-space:nowrap; text-overflow:ellipsis;max-width:150px; overflow:hidden;">
               <span part="anchor anchor-operation-security" style="font-weight: 700;"> ${orSecurityItem1.securityTypes} </span>
             </div>
-            <div class="tooltip-text">
+            <div class="tooltip-text" style="font-weight: normal;">
               ${orSecurityItem1.securityDefs.length > 1 ? html`<div>Requires <b>all</b> of the following </div>` : ''}
               <div style="padding: 10px 40px 5px 10px;">
                 ${orSecurityItem1.securityDefs.map((andSecurityItem, j) => html`
@@ -463,12 +463,14 @@ export function pathSecurityTemplate(pathSecurity) {
                     : andSecurityItem.type === 'http'
                       ? html`
                         <div style="line-height: 1;">
-                          ${orSecurityItem1.securityDefs.length > 1 ? html`<b>${j + 1}.</b> &nbsp;` : '' } 
-                          ${andSecurityItem.scheme === 'basic' ? getI18nText('authentication.http-basic-note') : 'Bearer Token'} ${getI18nText('headers.authentication').toLocaleLowerCase()}
-                          ${getOauthScopeTemplate(andSecurityItem.scopes)}
-                          <p style="margin-top: 15px;">Type: ${andSecurityItem.type}</p>
-                          <p>Scheme: ${andSecurityItem.scheme}</p>
-                          <p>Format: string</p> <!-- Format Not Availble In Object Value May Need To Be Updated In Future --> 
+                        <span style="font-weight: 700;">
+                            ${orSecurityItem1.securityDefs.length > 1 ? html`<b>${j + 1}.</b> &nbsp;` : '' } 
+                            ${andSecurityItem.scheme === 'basic' ? getI18nText('authentication.http-basic-note') : 'Bearer Token'} ${getI18nText('headers.authentication').toLocaleLowerCase()}
+                            ${getOauthScopeTemplate(andSecurityItem.scopes)}
+                          </span>
+                          <p style="margin-top: 15px; color: black; font-weight: 600;">Type: <span style="color: #7b8794">${andSecurityItem.type}</span></p>
+                          <p style="color: black; font-weight: 600;">Scheme: <span style="color: #7b8794">${andSecurityItem.scheme}</span></p>
+                          <p style="color: black; font-weight: 600;">Format: <span style="color: #7b8794">string</span></p> <!-- Format Not Availble In Object Value May Need To Be Updated In Future --> 
                         </div>`
                       : html`
                         <div>
