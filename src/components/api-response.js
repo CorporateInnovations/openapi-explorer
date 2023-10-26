@@ -224,8 +224,7 @@ export default class ApiResponse extends LitElement {
           ${Object.keys(this.mimeResponsesForEachStatus[status]).length === 0 
             ? ''
             : html`
-            <div style="display: ${this.selectedStatus == 200 ? 'block' : 'none'}">
-              </div>
+            <div style="display: ${this.selectedStatus == 200 ? 'block' : 'none'}"></div>
               <div class="tab-panel col" style="border-radius: 5px;">
                 <div class="tab-buttons row" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}">
                   <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab='model'>${getI18nText('operations.model')}</button>
@@ -233,44 +232,33 @@ export default class ApiResponse extends LitElement {
                   <div style="flex:1"></div>
                   <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; margin-left: auto; margin-top: 1px; margin-bottom: 5px; align-items: center; justify-content: center; border-radius: 17px; background-color: #0741c5; color: white; font-weight: 700; border: none; width: 67px; height: 28px; font-size: 14px;" @click="${(e) => {e.preventDefault(); copyToClipboard(JSON.stringify(this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples[this.selectedResponseExample].exampleValue, null, 2), e);}}">Copy
                      </span>
-                </div>                
+                </div>
                 ${this.activeSchemaTab === 'example'
-                  ? html`
-                    ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.length > 2
-                      ? html`
-                        <select id="schemaOptions" @change='${(e) => {this.onSelectExample(e); this.requestUpdate()}}'>
-                          ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.map((responseExample, key) => {
-                            return html`<option value="${key}">${responseExample["exampleSummary"]}</option>`;
-                          })}
-                        </select>`
-                      : ''}
-                    <div class='tab-content col' style='flex:1;'>
-                      ${this.mimeExampleTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
-                    </div>`
-                  : html`
-                ${Object.entries(this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree).map((value) => {
-                  if(value.includes("submittedPricingParameters*")){
-                    let subPriceParam = value[1];
-                     if(subPriceParam.hasOwnProperty("::ONE~OF ") || subPriceParam.hasOwnProperty("::ALL~OF ")){
-                      return html`
-                      <select id="schemaOptions" @change="${(e) => {e.preventDefault(); this.selectedResponse = e.target.value; this.requestUpdate();}}">
-                        ${Object.entries(this.mimeResponsesForEachStatus[status][this.selectedMimeType].schemaTree["submittedPricingParameters*"]["::ONE~OF "])
-                          .filter(([key, index]) => key.startsWith("::OPTION"))
-                          .map(([key, value]) => {
-                            const optionKeys = key;
-                            const splitOptionKeys = optionKeys.split('~');
-                            return html`<option value="${splitOptionKeys[1]}">${value["::description"]}</option>`;
-                          })}
-                      </select>`
-                      }
-                  } 
-                })}
-                    <div class='tab-content col' style='flex:1;'>
+                  ?
+                    Object.keys(this.mimeResponsesForEachStatus[status]).includes(this.selectedMimeType) ?
+                      Object.keys(this.mimeResponsesForEachStatus[status][this.selectedMimeType]).includes('examples') ?
+                        this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.length > 1 ?
+                          html`
+                            <select id="schemaOptions" @change='${(e) => {this.onSelectExample(e); this.requestUpdate()}}'>
+                              ${this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples.map((responseExample, key) => {
+                                return html`<option value="${key}">${responseExample["exampleSummary"]}</option>`;
+                              })}
+                            </select>
+                            <div class='tab-content col' style='flex:1;'>
+                              ${this.mimeExampleTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
+                            </div>`
+                        : html` <div class='tab-content col' style='flex:1;'>
+                          ${this.mimeExampleTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
+                        </div>`
+                      : ''
+                    : ''
+                  : Object.keys(this.mimeResponsesForEachStatus[status]).includes(this.selectedMimeType) ?
+                    html `<div class='tab-content col' style='flex:1;'>
                       ${this.mimeSchemaTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
                     </div>`
+                  : ''
                 }
-              </div>
-            `
+              </div>`
           }`)
         }
     `;
