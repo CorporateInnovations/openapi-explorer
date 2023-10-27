@@ -10,10 +10,6 @@ export default css`
   box-sizing: content-box;
 }
 
-.tr:not(:first-child){
-  padding: 15px 0;
-}
-
 .td {
   display: block;
   flex: 0 0 auto;
@@ -34,6 +30,11 @@ export default css`
   display: none;
   max-height: auto;
 }
+
+.tr > div > .key-label{
+  font-size: 20px;
+}
+
 .toolbar {
   display: none;
 }
@@ -143,7 +144,6 @@ export default css`
 }
 
 .nestingStyles {
-  background: rgb(242, 242, 242, 0.5);
   padding-top: 12px;
   padding-bottom: 12px;
 }

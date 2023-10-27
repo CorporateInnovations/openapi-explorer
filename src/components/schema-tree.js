@@ -41,7 +41,7 @@ export default class SchemaTree extends LitElement {
       }
 
       .tree .key {
-        max-width: 300px;
+        max-width: 315px;
       }
       .key.deprecated .key-label {
         text-decoration: line-through; 
@@ -63,6 +63,14 @@ export default class SchemaTree extends LitElement {
       .td key {
         padding-left: 48px;
       }
+
+      .td key:last-child{
+        margin-bottom: 0px !important;
+      }
+      
+      .td key-descr:last-child{
+        margin-bottom: 0px !important;
+      }
       
       .close-bracket {
         display:inline-block;
@@ -78,9 +86,31 @@ export default class SchemaTree extends LitElement {
         transition: max-height 1.2s ease-in-out;
         overflow: hidden;
       }
+
+      .inside-bracket-wrapper[data-inner-bracket="even"]{
+        background: white;
+      }
+
+      .inside-bracket-wrapper[data-inner-bracket="odd"]{
+        background: rgb(240, 240, 240, 0.5);
+      }
+
       .tr.collapsed + .inside-bracket-wrapper {
         transition: max-height 1.2s ease-in-out -1.1s;
         max-height: 0;
+      }
+
+      .tdKeyAndDescMargin{
+        margin-bottom: -25px;
+      }
+
+      .tdKeyAndDescMargin:last-child{
+        margin-bottom: -25px;
+      }
+
+      .schemaTypeStyles {
+        font-size: 20px !important;
+        color: rgb(123, 135, 148);
       }
 
       .inside-bracket.xxx-of.option {
@@ -147,10 +177,7 @@ export default class SchemaTree extends LitElement {
     } else {
       keyLabel = key;
     }
-
-    let baseIndentLevel = 10 * indentLevel;
-    let innerBracketIndent = 8 * indentLevel;
-
+    let baseIndentLevel = Math.pow(1.5, indentLevel) * 8;
     const leftPadding = 16;
     // Min-width used for model keys: `td key `
     const minFieldColWidth = 300 - (indentLevel * leftPadding);
@@ -210,22 +237,22 @@ export default class SchemaTree extends LitElement {
       const displayLine = [flags['🆁'] || flags['🆆'], description].filter(v => v).join(' ');
       return html`
       ${key.startsWith('::ONE~OF') ? '' : html`
-      <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}" style="${schemaLevel > 1 ? 'background: rgb(250, 250, 250);': ''}">
-      <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style='min-width:${minFieldColWidth}px;'>
+      <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}">
+      <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style="min-width:${minFieldColWidth}px; margin-top:${indentLevel != 1 ? '30' : '0'}px">
         ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION')
           ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
           : keyLabel === '::props' || keyLabel === '::ARRAY~OF'
             ? ''
             : schemaLevel > 0
-              ? html`<span class="key-label" style="font-size: 18px; padding-left:${indentLevel > 1 ? baseIndentLevel : ''}px" >
+              ? html`<span class="key-label" style="font-size: 18px; line-height: 1.5;" >
                   ${keyLabel.replace(/\*$/, '')} ${openBracket}${keyLabel.endsWith('*') ? html`<br><span style="color:var(--red); font-size: 16px;"> required</span>` : ''}
                 </span>`
               : ''
         }
       </div>
     </div>`}
-        <div class="inside-bracket-wrapper">
-          <div class='inside-bracket ${data['::type'] || 'no-type-info'} inside-bracket-object'>
+        <div class="inside-bracket-wrapper" style="${indentLevel != 0 ? 'padding-left:' + baseIndentLevel + 'px; margin-right: 10px;' : ''}; margin-bottom: 10px;" data-inner-bracket="${indentLevel % 2 === 1 ? 'odd' : 'even'}"> 
+          <div class='inside-bracket ${data['::type'] || 'no-type-info'} inside-bracket-object nestingStyles'>
             ${Array.isArray(data) && data[0] ? html`${this.generateTree(data[0], 'xxx-of-option', '', data[0]['::flags'] || {}, '::ARRAY~OF', '', newSchemaLevel, newIndentLevel)}`
               : html`
                 ${Object.keys(data).map((dataKey) =>
@@ -253,12 +280,12 @@ export default class SchemaTree extends LitElement {
     }
 
     return html`
-        <div class="${indentLevel > 1 ? 'nestingStyles' : 0}">
-        <div class="tr primitive" style="font-size: 18px; ${indentLevel > 2 ? 'border-radius: 0;' : ''} padding-left:${indentLevel > 1 ? innerBracketIndent : 0}px"> 
-          <div class="td key ${deprecated ? 'deprecated' : ''}" style='line-height: 1.5; min-width: 290px; font-size: 18px;'>
-            ${keyLabel.endsWith('*')
+        <div>
+        <div class="tr primitive" style="font-size: 18px;"> 
+          <div class="td key ${deprecated ? 'deprecated' : ''}" style="line-height: 1.5; min-width: 290px; font-size: 18px;">
+            ${keyLabel.endsWith('*') && keyLabel != ''
               ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red); font-size: 16px;'>required</span>`
-              : key.startsWith('::OPTION')
+              : key.startsWith('::OPTION') && keyLabel != ''
                 ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
                 : schemaLevel > 0
                   ? html`<span class="key-label">${keyLabel}</span>`
@@ -267,7 +294,7 @@ export default class SchemaTree extends LitElement {
           </div>
           <div class="td key-descr">  
             <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
-              ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <p style="font-size: 18px; color: rgb(123, 135, 148);">${type}</p>${schemaDescription}` || ''}`))}
+              ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <p class="schemaTypeStyles">${type}</p>${schemaDescription}` || ''}`))}
             </span>
             ${this.schemaDescriptionExpanded && (constraint || defaultValue || allowedValues || pattern || example) ? html` 
               <div style="margin-top: -5px;">
