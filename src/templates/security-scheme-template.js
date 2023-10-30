@@ -463,14 +463,14 @@ export function pathSecurityTemplate(pathSecurity) {
                     : andSecurityItem.type === 'http'
                       ? html`
                         <div style="line-height: 1;">
-                        <span style="font-weight: 700;">
+                        <span style="font-weight: 400;">
                             ${orSecurityItem1.securityDefs.length > 1 ? html`<b>${j + 1}.</b> &nbsp;` : '' } 
                             ${andSecurityItem.scheme === 'basic' ? getI18nText('authentication.http-basic-note') : 'Bearer Token'} ${getI18nText('headers.authentication').toLocaleLowerCase()}
                             ${getOauthScopeTemplate(andSecurityItem.scopes)}
                           </span>
-                          <p style="margin-top: 15px; color: black; font-weight: 600;">Type: <span style="color: #7b8794">${andSecurityItem.type}</span></p>
-                          <p style="color: black; font-weight: 600;">Scheme: <span style="color: #7b8794">${andSecurityItem.scheme}</span></p>
-                          <p style="color: black; font-weight: 600;">Format: <span style="color: #7b8794">string</span></p> <!-- Format Not Availble In Object Value May Need To Be Updated In Future --> 
+                          <p style="margin-top: 15px; color: black; font-weight: 400;">Type: <span style="color: #7b8794">${andSecurityItem.type}</span></p>
+                          <p style="color: black; font-weight: 400;">Scheme: <span style="color: #7b8794">${andSecurityItem.scheme}</span></p>
+                          <p style="color: black; font-weight: 400;">Format: <span style="color: #7b8794">string</span></p> <!-- Format Not Availble In Object Value May Need To Be Updated In Future --> 
                         </div>`
                       : html`
                         <div>

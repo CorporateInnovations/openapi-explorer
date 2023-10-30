@@ -109,7 +109,7 @@ export default class SchemaTree extends LitElement {
       }
 
       .schemaTypeStyles {
-        font-size: 20px !important;
+        font-size: 19px !important;
         color: rgb(123, 135, 148);
       }
 
@@ -238,19 +238,20 @@ export default class SchemaTree extends LitElement {
       return html`
       ${key.startsWith('::ONE~OF') ? '' : html`
       <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}">
-      <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style="min-width:${minFieldColWidth}px; margin-top:${indentLevel != 1 ? '30' : '0'}px">
-        ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION')
-          ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
-          : keyLabel === '::props' || keyLabel === '::ARRAY~OF'
-            ? ''
-            : schemaLevel > 0
-              ? html`<span class="key-label" style="font-size: 18px; line-height: 1.5;" >
-                  ${keyLabel.replace(/\*$/, '')} ${openBracket}${keyLabel.endsWith('*') ? html`<br><span style="color:var(--red); font-size: 16px;"> required</span>` : ''}
-                </span>`
-              : ''
-        }
+        <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style="min-width:${minFieldColWidth}px; margin-top:${indentLevel != 1 ? '15' : '0'}px ${keyLabel == '' ? 'display: none;' : ''}">
+          ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION')
+            ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
+            : keyLabel === '::props' || keyLabel === '::ARRAY~OF'
+              ? ''
+              : schemaLevel > 0
+                ? html`<span class="key-label" style="font-size: 18px; line-height: 1.5;">
+                    ${keyLabel.replace(/\*$/, '')} ${openBracket}${keyLabel.endsWith('*') ? html`<br><span style="color:var(--red); font-size: 16px;"> required</span>` : ''}
+                  </span>`
+                : ''
+          }
+        </div>
       </div>
-    </div>`}
+    `}    
         <div class="inside-bracket-wrapper" style="${indentLevel != 0 ? 'padding-left:' + baseIndentLevel + 'px; margin-right: 10px;' : ''}; margin-bottom: 10px;" data-inner-bracket="${indentLevel % 2 === 1 ? 'odd' : 'even'}"> 
           <div class='inside-bracket ${data['::type'] || 'no-type-info'} inside-bracket-object nestingStyles'>
             ${Array.isArray(data) && data[0] ? html`${this.generateTree(data[0], 'xxx-of-option', '', data[0]['::flags'] || {}, '::ARRAY~OF', '', newSchemaLevel, newIndentLevel)}`
@@ -281,7 +282,7 @@ export default class SchemaTree extends LitElement {
 
     return html`
         <div>
-        <div class="tr primitive" style="font-size: 18px;"> 
+        <div class="tr primitive" style="font-size: 18px; padding: 10px 0;"> 
           <div class="td key ${deprecated ? 'deprecated' : ''}" style="line-height: 1.5; min-width: 290px; font-size: 18px;">
             ${keyLabel.endsWith('*') && keyLabel != ''
               ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red); font-size: 16px;'>required</span>`
@@ -293,7 +294,7 @@ export default class SchemaTree extends LitElement {
             }
           </div>
           <div class="td key-descr">  
-            <span class="m-markdown-small" style="font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
+            <span class="m-markdown-small" style="font-size: 20px; font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
               ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <p class="schemaTypeStyles">${type}</p>${schemaDescription}` || ''}`))}
             </span>
             ${this.schemaDescriptionExpanded && (constraint || defaultValue || allowedValues || pattern || example) ? html` 
