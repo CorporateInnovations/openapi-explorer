@@ -32,7 +32,7 @@ export default css`
 }
 
 .tr > div > .key-label{
-  font-size: 20px;
+  font-size: 19px;
 }
 
 .toolbar {
@@ -145,6 +145,5 @@ export default css`
 
 .nestingStyles {
   padding-top: 12px;
-  padding-bottom: 12px;
 }
 `;
