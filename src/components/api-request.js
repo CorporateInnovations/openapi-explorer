@@ -407,7 +407,6 @@ export default class ApiRequest extends LitElement {
                 .filter(v => v.exampleSummary.trim() === this.selectedRequestExample.trim())
                 .map((v) => html`
                    <div class="example ${v.exampleSummary === this.selectedRequestBodyExample ? 'example-selected' : ''}" data-default = '${v.exampleSummary}'>
-                   ${v.exampleSummary && v.exampleSummary.length > 80 ? html`<div style="padding: 4px 0"> ${v.exampleSummary} </div>` : ''}
                    <slot name="${this.elementId}--request-body">
                    <json-tree 
                       render-style = '${this.renderStyle}'
