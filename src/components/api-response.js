@@ -102,11 +102,13 @@ export default class ApiResponse extends LitElement {
       
       #schemaOptions {
         border: 2px solid black;
-        max-width: 290px;
+        min-width: 298px;
+        max-width: 750px;
         margin: 10px 0;
         padding: 10px;
         border-radius: 5px; 
         font-weight: 700;
+        overflow: auto;
       }
       `,
     ];
@@ -356,7 +358,6 @@ export default class ApiResponse extends LitElement {
             mimeRespDetails.examples.map((v) =>
              html`
               <div class="example" data-example = '${v.exampleId}' style = "display: ${v.exampleId === mimeRespDetails.examples[mimeRespDetails.selectedExample].exampleId ? 'block' : 'none'}">
-                ${v.exampleSummary && v.exampleSummary.length > 80 ? html`<div style="padding: 4px 0"> ${v.exampleSummary} </div>` : ''}
                 ${v.exampleFormat === 'json'
                   ? html`
                     <json-tree
