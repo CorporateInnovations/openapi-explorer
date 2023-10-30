@@ -109,6 +109,7 @@ export default css`
 select[class="schemaSelectDropdown"]{
   border:2px solid #000;
   min-width:290px;
+  max-width: 100%;
   margin-top: 10px;
   padding:10px;
   border-radius:5px;
