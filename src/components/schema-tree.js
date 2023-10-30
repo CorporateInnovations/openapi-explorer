@@ -84,7 +84,7 @@ export default class SchemaTree extends LitElement {
       .inside-bracket-wrapper {
         max-height: 10000px;
         transition: max-height 1.2s ease-in-out;
-        overflow: hidden;
+        overflow: hidden auto;
       }
 
       .inside-bracket-wrapper[data-inner-bracket="even"]{
@@ -140,6 +140,7 @@ export default class SchemaTree extends LitElement {
   }
 
   generateTree(data, dataType = 'object', arrayType = '', flags = {}, key = '', description = '', schemaLevel = 0, indentLevel = 0) {
+
     if (!data) {
       return html`<div class="null" style="display:inline;">
         <span class="key-label xxx-of-key">${key.replace('::OPTION~', '')}</span>
@@ -252,7 +253,7 @@ export default class SchemaTree extends LitElement {
         </div>
       </div>
     `}    
-        <div class="inside-bracket-wrapper" style="${indentLevel != 0 ? 'padding-left:' + baseIndentLevel + 'px; margin-right: 10px;' : ''}; margin-bottom: 10px;" data-inner-bracket="${indentLevel % 2 === 1 ? 'odd' : 'even'}"> 
+        <div class="inside-bracket-wrapper" style="${indentLevel != 0 ? 'padding-left:' + baseIndentLevel + 'px; margin-right: 10px;' : ''}; margin-bottom: 10px; ${key.startsWith('::ONE~OF') ? 'background: rgba(240, 240, 240, 0.2);' : ''}" data-inner-bracket="${indentLevel % 2 === 1 ? 'odd' : 'even'}";> 
           <div class='inside-bracket ${data['::type'] || 'no-type-info'} inside-bracket-object nestingStyles'>
             ${Array.isArray(data) && data[0] ? html`${this.generateTree(data[0], 'xxx-of-option', '', data[0]['::flags'] || {}, '::ARRAY~OF', '', newSchemaLevel, newIndentLevel)}`
               : html`
@@ -301,7 +302,7 @@ export default class SchemaTree extends LitElement {
               <div style="margin-top: -5px;">
                 ${constraint ? html`<div class="schemaDescriptions"><span>${constraintSplit[0]}: </span><span class="technicalWords">${constraintSplit[1]}</span></div><br>` : ''}
                 ${defaultValue ? html`<div class="schemaDescriptions"><span>Default: </span><span class="technicalWords">${defaultValue}</span></div><br>` : ''}
-                ${allowedValues ? html`<div class="schemaDescriptions"><span>Supported: </span><span class="technicalWords">${allowedValues}</span></div><br>` : ''}
+                ${allowedValues ? html`<div class="schemaDescriptions"><span>Supported:</span>${allowedValues.split('┃').map((v, i) => html`${i > 0 ? '|' : ''}<span class="technicalWords">${v}</span>`)}</div>` : ''}
                 ${pattern ? html`<div class="schemaDescriptions"><span>Pattern: </span><span class="technicalWords">${pattern}</span></div><br>` : ''}
                 ${example ? html`<div class="schemaDescriptions"><span>Example: </span><span class="technicalWords">${example}</span></span></div><br>` : ''}
               </div>` 
