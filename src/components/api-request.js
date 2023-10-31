@@ -149,7 +149,7 @@ export default class ApiRequest extends LitElement {
       if (!paramSchema) {
         continue;
       }
-         
+
       const defaultVal = Array.isArray(paramSchema.default) ? paramSchema.default : `${paramSchema.default}`;
       let paramStyle = 'form';
       let paramExplode = true;
@@ -163,12 +163,13 @@ export default class ApiRequest extends LitElement {
       }
 
       tableRows.push(html`
-      <tr>
+      <tr style="vertical-align: sub;">
         <td style="width: 25%; min-width:268px; font-size: 18px; padding: 7px 0;">
           <div class="param-name ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column; line-height: 1.2; font-size: 18px;">
             ${param.name}${!paramSchema.deprecated && param.required ? html`<span style='color:var(--red); font-size: 16px;'>required</span>` : ''}
           </div>
         </td>
+
         <td style="width:160px; min-width:268px; font-size: 18px; padding: 7px 0;">
         <div class="param-type" style="line-height: 1.5; color: rgb(123, 135, 148);">
             ${paramSchema.type === 'array'
@@ -176,9 +177,18 @@ export default class ApiRequest extends LitElement {
               : `${paramSchema.format ? paramSchema.format : paramSchema.type}`
             }${!paramSchema.deprecated && param.required ? html`<span style='opacity: 0;'>required</span>` : ''}
           </div>
-          <div class="param-description ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column;">
-            ${param.description}
-          </div>
+
+            ${param.description
+              ? html`
+                 <div class="param-description ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column;">
+                    ${param.description}
+                </div>`
+              :  html`
+              <div class="param-description ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column;">
+                 <span>Example: <span class="technicalWords">${param.example}</span></span>
+             </div>`
+            }
+
           ${this.renderStyle === 'focused'
           ? html`
             <div>
@@ -215,6 +225,7 @@ export default class ApiRequest extends LitElement {
         : ''
       }
           </td>
+
         ${this.allowTry === 'true'
           ? html`
             <td style="min-width:160px;">
@@ -728,7 +739,7 @@ export default class ApiRequest extends LitElement {
                 ${paramSchema.example
                   ? html`
                     <span>
-                      <span style="font-weight:bold"> Example: </span>
+                      <span> Example: </span>
                       ${paramSchema.type === 'array' ? '[ ' : ''}
                       <a part="anchor anchor-param-example" class = "${this.allowTry === 'true' ? '' : 'inactive-link'}"
                         data-default-type="${paramSchema.type === 'array' ? paramSchema.type : 'string'}"
