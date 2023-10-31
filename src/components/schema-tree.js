@@ -178,7 +178,9 @@ export default class SchemaTree extends LitElement {
     } else {
       keyLabel = key;
     }
-    let baseIndentLevel = Math.pow(1.5, indentLevel) * 8;
+
+    let baseIndentLevel = 20 * indentLevel + 8;
+
     const leftPadding = 16;
     // Min-width used for model keys: `td key `
     const minFieldColWidth = 300 - (indentLevel * leftPadding);
@@ -238,7 +240,7 @@ export default class SchemaTree extends LitElement {
       const displayLine = [flags['🆁'] || flags['🆆'], description].filter(v => v).join(' ');
       return html`
       ${key.startsWith('::ONE~OF') ? '' : html`
-      <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}">
+      <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}" style="align-items: baseline;">
         <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style="min-width:${minFieldColWidth}px; margin-top:${indentLevel != 1 ? '15' : '0'}px ${keyLabel == '' ? 'display: none;' : ''}">
           ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION')
             ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
@@ -251,9 +253,17 @@ export default class SchemaTree extends LitElement {
                 : ''
           }
         </div>
+        <div class="td key-descr">
+        <span class="m-markdown-small" style="padding: 5px; vertical-align: middle;" title="${flags['🆁'] && 'Read only attribute' || flags['🆆'] && 'Write only attribute' || ''}">
+          ${unsafeHTML(marked(displayLine))}
+        </span>
+        ${this.schemaDescriptionExpanded ? html`
+          ${data['::metadata']?.constraints?.length ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Constraints: </span>${data['::metadata'].constraints.join(', ')}</div><br>` : ''}
+        ` : ''}
       </div>
-    `}    
-        <div class="inside-bracket-wrapper" style="${indentLevel != 0 ? 'padding-left:' + baseIndentLevel + 'px; margin-right: 10px;' : ''}; margin-bottom: 10px; ${key.startsWith('::ONE~OF') ? 'background: rgba(240, 240, 240, 0.2);' : ''}" data-inner-bracket="${indentLevel % 2 === 1 ? 'odd' : 'even'}";> 
+      </div>
+    `}   
+        <div class="inside-bracket-wrapper" style="${indentLevel != 0 ? 'padding-left: 30px; padding-right: 10px;' : ''} margin-bottom: 10px; ${key.startsWith('::ONE~OF') ? 'background: rgba(240, 240, 240, 0.2);' : ''}" data-inner-bracket="${indentLevel % 2 === 1 ? 'odd' : 'even'}";> 
           <div class='inside-bracket ${data['::type'] || 'no-type-info'} inside-bracket-object nestingStyles'>
             ${Array.isArray(data) && data[0] ? html`${this.generateTree(data[0], 'xxx-of-option', '', data[0]['::flags'] || {}, '::ARRAY~OF', '', newSchemaLevel, newIndentLevel)}`
               : html`
