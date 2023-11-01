@@ -241,7 +241,7 @@ export default class SchemaTree extends LitElement {
       return html`
       ${key.startsWith('::ONE~OF') ? '' : html`
       <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}" style="align-items: baseline;">
-        <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style="min-width:${minFieldColWidth}px; margin-top:${indentLevel != 1 ? '15' : '0'}px ${keyLabel == '' ? 'display: none;' : ''}">
+        <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style="min-width: 290px; margin-top:${indentLevel != 1 ? '15' : '0'}px ${keyLabel == '' ? 'display: none;' : ''}">
           ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION')
             ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
             : keyLabel === '::props' || keyLabel === '::ARRAY~OF'
@@ -254,7 +254,7 @@ export default class SchemaTree extends LitElement {
           }
         </div>
         <div class="td key-descr">
-        <span class="m-markdown-small" style="padding: 5px; vertical-align: middle;" title="${flags['🆁'] && 'Read only attribute' || flags['🆆'] && 'Write only attribute' || ''}">
+        <span class="m-markdown-small" style="padding: 5px 0; vertical-align: middle;" title="${flags['🆁'] && 'Read only attribute' || flags['🆆'] && 'Write only attribute' || ''}">
           ${unsafeHTML(marked(displayLine))}
         </span>
         ${this.schemaDescriptionExpanded ? html`
@@ -304,9 +304,9 @@ export default class SchemaTree extends LitElement {
                   : ''
             }
           </div>
-          <div class="td key-descr">  
-            <span class="m-markdown-small" style="font-size: 20px; font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
-              ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <p class="schemaTypeStyles">${type}</p>${schemaDescription}` || ''}`))}
+          <div class="td key-descr" style="line-height: 2;">  
+            <span class="m-markdown-small" style="line-height: 1.7; font-size: 20px; font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
+              ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <p class="schemaTypeStyles">${type}</p><p style="margin-top: 3px;">${schemaDescription}</p>` || ''}`))}
             </span>
             ${this.schemaDescriptionExpanded && (constraint || defaultValue || allowedValues || pattern || example) ? html` 
               <div style="margin-top: -5px;">
