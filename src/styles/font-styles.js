@@ -100,7 +100,7 @@ export default css`
   .m-markdown-small a,
   .m-markdown-small span,
   .m-markdown-small li {
-    font-size: 16.5px;
+    font-size: 18px;
     line-height: calc(var(--font-size-small) + 6px);
   }
 
