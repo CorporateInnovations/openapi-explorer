@@ -130,4 +130,18 @@ select[class="schemaSelectDropdown"]{
     font-size: 14px;
     max-width: 580px;
 }
+
+@media only screen and (max-width: 768px) {
+  .mbl-styling {
+    padding: 20px;
+    border: 1.8px solid #ececec;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .mbl-border {
+    border: none !important;
+    padding: 0 !important;
+  }
+}
 `;
