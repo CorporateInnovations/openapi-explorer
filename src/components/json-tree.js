@@ -140,7 +140,7 @@ export default class JsonTree extends LitElement {
           }
         </div>
       </div>
-      <div class="close-bracket"> } </div>
+      <div class="close-bracket">${detailType === 'array' ? ']' : '}'}</div>
       `;
     }
 

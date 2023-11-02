@@ -32,7 +32,7 @@ export default class ApiRequest extends LitElement {
     this.curlSyntax = '';
     this.activeResponseTab = 'response'; // allowed values: response, headers, curl
     this.selectedRequestBodyType = '';
-    this.selectedRequestBodyExample = '';
+    this.selectedRequestBodyExample = null;
     this.requestBodyExpanded = true;
     this.selectedRequest = '';
     this.selectedRequestModel = '';
@@ -74,20 +74,20 @@ export default class ApiRequest extends LitElement {
       // properties for internal tracking
       activeResponseTab: { type: String }, // internal tracking of response-tab not exposed as a attribute
       selectedRequestBodyType: { type: String, attribute: 'selected-request-body-type' }, // internal tracking of selected request-body type
-      selectedRequestBodyExample: { type: String, attribute: 'selected-request-body-example' }, // internal tracking of selected request-body example
+      selectedRequestBodyExample: { type: Object, attribute: 'selected-request-body-example' }, // internal tracking of selected request-body example
     };
   }
 
   render() {
     return html`
     <div class="grey-border api-request col regular-font request-panel ${(this.renderStyle === 'focused' || this.callback === 'true') ? 'focused-mode' : 'view-mode'}">
-      <div class="${this.callback === 'true' ? 'tiny-title' : 'req-res-title'}" style="font-size: 20px;"> 
+      <div class="${this.callback === 'true' ? 'tiny-title' : 'req-res-title'} mbl-styling" style="font-size: 20px; ${this.requestBodyExpanded ? 'border-bottom: none;' : '' }"> 
         ${this.callback === 'true' ? 'CALLBACK REQUEST' : getI18nText('operations.request')}
         <div class="toolbar-item" style="display:flex; float: right; color: #999999; background-color: rgb(236, 236, 236); padding: 3px 11px 3px 11px; font-size: 14px; border-radius: 30px; cursor: pointer;" @click='${(e) =>{e.preventDefault(); this.toggleRequestBody()}}'}>
          ${this.requestBodyExpanded ? getI18nText('schemas.collapse-desc') : getI18nText('schemas.expand-desc')}
         </div>
       </div>
-      <div>
+      <div style="${this.requestBodyExpanded ? 'border-left: 1.8px solid #ececec; border-right: 1.8px solid #ececec; border-bottom: 1.8px solid #ececec; padding: 20px;' : ''}" class="mbl-border">
         ${this.requestBodyExpanded ? html`
         ${this.inputParametersTemplate('path')}
         ${this.inputParametersTemplate('query')}
@@ -287,13 +287,13 @@ export default class ApiRequest extends LitElement {
 
   resetRequestBodySelection() {
     this.selectedRequestBodyType = '';
-    this.selectedRequestBodyExample = '';
+    this.selectedRequestBodyExample = null;
     this.clearResponseData();
   }
 
   // Request-Body Event Handlers
   onSelectExample(e) {
-    this.selectedRequestBodyExample = e.target.value;
+    this.selectedRequestBodyExample.summary = e.target.value;
     const exampleDropdownEl = e.target;
     window.setTimeout((selectEl) => {
       const exampleTextareaEl = selectEl.closest('.example-panel').querySelector('.request-body-param');
@@ -305,7 +305,7 @@ export default class ApiRequest extends LitElement {
   onMimeTypeChange(e) {
     this.selectedRequestBodyType = e.target.value;
     const mimeDropdownEl = e.target;
-    this.selectedRequestBodyExample = '';
+    this.selectedRequestBodyExample = null;
     window.setTimeout((selectEl) => {
       const exampleTextareaEl = selectEl.closest('.request-body-container').querySelector('.request-body-param');
       if (exampleTextareaEl) {
@@ -393,10 +393,10 @@ export default class ApiRequest extends LitElement {
           );
 
          if (!this.selectedRequestBodyExample) {
-            this.selectedRequestBodyExample = (reqBodyExamples.length > 0 ? reqBodyExamples[0].exampleSummary : '');
+            this.selectedRequestBodyExample = (reqBodyExamples.length > 0 ? reqBodyExamples[0] : '');
           }
 
-          reqBodyExamples.filter((v) => v.exampleSummary === this.selectedRequestBodyExample).map((v) => selectedExampleValue = v.exampleValue);
+          reqBodyExamples.filter((v) => v.exampleSummary === this.selectedRequestBodyExample.summary).map((v) => selectedExampleValue = v.exampleValue);
           this.requestBodyExamples = reqBodyExamples;
 
           if (!this.selectedRequestModel) {
@@ -417,11 +417,11 @@ export default class ApiRequest extends LitElement {
               ${reqBodyExamples
                 .filter(v => v.exampleSummary.trim() === this.selectedRequestExample.trim())
                 .map((v) => html`
-                   <div class="example ${v.exampleSummary === this.selectedRequestBodyExample ? 'example-selected' : ''}" data-default = '${v.exampleSummary}'>
+                   <div class="example ${v.exampleSummary === this.selectedRequestBodyExample.summary ? 'example-selected' : ''}" data-default = '${v.exampleSummary}'>
                    <slot name="${this.elementId}--request-body">
                    <json-tree 
                       render-style = '${this.renderStyle}'
-                      .data="${JSON.parse(v.exampleValue)}"
+                      .data="${typeof v.exampleValue === 'string' ? JSON.parse(v.exampleValue) : v.exampleValue}"
                       class = 'example-panel pad-top-8'
                       style="background-color: #393939;"
                     ></json-tree>
@@ -523,6 +523,7 @@ export default class ApiRequest extends LitElement {
             ${reqBodyTypeSelectorHtml}
           </div>
         ${this.request_body.description ? html`<div class="m-markdown" style="margin-bottom:20px;">${unsafeHTML(marked(this.request_body.description))}</div>` : ''}
+        
           ${(this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text'))
             ? html`         
               <div class="tab-panel col" style="border-width:0 0 1px 0; border-radius: 5px;">
@@ -530,7 +531,7 @@ export default class ApiRequest extends LitElement {
                 <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab="model" >${getI18nText('operations.model')}</button>
                   <button class="tab-btn ${this.activeSchemaTab === 'example' ? 'active' : ''}" data-tab="example">${getI18nText('operations.example')}</button>
                   <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; margin-left: auto; align-items: center; justify-content: center; border-radius: 17px; background-color: #0741c5; color: white; font-weight: 700; border-color: #0741c5; width: 67px; height: 28px; font-size: 14px; margin-top: 3px;"
-                  @click="${(e) => { e.preventDefault(); copyToClipboardV2(JSON.stringify(reqBodyDefaultHtml.values[1][0].values[5]), e); this.copied = !this.copied; const button = e.target; const originalText = button.innerHTML; button.innerHTML = "Copied";
+                  @click="${(e) => { e.preventDefault(); copyToClipboardV2((typeof this.selectedRequestBodyExample.exampleValue === "string" ? this.selectedRequestBodyExample.exampleValue : JSON.stringify(this.selectedRequestBodyExample.exampleValue)), e); this.copied = !this.copied; const button = e.target; const originalText = button.innerHTML; button.innerHTML = "Copied";
                     setTimeout(() => { button.innerHTML = originalText; }, 4000)}}"> Copy </span>
                 </div>
                 ${html`<div class="tab-content col" style="display: ${this.activeSchemaTab === 'model' ? 'block' : 'none'}">
