@@ -142,8 +142,4 @@ export default css`
   display: contents;
   align-items: center;
 }
-
-.nestingStyles {
-  padding-top: 12px;
-}
 `;

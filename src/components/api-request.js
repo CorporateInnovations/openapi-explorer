@@ -528,9 +528,9 @@ export default class ApiRequest extends LitElement {
             ? html`         
               <div class="tab-panel col" style="border-width:0 0 1px 0; border-radius: 5px;">
                 <div class="tab-buttons row" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}">
-                <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab="model" >${getI18nText('operations.model')}</button>
-                  <button class="tab-btn ${this.activeSchemaTab === 'example' ? 'active' : ''}" data-tab="example">${getI18nText('operations.example')}</button>
-                  <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; margin-left: auto; align-items: center; justify-content: center; border-radius: 17px; background-color: #0741c5; color: white; font-weight: 700; border-color: #0741c5; width: 67px; height: 28px; font-size: 14px; margin-top: 3px;"
+                <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab="model" style="font-size: 14px;">${getI18nText('operations.model')}</button>
+                  <button class="tab-btn ${this.activeSchemaTab === 'example' ? 'active' : ''}" data-tab="example" style="font-size: 14px;">${getI18nText('operations.example')}</button>
+                  <span class="m-btn outline-primary" id="copy-button-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'};"
                   @click="${(e) => { e.preventDefault(); copyToClipboardV2((typeof this.selectedRequestBodyExample.exampleValue === "string" ? this.selectedRequestBodyExample.exampleValue : JSON.stringify(this.selectedRequestBodyExample.exampleValue)), e); this.copied = !this.copied; const button = e.target; const originalText = button.innerHTML; button.innerHTML = "Copied";
                     setTimeout(() => { button.innerHTML = originalText; }, 4000)}}"> Copy </span>
                 </div>

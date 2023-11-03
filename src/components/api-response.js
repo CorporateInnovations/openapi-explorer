@@ -110,6 +110,22 @@ export default class ApiResponse extends LitElement {
         font-weight: 700;
         overflow: auto;
       }
+
+      #copy-button-primary {
+        box-shadow: none;
+        margin-left: auto;
+        align-items: end;
+        justify-content: center;
+        border-radius: 17px;
+        background-color: #0741c5;
+        color: white;
+        font-weight: 700;
+        border-color: #0741c5;
+        width: 65px;
+        height: 26px; 
+        font-size: 14px; 
+        margin-top: 3px;
+      }
       `,
     ];
   }
@@ -232,7 +248,7 @@ export default class ApiResponse extends LitElement {
                   <button class="tab-btn ${this.activeSchemaTab === 'model' ? 'active' : ''}" data-tab='model'>${getI18nText('operations.model')}</button>
                   <button class="tab-btn ${this.activeSchemaTab === 'example' ? 'active' : ''}" data-tab='example'>${getI18nText('operations.example')}</button>
                   <div style="flex:1"></div>
-                  <span class="m-btn outline-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'}; box-shadow: none; margin-left: auto; margin-top: 1px; margin-bottom: 5px; align-items: center; justify-content: center; border-radius: 17px; background-color: #0741c5; color: white; font-weight: 700; border: none; width: 67px; height: 28px; font-size: 14px;" @click="${(e) => {e.preventDefault(); copyToClipboard(JSON.stringify(this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples[this.selectedResponseExample].exampleValue, null, 2), e);}}">Copy
+                  <span class="m-btn outline-primary" id="copy-button-primary" style="display: ${this.activeSchemaTab === 'example' ? 'flex' : 'none'};" @click="${(e) => {e.preventDefault(); copyToClipboard(JSON.stringify(this.mimeResponsesForEachStatus[status][this.selectedMimeType].examples[this.selectedResponseExample].exampleValue, null, 2), e);}}">Copy
                      </span>
                 </div>
                 ${this.activeSchemaTab === 'example'
