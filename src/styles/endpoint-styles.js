@@ -239,6 +239,7 @@ pre.code-sample {
   color: #05297d;
   font-weight: 700;
   font-size: 36px;
+  margin-top: 0 !important;
 }
 
 .performsSessionAuthDescription {

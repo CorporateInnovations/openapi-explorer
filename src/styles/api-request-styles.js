@@ -95,6 +95,22 @@ export default css`
   margin-top: 8px;
 }
 
+#copy-button-primary {
+  box-shadow: none;
+  margin-left: auto;
+  align-items: end;
+  justify-content: center;
+  border-radius: 17px;
+  background-color: #0741c5;
+  color: white;
+  font-weight: 700;
+  border-color: #0741c5;
+  width: 65px;
+  height: 26px; 
+  font-size: 14px; 
+  margin-top: 3px;
+}
+
 @media only screen and (min-width: 768px) {
   .api-request .textarea {
     padding:8px;
@@ -131,14 +147,14 @@ select[class="schemaSelectDropdown"]{
     max-width: 580px;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 767px) {
   .mbl-styling {
     padding: 20px;
     border: 1.8px solid #ececec;
   }
 }
 
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 767px) {
   .mbl-border {
     border: none !important;
     padding: 0 !important;

@@ -238,9 +238,10 @@ export default class SchemaTree extends LitElement {
 
       let selection = null;
       const displayLine = [flags['🆁'] || flags['🆆'], description].filter(v => v).join(' ');
+
       return html`
       ${key.startsWith('::ONE~OF') ? '' : html`
-      <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}" style="align-items: baseline;">
+      <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}" style="align-items: baseline; ${keyLabel.length == 0 ? 'display: none;' : ''}">
         <div class="td key ${data['::deprecated'] ? 'deprecated' : ''}" style="min-width: 290px; margin-top:${indentLevel != 1 ? '15' : '0'}px ${keyLabel == '' ? 'display: none;' : ''}">
           ${data['::type'] === 'xxx-of-option' || data['::type'] === 'xxx-of-array' || key.startsWith('::OPTION')
             ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
@@ -293,7 +294,7 @@ export default class SchemaTree extends LitElement {
 
     return html`
         <div>
-        <div class="tr primitive" style="font-size: 18px; padding: 10px 0;"> 
+        <div class="tr primitive" style="font-size: 18px; padding-top: 17px;"> 
           <div class="td key ${deprecated ? 'deprecated' : ''}" style="line-height: 1.5; min-width: 290px; font-size: 18px;">
             ${keyLabel.endsWith('*') && keyLabel != ''
               ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red); font-size: 16px;'>required</span>`
