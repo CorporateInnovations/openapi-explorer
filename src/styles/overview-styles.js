@@ -2,6 +2,13 @@ import { css } from 'lit';
 
 /* eslint-disable max-len */
 export default css`
+
+#overview {
+	padding-top: 2.5rem;
+	max-width: 700px;
+	font-size: 19px;
+}
+
 .overview-bg-img {
 	position: absolute;
 	bottom: 0;

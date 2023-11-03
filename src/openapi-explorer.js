@@ -344,7 +344,7 @@ export default class OpenApiExplorer extends LitElement {
           padding: 24px 8px; 
         }
         .section-gap--focused-mode {
-          padding:  2.5rem 1.5rem 1.5rem 1.5rem;
+          padding:  0 1.5rem 1.5rem 1.5rem;
         }
         .endpoint-body {
           position: relative;
