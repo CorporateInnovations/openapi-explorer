@@ -244,6 +244,10 @@ function getExampleValuesFromSchemaRecursive(rawSchema, config = {}) {
 function getSimpleValueResult(schema, config, namespace, prefix, xmlAttributes, xmlTagProperties, overridePropertyName) {
   if (schema.type === 'array' || schema.items) {
     if (!config.xml) {
+      const value = getSampleValueByType(schema, config.propertyName, config.skipExampleStrings);
+      if(schema.example || schema.examples){
+        return[value];
+      }
       return [getExampleValuesFromSchemaRecursive(schema.items || {}, config)];
     }
     if (!schema.xml || !schema.xml.wrapped) {
@@ -474,7 +478,7 @@ export function schemaInObjectNotation(rawSchema, options, level = 0, suffix = '
     obj['::flags'] = { '🆁': schema.readOnly && '🆁', '🆆': schema.writeOnly && '🆆' };
     obj['::type'] = 'array';
     obj['::deprecated'] = schema.deprecated || false;
-    obj['::props'] = schemaInObjectNotation(Object.assign({ deprecated: schema.deprecated, readOnly: schema.readOnly, writeOnly: schema.writeOnly }, schema.items), options, (level + 1));
+    obj['::props'] = schemaInObjectNotation(Object.assign({ deprecated: schema.deprecated, readOnly: schema.readOnly, writeOnly: schema.writeOnly, example: schema.example ?? schema.examples }, schema.items), options, (level + 1));
     if (schema.items?.items) {
       obj['::array-type'] = schema.items.items.type;
     }

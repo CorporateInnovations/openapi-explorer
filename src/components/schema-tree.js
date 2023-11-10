@@ -315,7 +315,11 @@ export default class SchemaTree extends LitElement {
                 ${defaultValue ? html`<div class="schemaDescriptions"><span>Default: </span><span class="technicalWords">${defaultValue}</span></div><br>` : ''}
                 ${allowedValues ? html`<div class="schemaDescriptions"><span>Supported:</span>${allowedValues.split('┃').map((v, i) => html`${i > 0 ? '|' : ''}<span class="technicalWords">${v}</span>`)}</div>` : ''}
                 ${pattern ? html`<div class="schemaDescriptions"><span>Pattern: </span><span class="technicalWords">${pattern}</span></div><br>` : ''}
-                ${example ? html`<div class="schemaDescriptions"><span>Example: </span><span class="technicalWords">${example}</span></span></div><br>` : ''}
+                ${example ?
+                  Array.isArray(example) ?
+                  html`<div class="schemaDescriptions"><span>Example: </span><span class="technicalWords">List: [${example.toString()}]</span></span></div><br>`
+                  : html`<div class="schemaDescriptions"><span>Example: </span><span class="technicalWords">${example}</span></span></div><br>`
+                : ''}
               </div>` 
             : ''}
             </div>
