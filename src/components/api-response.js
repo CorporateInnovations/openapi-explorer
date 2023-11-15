@@ -274,7 +274,7 @@ export default class ApiResponse extends LitElement {
                     html `<div class='tab-content col' style='flex:1;'>
                       ${this.mimeSchemaTemplate(this.mimeResponsesForEachStatus[status][this.selectedMimeType])}
                     </div>`
-                    : ''
+                  : ''
                 }
               </div>`
           }`)
