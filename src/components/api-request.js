@@ -165,7 +165,7 @@ export default class ApiRequest extends LitElement {
       tableRows.push(html`
       <tr style="vertical-align: sub;">
         <td style="width: 25%; min-width:268px; font-size: 18px; padding: 7px 0;">
-          <div class="param-name ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column; line-height: 1.2; font-size: 18px;">
+          <div class="param-name ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column; line-height: 1.5; font-size: 19px; color: black;">
             ${param.name}${!paramSchema.deprecated && param.required ? html`<span style='color:var(--red); font-size: 16px;'>required</span>` : ''}
           </div>
         </td>
@@ -180,7 +180,7 @@ export default class ApiRequest extends LitElement {
 
             ${param.description
               ? html`
-                 <div class="param-description ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column;">
+                 <div class="param-description ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column; line-height: 1;">
                     ${param.description}
                 </div>`
               :  html`

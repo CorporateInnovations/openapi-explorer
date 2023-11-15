@@ -336,8 +336,6 @@ export function schemaInObjectNotation(rawSchema, options, level = 0, suffix = '
       if (v.type === 'object' || v.properties || v.allOf || v.anyOf || v.oneOf) {
         const partialObj = schemaInObjectNotation(v, options);
         if (partialObj) {
-          // Commented original code
-          // objWithAnyOfProps[`::OPTION~${index + 1}${v.title ? `~${v.title}` : ''}`] = partialObj;
           if (v.allOf[0].titleV2) {
             objWithAnyOfProps[`::OPTION~${v.allOf[0].titleV2}`] = partialObj;
           } else if (v.title) {
@@ -474,7 +472,7 @@ export function schemaInObjectNotation(rawSchema, options, level = 0, suffix = '
     obj['::title'] = schema.title || '';
     obj['::description'] = schema.description
       ? schema.description
-      : (schema.items?.description ? `array&lt;${schema.items.description}&gt;` : '');
+      : (schema.items?.description ? `${schema.items.description}` : '');
     obj['::flags'] = { '🆁': schema.readOnly && '🆁', '🆆': schema.writeOnly && '🆆' };
     obj['::type'] = 'array';
     obj['::deprecated'] = schema.deprecated || false;
