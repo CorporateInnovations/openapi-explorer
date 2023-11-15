@@ -113,6 +113,7 @@ export default css`
   }
   .m-markdown *:first-child, .m-markdown-small *:first-child {
     margin-block-start: 0;
+    line-height: 1.2; 
   }
 
   .m-markdown p, .m-markdown-small p {
@@ -145,9 +146,6 @@ export default css`
     max-width: 580px;
   }
 
-  .m-markdown-small code {
-    font-size: calc(var(--font-size-mono) - 1px);
-  }
 
   .m-markdown-small pre,
   .m-markdown pre {
