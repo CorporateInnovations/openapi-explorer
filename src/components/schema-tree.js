@@ -140,7 +140,6 @@ export default class SchemaTree extends LitElement {
   }
 
   generateTree(data, dataType = 'object', arrayType = '', flags = {}, key = '', description = '', schemaLevel = 0, indentLevel = 0) {
-
     if (!data) {
       return html`<div class="null" style="display:inline;">
         <span class="key-label xxx-of-key">${key.replace('::OPTION~', '')}</span>
@@ -238,7 +237,7 @@ export default class SchemaTree extends LitElement {
 
       let selection = null;
       const displayLine = [flags['🆁'] || flags['🆆'], description].filter(v => v).join(' ');
-
+      
       return html`
       ${key.startsWith('::ONE~OF') ? '' : html`
       <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}" style="align-items: baseline; ${keyLabel.length == 0 ? 'display: none;' : ''}">
@@ -306,8 +305,9 @@ export default class SchemaTree extends LitElement {
             }
           </div>
           <div class="td key-descr" style="line-height: 2;">  
-            <span class="m-markdown-small" style="line-height: 1.7; font-size: 20px; font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
-              ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <p class="schemaTypeStyles">${type}</p><p style="margin-top: 3px;">${schemaDescription}</p>` || ''}`))}
+            <span class="m-markdown-small" style="line-height: 1.7; font-size: 20px; font-family: var(--font-mono); vertical-align: middle; padding: 1px;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
+              ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <span class="schemaTypeStyles">${type}</span><br>
+              ${schemaDescription}` || ''}`))}
             </span>
             ${this.schemaDescriptionExpanded && (constraint || defaultValue || allowedValues || pattern || example) ? html` 
               <div style="margin-top: -5px;">
@@ -315,7 +315,11 @@ export default class SchemaTree extends LitElement {
                 ${defaultValue ? html`<div class="schemaDescriptions"><span>Default: </span><span class="technicalWords">${defaultValue}</span></div><br>` : ''}
                 ${allowedValues ? html`<div class="schemaDescriptions"><span>Supported:</span>${allowedValues.split('┃').map((v, i) => html`${i > 0 ? '|' : ''}<span class="technicalWords">${v}</span>`)}</div>` : ''}
                 ${pattern ? html`<div class="schemaDescriptions"><span>Pattern: </span><span class="technicalWords">${pattern}</span></div><br>` : ''}
-                ${example ? html`<div class="schemaDescriptions"><span>Example: </span><span class="technicalWords">${example}</span></span></div><br>` : ''}
+                ${example ?
+                  Array.isArray(example) ?
+                  html`<div class="schemaDescriptions"><span>Example: </span><span class="technicalWords">[${example.toString()}]</span></span></div><br>`
+                  : html`<div class="schemaDescriptions"><span>Example: </span><span class="technicalWords">${example}</span></span></div><br>`
+                : ''}
               </div>` 
             : ''}
             </div>
