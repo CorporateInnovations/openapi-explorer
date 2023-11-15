@@ -28,7 +28,7 @@ export default function codeSamplesTemplate(xCodeSamples) {
       const sanitizedSource = v.source.split('\n').map(s => s.substring(0, paddingToRemove).match(/^\s+$/) ? s.substring(paddingToRemove) : s);
       const fullSource = sanitizedSource.join('\n');
       return html`
-        <div class="tab-content m-markdown code-sample-wrapper" style="display:${i === 0 ? 'block' : 'none'}" data-tab = '${v.lang}${i}'>
+        <div class="tab-content m-markdown code-sample-wrapper" style= "display:${i === 0 ? 'block' : 'none'}" data-tab = '${v.lang}${i}'>
           <button class="m-btn outline-primary toolbar-copy-btn" @click='${(e) => { copyToClipboard(v.source, e); }}'>${getI18nText('operations.copy')}</button>
           <pre><code>${Prism.languages[v.lang?.toLowerCase()] ? unsafeHTML(Prism.highlight(fullSource, Prism.languages[v.lang?.toLowerCase()], v.lang?.toLowerCase())) : fullSource}
           </code></pre>
