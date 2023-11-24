@@ -237,6 +237,7 @@ export default class SchemaTree extends LitElement {
 
       let selection = null;
       const displayLine = [flags['🆁'] || flags['🆆'], description].filter(v => v).join(' ');
+      console.log('displayLine', displayLine);
       
       return html`
       ${key.startsWith('::ONE~OF') ? '' : html`
@@ -247,20 +248,20 @@ export default class SchemaTree extends LitElement {
             : keyLabel === '::props' || keyLabel === '::ARRAY~OF'
               ? ''
               : schemaLevel > 0
-                ? html`<span class="key-label" style="font-size: 18px; line-height: 1.5;">
+                ? html`<span class="key-label" style="font-size: 18px;">
                     ${keyLabel.replace(/\*$/, '')} ${openBracket}${keyLabel.endsWith('*') ? html`<br><span style="color:var(--red); font-size: 16px;"> required</span>` : ''}
                   </span>`
                 : ''
           }
         </div>
         <div class="td key-descr">
-        <span class="m-markdown-small" style="padding: 5px 0; vertical-align: middle;" title="${flags['🆁'] && 'Read only attribute' || flags['🆆'] && 'Write only attribute' || ''}">
-          ${unsafeHTML(marked(displayLine))}
-        </span>
-        ${this.schemaDescriptionExpanded ? html`
-          ${data['::metadata']?.constraints?.length ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Constraints: </span>${data['::metadata'].constraints.join(', ')}</div><br>` : ''}
-        ` : ''}
-      </div>
+          <span class="m-markdown-small" style="padding: 5px 0; vertical-align: middle;" title="${flags['🆁'] && 'Read only attribute' || flags['🆆'] && 'Write only attribute' || ''}">
+            ${unsafeHTML(marked(displayLine))}
+          </span>
+          ${this.schemaDescriptionExpanded ? html`
+            ${data['::metadata']?.constraints?.length ? html`<div style='display:inline-block; line-break:anywhere; margin-right:8px'><span class='bold-text'>Constraints: </span>${data['::metadata'].constraints.join(', ')}</div><br>` : ''}
+          ` : ''}
+        </div>
       </div>
     `}   
         <div class="inside-bracket-wrapper" style="${indentLevel != 0 ? 'padding-left: 30px; padding-right: 10px;' : ''} margin-bottom: 10px; ${key.startsWith('::ONE~OF') ? 'background: rgba(240, 240, 240, 0.2);' : ''}" data-inner-bracket="${indentLevel % 2 === 1 ? 'odd' : 'even'}";> 
@@ -294,7 +295,7 @@ export default class SchemaTree extends LitElement {
     return html`
         <div>
         <div class="tr primitive" style="font-size: 18px; padding-top: 17px;"> 
-          <div class="td key ${deprecated ? 'deprecated' : ''}" style="line-height: 1.5; min-width: 290px; font-size: 18px;">
+          <div class="td key ${deprecated ? 'deprecated' : ''}" style="min-width: 290px; font-size: 18px;">
             ${keyLabel.endsWith('*') && keyLabel != ''
               ? html`<span class="key-label">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red); font-size: 16px;'>required</span>`
               : key.startsWith('::OPTION') && keyLabel != ''
@@ -304,8 +305,8 @@ export default class SchemaTree extends LitElement {
                   : ''
             }
           </div>
-          <div class="td key-descr" style="line-height: 2;">  
-            <span class="m-markdown-small" style="line-height: 1.7; font-size: 20px; font-family: var(--font-mono); vertical-align: middle; padding: 1px;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
+          <div class="td key-descr">
+            <span class="m-markdown-small" style="font-size: 20px; font-family: var(--font-mono); vertical-align: middle; padding: 1px;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
               ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <span class="schemaTypeStyles">${type}</span><br>
               ${schemaDescription}` || ''}`))}
             </span>

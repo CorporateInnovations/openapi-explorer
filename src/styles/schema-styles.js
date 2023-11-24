@@ -115,18 +115,19 @@ export default css`
 
 .technicalWords {
   border-radius: 4px;
-    background-color: rgb(245, 247, 250);
-    color: rgb(51, 51, 51);
-    padding: 1px 6px;
-    border: 1px solid rgb(228, 231, 235);
-    font-size: 12px;
-    font-family: "Titillium Web", sans-serif;
-    line-height: 1.2em;
-    display: inline-flex;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    font-size: 14px;
-    max-width: 580px;
+  background-color: rgb(245, 247, 250);
+  color: rgb(51, 51, 51);
+  padding: 0px 3px;
+  margin: 0px 2px;
+  border: 1px solid rgb(228, 231, 235);
+  font-size: 12px;
+  line-height: 1.2;
+  font-family: "Titillium Web", sans-serif;
+  display: inline-flex;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  max-width: 580px;
 }
 
 @media only screen and (min-width: 1595px) {
