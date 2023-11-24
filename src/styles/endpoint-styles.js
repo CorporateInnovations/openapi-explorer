@@ -230,7 +230,6 @@ pre.code-sample {
 @media only screen and (max-width: 1024px) {
 .performsSessionAuthHeading {
   max-width: 330px;
-  line-height: 1;
   font-size: 30px;
  }
 }
@@ -259,7 +258,6 @@ pre.code-sample {
   word-wrap: break-word;
   max-width: 100%;
   overflow-wrap: anywhere;
-  line-height: 1;
   margin-top: 17px;
 }
 `;

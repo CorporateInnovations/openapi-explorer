@@ -180,11 +180,11 @@ export default class ApiRequest extends LitElement {
 
             ${param.description
               ? html`
-                 <div class="param-description ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column; line-height: 1;">
+                 <div class="param-description ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column; line-height: calc(var(--font-size-small) + 6px);">
                     ${param.description}
                 </div>`
               :  html`
-              <div class="param-description ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column;">
+              <div class="param-description ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column; line-height: calc(var(--font-size-small) + 6px);">
                  <span>Example: <span class="technicalWords">${param.example}</span></span>
              </div>`
             }
