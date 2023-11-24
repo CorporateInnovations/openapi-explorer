@@ -449,7 +449,9 @@ export function schemaInObjectNotation(rawSchema, options, level = 0, suffix = '
   } else if (schema.type === 'object' || schema.properties) {
     const obj = { '::type': '' };
     obj['::title'] = schema.title || '';
-    obj['::description'] = schema.description || '';
+    if(schema.description){
+      obj['::description'] = schema.description || '';
+    }
     obj['::flags'] = { '🆁': schema.readOnly && '🆁', '🆆': schema.writeOnly && '🆆' };
     obj['::type'] = 'object';
     obj['::deprecated'] = schema.deprecated || false;

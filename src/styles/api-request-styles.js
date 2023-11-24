@@ -136,8 +136,10 @@ select[class="schemaSelectDropdown"]{
   border-radius: 4px;
   background-color: rgb(245, 247, 250);
   color: rgb(51, 51, 51);
-  padding: 0 6px;
+  padding: 0px 3px;
+  margin: 0px 2px;
   border: 1px solid rgb(228, 231, 235);
+  line-height: 1.2;
   font-family: "Titillium Web", sans-serif;
   display: inline-flex;
   white-space: pre-wrap;

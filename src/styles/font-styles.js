@@ -135,6 +135,7 @@ export default css`
     background-color: rgb(245, 247, 250);
     color: rgb(51, 51, 51);
     padding: 1px 6px;
+    line-height: 1.2;
     border: 1px solid rgb(228, 231, 235);
     font-family: "Titillium Web", sans-serif;
     display: inline-flex;
