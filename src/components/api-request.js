@@ -164,14 +164,14 @@ export default class ApiRequest extends LitElement {
 
       tableRows.push(html`
       <tr style="vertical-align: sub;">
-        <td style="width: 25%; min-width:268px; font-size: 18px; padding: 7px 0;">
-          <div class="param-name ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column; line-height: 1.5; font-size: 19px; color: black;">
-            ${param.name}${!paramSchema.deprecated && param.required ? html`<span style='color:var(--red); font-size: 16px;'>required</span>` : ''}
+        <td style="min-width: 290px; max-width: 315px; font-size: var(--font-size-small); padding: 7px 0;">
+          <div class="param-name ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column; color: black;">
+            ${param.name}${!paramSchema.deprecated && param.required ? html`<span style='color:var(--red); font-size: calc(var(--font-size-small) - 2px);'>required</span>` : ''}
           </div>
         </td>
 
-        <td style="width:160px; min-width:268px; font-size: 18px; padding: 7px 0;">
-        <div class="param-type" style="line-height: 1.5; color: rgb(123, 135, 148);">
+        <td style="width:100%; min-width:268px; font-size: var(--font-size-small); padding: 7px 0;">
+        <div class="param-type" style="color: rgb(123, 135, 148);">
             ${paramSchema.type === 'array'
               ? `${paramSchema.arrayType}`
               : `${paramSchema.format ? paramSchema.format : paramSchema.type}`
@@ -180,8 +180,8 @@ export default class ApiRequest extends LitElement {
 
             ${param.description
               ? html`
-                 <div class="param-description ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column; line-height: calc(var(--font-size-small) + 6px);">
-                    ${param.description}
+                 <div class="param-description m-markdown-small ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column; line-height: calc(var(--font-size-small) + 7px); font-size: var(--font-size-regular)">
+                    ${unsafeHTML(marked(param.description))}
                 </div>`
               :  html`
               <div class="param-description ${paramSchema.deprecated ? 'deprecated' : ''}" style="display: flex; flex-direction: column; line-height: calc(var(--font-size-small) + 6px);">

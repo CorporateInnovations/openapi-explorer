@@ -102,8 +102,6 @@ export default class ApiResponse extends LitElement {
       
       #schemaOptions {
         border: 2px solid black;
-        min-width: 298px;
-        max-width: 750px;
         margin: 10px 0;
         padding: 10px;
         border-radius: 5px; 
