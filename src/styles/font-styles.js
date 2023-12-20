@@ -100,7 +100,7 @@ export default css`
   .m-markdown-small a,
   .m-markdown-small span,
   .m-markdown-small li {
-    font-size: 18px;
+    font-size: var(--font-size-regular);
     line-height: calc(var(--font-size-small) + 6px);
   }
 
@@ -134,15 +134,12 @@ export default css`
     border-radius: 4px;
     background-color: rgb(245, 247, 250);
     color: rgb(51, 51, 51);
-    padding: 1px 6px;
-    line-height: 1.2;
+    padding: 0px 3px;
     border: 1px solid rgb(228, 231, 235);
-    font-family: "Titillium Web", sans-serif;
     display: inline-flex;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
-    font-size: 14px;
-    max-width: 580px;
+    font-size: var(--font-size-regular);
   }
 
 

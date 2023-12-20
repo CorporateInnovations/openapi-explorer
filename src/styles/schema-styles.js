@@ -22,7 +22,6 @@ export default css`
 }
 
 .key-descr {
-  line-height: 1.7;
   font-family:var(--font-regular);
   flex-shrink: 1;
   text-overflow: ellipsis;
@@ -32,7 +31,7 @@ export default css`
 }
 
 .tr > div > .key-label{
-  font-size: 19px;
+  font-size: var(--font-size-small);
 }
 
 .toolbar {
@@ -118,23 +117,14 @@ export default css`
   background-color: rgb(245, 247, 250);
   color: rgb(51, 51, 51);
   padding: 0px 3px;
-  margin: 0px 2px;
   border: 1px solid rgb(228, 231, 235);
-  font-size: 12px;
-  line-height: 1.2;
-  font-family: "Titillium Web", sans-serif;
   display: inline-flex;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  font-size: 14px;
-  max-width: 580px;
+  font-size: calc(var(--font-size-small) - 1px);
 }
 
 @media only screen and (min-width: 1595px) {
-  .technicalWords {
-      max-width: fit-content;
-   }
-  }
 
 .schemaDescriptions {
   display:inline-block;
