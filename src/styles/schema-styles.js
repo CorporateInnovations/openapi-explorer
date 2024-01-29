@@ -31,7 +31,7 @@ export default css`
 }
 
 .tr > div > .key-label{
-  font-size: var(--font-size-small);
+  font-size: calc(var(--font-size-small) + 1px);
 }
 
 .toolbar {
@@ -121,7 +121,7 @@ export default css`
   display: inline-flex;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  font-size: calc(var(--font-size-small) - 1px);
+  font-size: var(--font-size-small);
 }
 
 @media only screen and (min-width: 1595px) {

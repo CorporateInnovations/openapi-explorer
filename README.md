@@ -1,3 +1,10 @@
+# CI Group
+
+Node version 14
+PHP 7.4
+use npm run build (uses eslint)
+Symlink this to local project
+
 # OpenAPI Explorer
 Web Component Custom Element for Open-API spec viewing, with automatic integration for React and Vue.
 

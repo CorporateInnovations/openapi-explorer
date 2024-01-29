@@ -141,7 +141,7 @@ select[class="schemaSelectDropdown"]{
   display: inline-flex;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  font-size: calc(var(--font-size-small) - 1px);
+  font-size: var(--font-size-small);
 }
 
 @media only screen and (max-width: 767px) {
