@@ -139,7 +139,7 @@ export default css`
     display: inline-flex;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
-    font-size: var(--font-size-regular);
+    font-size: var(--font-size-small);
   }
 
 

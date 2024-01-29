@@ -95,6 +95,14 @@ export default class SchemaTree extends LitElement {
         background: rgb(240, 240, 240, 0.5);
       }
 
+      .inside-bracket > .tr {
+         border-bottom: 1px solid var(--light-border-color);
+      }
+
+      .inside-bracket > :last-child {
+        border-bottom: none;
+      }
+
       .tr.collapsed + .inside-bracket-wrapper {
         transition: max-height 1.2s ease-in-out -1.1s;
         max-height: 0;
@@ -236,6 +244,7 @@ export default class SchemaTree extends LitElement {
 
       let selection = null;
       const displayLine = [flags['🆁'] || flags['🆆'], description].filter(v => v).join(' ');
+      const specialType = data['::type'] ?? data['type'] ?? '';
       return html`
       ${key.startsWith('::ONE~OF') ? '' : html`
       <div class="tr ${schemaLevel < this.schemaExpandLevel || data['::type'] && data['::type'].startsWith('xxx-of') ? '' : 'collapsed'} ${data['::type'] || 'no-type-info'}" style="align-items: baseline; padding: 7px 0; ${keyLabel.length == 0 ? 'display: none;' : ''}">
@@ -246,12 +255,13 @@ export default class SchemaTree extends LitElement {
               ? ''
               : schemaLevel > 0
                 ? html`<span class="key-label">
-                    ${keyLabel.replace(/\*$/, '')} ${openBracket}${keyLabel.endsWith('*') ? html`<br><span style="color:var(--red); font-size: calc(var(--font-size-small) - 2px)"> required</span>` : ''}
+                    ${keyLabel.replace(/\*$/, '')} ${openBracket}${keyLabel.endsWith('*') ? html`<br><span style="color:var(--red); font-size: calc(var(--font-size-small) - 1px)"> required</span>` : ''}
                   </span>`
                 : ''
           }
         </div>
         <div class="td key-descr">
+          <span class="schemaTypeStyles" style="font-size: calc(var(--font-size-small) + 1px);">${specialType}</span>
           <span class="m-markdown-small" style="padding: 5px 0; vertical-align: middle;" title="${flags['🆁'] && 'Read only attribute' || flags['🆆'] && 'Write only attribute' || ''}">
             ${unsafeHTML(marked(displayLine))}
           </span>
@@ -290,11 +300,10 @@ export default class SchemaTree extends LitElement {
     }
 
     return html`
-        <div>
-        <div class="tr primitive" style="font-size: var(--font-size-small); padding: 7px 0;">
+        <div class="tr primitive" style="font-size: calc(var(--font-size-small) + 1px); padding: 7px 0;">
           <div class="td key ${deprecated ? 'deprecated' : ''}" style="min-width: 290px;">
             ${keyLabel.endsWith('*') && keyLabel != ''
-              ? html`<span class="key-label" style="font-size: var(--font-size-small);">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red); font-size: calc(var(--font-size-small) - 2px);'>required</span>`
+              ? html`<span class="key-label" style="font-size: calc(var(--font-size-small) + 1px);">${keyLabel.substring(0, keyLabel.length - 1)}</span></br><span style='color:var(--red); font-size: calc(var(--font-size-small) - 1px);'>required</span>`
               : key.startsWith('::OPTION') && keyLabel != ''
                 ? html`<span class='key-label xxx-of-key'>${keyLabel}</span><span class="xxx-of-descr">${keyDescr}</span>`
                 : schemaLevel > 0
@@ -304,10 +313,10 @@ export default class SchemaTree extends LitElement {
           </div>
           <div class="td key-descr">
             <span class="m-markdown-small" style="font-size: var(--font-size-regular); line-height: calc(var(--font-size-small) + 7px); font-family: var(--font-mono); vertical-align: middle; padding: 1px;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
-              ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <span class="schemaTypeStyles" style="font-size: var(--font-size-small);">${type}</span><br>${schemaDescription}` || ''}`))}
+              ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <span class="schemaTypeStyles" style="font-size: calc(var(--font-size-small) + 1px);">${type}</span><br>${schemaDescription}` || ''}`))}
             </span>
             ${this.schemaDescriptionExpanded && (constraint || defaultValue || allowedValues || pattern || example) ? html` 
-              <div style="font-size: var(--font-size-small);">
+              <div style="font-size: calc(var(--font-size-small) + 1px);">
                 ${constraint ? html`<div class="schemaDescriptions"><span>${constraintSplit[0]}: </span><span class="technicalWords">${constraintSplit[1]}</span></div>${defaultValue | allowedValues | pattern | example ? '<br>':''}` : ''}
                 ${defaultValue ? html`<div class="schemaDescriptions"><span>Default: </span><span class="technicalWords">${defaultValue}</span></div>${allowedValues | pattern | example ? '<br>':''}` : ''}
                 ${allowedValues ? html`<div class="schemaDescriptions"><span>Supported:</span>${allowedValues.split('┃').map((v, i) => html`${i > 0 ? ' | ' : ''}<span class="technicalWords">${v}</span>`)}</div>${pattern | example ? '<br>':''}` : ''}
@@ -321,7 +330,6 @@ export default class SchemaTree extends LitElement {
             : ''}
             </div>
         </div>  
-        </div> 
     `;
   }
   /* eslint-enable indent */
