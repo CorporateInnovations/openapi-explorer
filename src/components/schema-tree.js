@@ -312,7 +312,7 @@ export default class SchemaTree extends LitElement {
             }
           </div>
           <div class="td key-descr">
-            <span class="m-markdown-small" style="font-size: var(--font-size-regular); line-height: calc(var(--font-size-small) + 7px); font-family: var(--font-mono); vertical-align: middle; padding: 1px;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
+            <span class="m-markdown-small" style="font-size: var(--font-size-regular); line-height: calc(var(--font-size-small) + 7px); font-family: var(--font-mono); vertical-align: middle;" title="${readOrWriteOnly === '🆁' && 'Read only attribute' || readOrWriteOnly === '🆆' && 'Write only attribute' || ''}">
               ${unsafeHTML(marked(`${dataType === 'array' && description || `${schemaTitle ? `**${schemaTitle}:**` : ''} <span class="schemaTypeStyles" style="font-size: calc(var(--font-size-small) + 1px);">${type}</span><br>${schemaDescription}` || ''}`))}
             </span>
             ${this.schemaDescriptionExpanded && (constraint || defaultValue || allowedValues || pattern || example) ? html` 
