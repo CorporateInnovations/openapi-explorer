@@ -774,7 +774,7 @@ export default class OpenApiExplorer extends LitElement {
 
     // For focused APIs, always scroll to the top of the component
     if (!elementId.match('cmp--') && !elementId.match('tag--')) {
-      this.shadowRoot.getElementById('operations-root').scrollIntoView({ behavior: 'auto', block: 'start' });
+      window.scroll({ behavior: 'smooth', top: '0', left: '0' });
     } else {
       contentEl.scrollIntoView({ behavior: 'auto', block: 'start' });
     }
@@ -809,7 +809,7 @@ export default class OpenApiExplorer extends LitElement {
     }
 
     if (scrollNavItemToView) {
-      newNavEl.scrollIntoView({ behavior: 'auto', block: 'center' });
+      window.scroll({ behavior: 'smooth', top: '0', left: '0' });
     }
     await sleep(0);
     const oldNavEl = this.shadowRoot.querySelector('.nav-bar-tag.active, .nav-bar-path.active, .nav-bar-info.active, .nav-bar-h1.active, .nav-bar-h2.active');
