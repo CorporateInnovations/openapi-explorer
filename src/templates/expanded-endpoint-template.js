@@ -22,8 +22,7 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
   const nonEmptyApiKeys = this.resolvedSpec.securitySchemes.filter((v) => (v.finalKeyValue && path.security && path.security.some((ps) => ps[v.apiKeyId]))) || [];
 
   const codeSampleTabPanel = path.xCodeSamples ? codeSamplesTemplate.call(this, path.xCodeSamples) : '';
-  console.log('url', path.servers?.[0]?.url || this.selectedServer?.computedUrl);
-  console.log('path', path.path)
+
   return html`
     ${this.renderStyle === 'read' ? html`<div class='divider' part="operation-divider"></div>` : ''}
     <div class='expanded-endpoint-body observe-me ${path.method}' part="section-operation ${path.elementId}" id='${path.elementId}'>
@@ -37,7 +36,7 @@ export function expandedEndpointBodyTemplate(path, tagName = '') {
         <div class='mono-font part="section-operation-url" regular-font-size' style='padding: 8px 0; color: black; display: flex; align-items: center;'> 
           ${path.isWebhook ? html`<span style="color:var(--primary-color)"> WEBHOOK </span>` : ''}
           <span style="font-size: 14px; background: ${path.method == 'delete' ? '#ff0f0f' : path.method == 'get' ? '#61C15C' : '#0841c6'}; border-radius: 25px; color: 'white'; padding: 0.4rem 1.2rem" part="label-operation-method" class='regular-font upper method-fg bold-text ${path.method}'>${path.method}</span> 
-          <span part="label-operation-path" id="apiUrl"><p class="apiUrlText">${path.servers?.[0]?.url || this.selectedServer?.computedUrl}${path.path.startsWith('/') ? path.path.slice(1) : path.path}</p></span>
+          <span part="label-operation-path" id="apiUrl"><p class="apiUrlText">${path.servers?.[0]?.url || this.selectedServer?.computedUrl}${path.path}</p></span>
         </div>
       </div>
       ${path.externalDocs
