@@ -9,7 +9,6 @@ export default function overviewTemplate() {
   return html`
     <section id="overview" part="section-overview"
       class="observe-me ${this.renderStyle === 'focused' ? 'section-gap--focused-mode' : 'section-gap'}">
-      <img class="overview-bg-img" src="/images/eun-bg.png">
       ${this.resolvedSpec && this.resolvedSpec.info
         ? html`
           <slot name="overview">
