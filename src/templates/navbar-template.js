@@ -54,7 +54,7 @@ export default function navbarTemplate() {
           ${this.allowAdvancedSearch === 'false'
             ? ''
             : html`
-              <button class="m-btn outline-primary" part="btn btn-fill btn-search" style="margin-left:5px; color: white;" @click="${this.onShowSearchModalClicked}">
+              <button class="m-btn outline-primary" part="btn btn-search" style="margin-left:5px; color: white;" @click="${this.onShowSearchModalClicked}">
                 ${getI18nText('menu.search')}
               </button>
             `
